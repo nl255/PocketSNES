@@ -2,8 +2,7 @@
 
 TARGET = ./dist/PocketSNES.dge
 
-CHAINPREFIX := /opt/mipsel-linux-uclibc
-CROSS_COMPILE := $(CHAINPREFIX)/usr/bin/mipsel-linux-
+CROSS_COMPILE ?= mipsel-linux-
 
 CC  := $(CROSS_COMPILE)gcc
 CXX := $(CROSS_COMPILE)g++
@@ -18,19 +17,18 @@ INCLUDE = -I pocketsnes \
 		-I pocketsnes/include \
 		-I menu -I pocketsnes/linux -I pocketsnes/snes9x
 
-CFLAGS =  -std=gnu++03 $(INCLUDE) -DRC_OPTIMIZED -DGCW_ZERO -D__LINUX__ -D__DINGUX__ -DFOREVER_16_BIT  $(SDL_CFLAGS)
-# CFLAGS =  -std=gnu++03 $(INCLUDE) -DRC_OPTIMIZED -D__LINUX__ -D__DINGUX__ $(SDL_CFLAGS)
-CFLAGS += -O3 -fdata-sections -ffunction-sections -mips32 -march=mips32 -mno-mips16 -fomit-frame-pointer -fno-builtin
+CFLAGS = $(INCLUDE) -DRC_OPTIMIZED -DGCW_ZERO -D__LINUX__ -D__DINGUX__ -DFOREVER_16_BIT -DFOREVER_16_BIT_SOUND $(SDL_CFLAGS)
+# CFLAGS += -ggdb3 -Og
+CFLAGS += -O4 -fexpensive-optimizations -fdata-sections -ffunction-sections -mips32r2 -fomit-frame-pointer -fno-builtin
 CFLAGS += -fno-common -Wno-write-strings -Wno-sign-compare -ffast-math -ftree-vectorize
 CFLAGS += -funswitch-loops -fno-strict-aliasing
-CFLAGS += -DMIPS_XBURST -DFAST_LSB_WORD_ACCESS
-# CFLAGS += -flto
-# CFLAGS += -fprofile-generate -fprofile-dir=/home/retrofw/profile/pocketsnes
-CFLAGS += -fprofile-use -fprofile-dir=./profile -DNO_ROM_BROWSER
+CFLAGS += -DFAST_LSB_WORD_ACCESS -DNO_ROM_BROWSER
+CFLAGS += -flto
+#CFLAGS += -fprofile-use -fprofile-dir=./profile
 
-CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -fno-math-errno -fno-threadsafe-statics
+CXXFLAGS = $(CFLAGS) -std=gnu++03 -fno-exceptions -fno-rtti -fno-math-errno -fno-threadsafe-statics
 
-LDFLAGS = $(CXXFLAGS) -lpthread -lz -lpng  $(SDL_LIBS) -Wl,--as-needed -Wl,--gc-sections -s
+LDFLAGS = $(CXXFLAGS) -lz -lpng $(SDL_LIBS) -Wl,--as-needed -Wl,--gc-sections -s
 
 # Find all source files
 SOURCE = pocketsnes/snes9x menu sal/linux sal

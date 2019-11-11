@@ -31,6 +31,19 @@ static u32 sal_Input(int held)
 		return 0;
 	}
 
+	u32 extraKeys = 0;
+	do {
+		switch (event.type) {
+		case SDL_KEYDOWN:
+			switch (event.key.keysym.sym) {
+			case SDLK_HOME:
+				extraKeys |= SAL_INPUT_MENU;
+				break;
+			}
+			break;
+		}
+	} while(SDL_PollEvent(&event));
+
 	inputHeld = 0;
 
 	u8 *keystate = SDL_GetKeyState(NULL);
@@ -49,7 +62,7 @@ static u32 sal_Input(int held)
 	if ( keystate[SDLK_HOME] )		inputHeld |= SAL_INPUT_MENU;
 
 	mInputRepeat = inputHeld;
-	return inputHeld;
+	return inputHeld | extraKeys;
 }
 
 static int key_repeat_enabled = 1;
@@ -134,16 +147,16 @@ u32 sal_VideoInit(u32 bpp)
 	//Set up the screen
 	mScreen = SDL_SetVideoMode(SAL_SCREEN_WIDTH, SAL_SCREEN_HEIGHT, bpp, SDL_HWSURFACE | 
 #ifdef SDL_TRIPLEBUF
-    SDL_TRIPLEBUF
+	SDL_TRIPLEBUF
 #else
-    SDL_DOUBLEBUF
+	SDL_DOUBLEBUF
 #endif
 	);
 
 	//If there was an error in setting up the screen
 	if( mScreen == NULL )
 	{
-	sal_LastErrorSet("SDL_SetVideoMode failed");        	
+	sal_LastErrorSet("SDL_SetVideoMode failed");
 	return SAL_ERROR;
 	}
 

@@ -46,7 +46,7 @@ static u32 sal_Input(int held)
 	if ( keystate[SDLK_DOWN] )		inputHeld |= SAL_INPUT_DOWN;
 	if ( keystate[SDLK_LEFT] )		inputHeld |= SAL_INPUT_LEFT;
 	if ( keystate[SDLK_RIGHT] )		inputHeld |= SAL_INPUT_RIGHT;
-	if ( keystate[SDLK_END] )		inputHeld |= SAL_INPUT_MENU;
+	if ( keystate[SDLK_HOME] )		inputHeld |= SAL_INPUT_MENU;
 
 	mInputRepeat = inputHeld;
 	return inputHeld;

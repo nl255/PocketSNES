@@ -23,11 +23,18 @@ CFLAGS += -O3 -fdata-sections -ffunction-sections -mips32r2 -mno-mips16 -fomit-f
 CFLAGS += -fno-common -Wno-write-strings -Wno-sign-compare -ffast-math -ftree-vectorize -floop-interchange
 CFLAGS += -funswitch-loops -fno-strict-aliasing
 CFLAGS += -DFAST_LSB_WORD_ACCESS -DNO_ROM_BROWSER
-#CFLAGS += -fprofile-use -fprofile-dir=./profile
+ifdef PROFILE_GEN
+CFLAGS += -fprofile-generate -fprofile-dir=/media/data/profile/pocketsnes
+else
+CFLAGS += -fprofile-use -fprofile-dir=./profile
+endif
 
 CXXFLAGS = $(CFLAGS) -std=gnu++03 -fno-exceptions -fno-rtti -fno-math-errno -fno-threadsafe-statics
 
-LDFLAGS = $(CXXFLAGS) -lz -lpng $(SDL_LIBS) -Wl,--as-needed -Wl,--gc-sections -s
+LDFLAGS = $(CXXFLAGS) -lz -lpng $(SDL_LIBS) -Wl,--as-needed
+ifndef PROFILE_GEN
+LDFLAGS += -Wl,--gc-sections -s
+endif
 
 # Find all source files
 SOURCE = pocketsnes/snes9x menu sal/linux sal

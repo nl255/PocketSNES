@@ -21,12 +21,11 @@ INCLUDE = -I src \
 		-I src/include \
 		-I menu -I src/linux -I src/snes9x
 
-CFLAGS =  --std=gnu11 $(INCLUDE) -DRC_OPTIMIZED -DGCW_ZERO -D__LINUX__ -D__DINGUX__ -DFOREVER_16_BIT  $(SDL_CFLAGS)
-# CFLAGS =  --std=gnu11 $(INCLUDE) -DRC_OPTIMIZED -D__LINUX__ -D__DINGUX__ $(SDL_CFLAGS)
-CFLAGS += -Ofast -fdata-sections -ffunction-sections -fomit-frame-pointer -fno-builtin -march=armv5te -mtune=arm926ej-s
+CFLAGS =  --std=gnu11 $(INCLUDE) -DRC_OPTIMIZED -D__LINUX__ -D__DINGUX__ -DFOREVER_16_BIT  $(SDL_CFLAGS)
+CFLAGS += -O3 -fdata-sections -ffunction-sections -fomit-frame-pointer -fno-builtin -march=armv5te -mtune=arm926ej-s
 CFLAGS += -fno-common -Wno-write-strings -Wno-sign-compare -ffast-math -ftree-vectorize
 CFLAGS += -funswitch-loops -fno-strict-aliasing
-CFLAGS += -DMIPS_XBURST -DFAST_LSB_WORD_ACCESS
+CFLAGS += -DFAST_LSB_WORD_ACCESS
 CFLAGS += -fprofile-use -fprofile-dir=./profile
 
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -fno-math-errno -fno-threadsafe-statics

@@ -48,11 +48,15 @@ void DefaultMenuOptions(void)
 	mMenuOptions->cpuSpeed=336;
 	mMenuOptions->country=0;
 	mMenuOptions->showFps=0;
-	mMenuOptions->soundRate=48000;
+	mMenuOptions->soundRate=32000;
 	mMenuOptions->stereo=0;
+#ifdef GCW_ZERO
 	mMenuOptions->fullScreen=3;
+#else
+	mMenuOptions->fullScreen=0;
+#endif
 	mMenuOptions->autoSaveSram=1;
-	mMenuOptions->soundSync=1;
+	mMenuOptions->soundSync=0;
 }
 
 s32 LoadMenuOptions(const char *path, const char *filename, const char *ext,
@@ -1121,9 +1125,11 @@ void SettingsMenuUpdateText(s32 menu_index)
 				case 2:
 					strcpy(mMenuText[SETTINGS_MENU_FULLSCREEN],"Video scaling            SMOOTH");
 					break;
+#ifdef GCW_ZERO
 				case 3:
 					strcpy(mMenuText[SETTINGS_MENU_FULLSCREEN],"Video scaling          HARDWARE");
 					break;
+#endif
 			}
 
 		case SETTINGS_MENU_LOAD_GLOBAL_SETTINGS:
@@ -1441,15 +1447,20 @@ s32 SettingsMenu(void)
 					break;
 
 				case SETTINGS_MENU_FULLSCREEN:
+#ifdef GCW_ZERO
+					static int max_fullscreen_options=3;
+#else
+					static int max_fullscreen_options=2;
+#endif
 					if (keys & SAL_INPUT_RIGHT)
 					{
 						mMenuOptions->fullScreen++;
-						if(mMenuOptions->fullScreen > 3) mMenuOptions->fullScreen = 0;
+						if(mMenuOptions->fullScreen > max_fullscreen_options) mMenuOptions->fullScreen = 0;
 					}
 					else
 					{
 						mMenuOptions->fullScreen--;
-						if(mMenuOptions->fullScreen > 3) mMenuOptions->fullScreen = 3;
+						if(mMenuOptions->fullScreen > max_fullscreen_options) mMenuOptions->fullScreen = max_fullscreen_options;
 					}
 					SettingsMenuUpdateText(SETTINGS_MENU_FULLSCREEN);
 					break;

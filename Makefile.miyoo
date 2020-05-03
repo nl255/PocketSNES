@@ -28,7 +28,7 @@ CFLAGS += -funswitch-loops -fno-strict-aliasing
 CFLAGS += -DFAST_LSB_WORD_ACCESS
 CFLAGS += -fprofile-use -fprofile-dir=./profile
 
-CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -fno-math-errno -fno-threadsafe-statics
+CXXFLAGS = $(filter-out --std=gnu11,$(CFLAGS)) --std=gnu++11 -fno-exceptions -fno-rtti -fno-math-errno -fno-threadsafe-statics
 
 LDFLAGS = $(CXXFLAGS) -lpthread -lz -lpng  $(SDL_LIBS) -Wl,--as-needed -Wl,--gc-sections -s
 
@@ -50,7 +50,7 @@ $(TARGET) : $(OBJS)
 	$(CMD)$(CC) $(CFLAGS) -c $< -o $@
 
 %.o: %.cpp
-	$(CMD)$(CXX) $(CFLAGS) -c $< -o $@
+	$(CMD)$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .PHONY : clean
 

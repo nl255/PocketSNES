@@ -34,21 +34,22 @@ static u32 sal_Input(int held)
 	inputHeld = 0;
 
 	u8 *keystate = SDL_GetKeyState(NULL);
-	if ( keystate[SDLK_LCTRL] )		inputHeld |= SAL_INPUT_A;
-	if ( keystate[SDLK_LALT] )		inputHeld |= SAL_INPUT_B;
-	if ( keystate[SDLK_SPACE] )		inputHeld |= SAL_INPUT_X;
-	if ( keystate[SDLK_LSHIFT] )	inputHeld |= SAL_INPUT_Y;
-	if ( keystate[SDLK_TAB] )		inputHeld |= SAL_INPUT_L;
-	if ( keystate[SDLK_BACKSPACE] )	inputHeld |= SAL_INPUT_R;
-	if ( keystate[SDLK_RETURN] )	inputHeld |= SAL_INPUT_START;
-	if ( keystate[SDLK_ESCAPE] )	inputHeld |= SAL_INPUT_SELECT;
-	if ( keystate[SDLK_UP] )		inputHeld |= SAL_INPUT_UP;
-	if ( keystate[SDLK_DOWN] )		inputHeld |= SAL_INPUT_DOWN;
-	if ( keystate[SDLK_LEFT] )		inputHeld |= SAL_INPUT_LEFT;
-	if ( keystate[SDLK_RIGHT] )		inputHeld |= SAL_INPUT_RIGHT;
-	if ( keystate[SDLK_END] || keystate[SDLK_HOME] || ( keystate[SDLK_ESCAPE] && keystate[SDLK_RETURN]) ) inputHeld[j] |= SAL_INPUT_MENU;
-	if ( keystate[SDLK_ESCAPE] && keystate[SDLK_TAB] ) inputHeld[j] |= SAL_INPUT_QUICKLOAD;
-	if ( keystate[SDLK_ESCAPE] && keystate[SDLK_BACKSPACE] ) inputHeld[j] |= SAL_INPUT_QUICKSAVE;
+	if ( keystate[SDLK_LCTRL] )		                    inputHeld |= SAL_INPUT_B;
+	if ( keystate[SDLK_LALT] )		                    inputHeld |= SAL_INPUT_A;
+	if ( keystate[SDLK_SPACE] )		                    inputHeld |= SAL_INPUT_Y;
+	if ( keystate[SDLK_LSHIFT] )	                            inputHeld |= SAL_INPUT_X;
+	if ( keystate[SDLK_TAB] )		                    inputHeld |= SAL_INPUT_L;
+	if ( keystate[SDLK_BACKSPACE] )	                            inputHeld |= SAL_INPUT_R;
+	if ( keystate[SDLK_RETURN] )	                            inputHeld |= SAL_INPUT_START;
+	if ( keystate[SDLK_ESCAPE] )	                            inputHeld |= SAL_INPUT_SELECT;
+	if ( keystate[SDLK_UP] )		                    inputHeld |= SAL_INPUT_UP;
+	if ( keystate[SDLK_DOWN] )		                    inputHeld |= SAL_INPUT_DOWN;
+	if ( keystate[SDLK_LEFT] )		                    inputHeld |= SAL_INPUT_LEFT;
+	if ( keystate[SDLK_RIGHT] )		                    inputHeld |= SAL_INPUT_RIGHT;
+	if ( keystate[SDLK_RCTRL] ||
+		(keystate[SDLK_ESCAPE] && keystate[SDLK_RETURN]) )  inputHeld |= SAL_INPUT_MENU;
+	if ( keystate[SDLK_ESCAPE] && keystate[SDLK_TAB] )          inputHeld |= SAL_INPUT_QUICKLOAD;
+	if ( keystate[SDLK_ESCAPE] && keystate[SDLK_BACKSPACE] )    inputHeld |= SAL_INPUT_QUICKSAVE;
 
 	mInputRepeat = inputHeld;
 	return inputHeld;

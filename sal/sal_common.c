@@ -301,7 +301,7 @@ void sal_InputWaitForRelease()
 	{
 		while(1)
 		{     
-			keys=sal_InputPoll(0);
+			keys=sal_InputPoll();
 			if(keys==0) break;
 		}
 	}
@@ -316,7 +316,7 @@ void sal_InputWaitForPress()
 	{
 		while(1)
 		{     
-			keys=sal_InputPoll(0);
+			keys=sal_InputPoll();
 			if(keys!=0) break;
 		}
 	}

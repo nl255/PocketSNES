@@ -269,9 +269,10 @@ extern s32 saveno;
 uint32 S9xReadJoypad (int which1)
 {
 	uint32 val=0x80000000;
-	if (mInMenu || which1 > 1) return val;
+	if (mInMenu) return val;
+	if (which1 != 0) return val;
 
-	u32 joy = sal_InputPoll(which1);
+	u32 joy = sal_InputPoll();
 
 	if (joy & SAL_INPUT_MENU) {
 		mEnterMenu = 1;

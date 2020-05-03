@@ -3,7 +3,7 @@
 
 # Define the applications properties here:
 
-TARGET = pocketsnes/pocketsnes.elf
+TARGET = pocketsnes/PocketSNES
 
 CHAINPREFIX := /opt/miyoo
 CROSS_COMPILE := $(CHAINPREFIX)/usr/bin/arm-linux-

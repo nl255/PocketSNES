@@ -449,12 +449,19 @@ bool8 S9xGraphicsInit ()
     if (Settings.SixteenBit)
     {
 #endif
+#ifndef _FAST_GFX
 	if (!(GFX.X2 = (uint16 *) malloc (sizeof (uint16) * 0x10000)))
 	    return (FALSE);
+#endif
 
-	if (!(GFX.ZERO_OR_X2 = (uint16 *) malloc (sizeof (uint16) * 0x10000)) ||
-	    !(GFX.ZERO = (uint16 *) malloc (sizeof (uint16) * 0x10000)))
+	if (1
+#ifndef _FAST_GFX
+		!(GFX.ZERO_OR_X2 = (uint16 *) malloc (sizeof (uint16) * 0x10000)) ||
+		!(GFX.ZERO = (uint16 *) malloc (sizeof (uint16) * 0x10000))
+#endif
+	   )
 	{
+#ifndef _FAST_GFX
 	    if (GFX.ZERO_OR_X2)
 	    {
 		free ((char *) GFX.ZERO_OR_X2);
@@ -466,9 +473,11 @@ bool8 S9xGraphicsInit ()
 		GFX.X2 = NULL;
 	    }
 	    return (FALSE);
+#endif
 	}
 	uint32 r, g, b;
 
+#ifndef _FAST_GFX
 	// Build a lookup table that multiplies a packed RGB value by 2 with
 	// saturation.
 	for (r = 0; r <= MAX_RED; r++)
@@ -491,43 +500,15 @@ bool8 S9xGraphicsInit ()
 		}
 	    }
 	}
+#endif
+
+#ifndef _FAST_GFX
 	ZeroMemory (GFX.ZERO, 0x10000 * sizeof (uint16));
 	ZeroMemory (GFX.ZERO_OR_X2, 0x10000 * sizeof (uint16));
 	// Build a lookup table that if the top bit of the color value is zero
 	// then the value is zero, otherwise multiply the value by 2. Used by
 	// the color subtraction code.
 
-#if defined(OLD_COLOUR_BLENDING)
-	for (r = 0; r <= MAX_RED; r++)
-	{
-	    uint32 r2 = r;
-	    if ((r2 & 0x10) == 0)
-		r2 = 0;
-	    else
-		r2 = (r2 << 1) & MAX_RED;
-
-	    for (g = 0; g <= MAX_GREEN; g++)
-	    {
-		uint32 g2 = g;
-		if ((g2 & GREEN_HI_BIT) == 0)
-		    g2 = 0;
-		else
-		    g2 = (g2 << 1) & MAX_GREEN;
-
-		for (b = 0; b <= MAX_BLUE; b++)
-		{
-		    uint32 b2 = b;
-		    if ((b2 & 0x10) == 0)
-			b2 = 0;
-		    else
-			b2 = (b2 << 1) & MAX_BLUE;
-
-		    GFX.ZERO_OR_X2 [BUILD_PIXEL2 (r, g, b)] = BUILD_PIXEL2 (r2, g2, b2);
-		    GFX.ZERO_OR_X2 [BUILD_PIXEL2 (r, g, b) & ~ALPHA_BITS_MASK] = BUILD_PIXEL2 (r2, g2, b2);
-		}
-	    }
-	}
-#else
         for (r = 0; r <= MAX_RED; r++)
         {
             uint32 r2 = r;
@@ -565,6 +546,7 @@ bool8 S9xGraphicsInit ()
         }
 #endif
 
+#ifndef _FAST_GFX
 	// Build a lookup table that if the top bit of the color value is zero
 	// then the value is zero, otherwise its just the value.
 	for (r = 0; r <= MAX_RED; r++)
@@ -595,7 +577,8 @@ bool8 S9xGraphicsInit ()
 		}
 	    }
 	}
-#ifndef FOREVER_16_BIT
+#endif
+#if !defined(FOREVER_16_BIT) || !defined(_FAST_GFX)
     }
     else
     {
@@ -611,6 +594,7 @@ bool8 S9xGraphicsInit ()
 void S9xGraphicsDeinit (void)
 {
     // Free any memory allocated in S9xGraphicsInit
+#ifndef _FAST_GFX
     if (GFX.X2)
     {
 	free ((char *) GFX.X2);
@@ -626,6 +610,7 @@ void S9xGraphicsDeinit (void)
 	free ((char *) GFX.ZERO);
 	GFX.ZERO = NULL;
     }
+#endif
 }
 
 void S9xBuildDirectColourMaps ()

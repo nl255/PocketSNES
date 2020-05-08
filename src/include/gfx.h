@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -128,8 +128,10 @@ struct SGFX{
 
     // Setup in call to S9xGraphicsInit()
     int   Delta;
+    #ifndef _FAST_GFX
     uint16 *X2;
     uint16 *ZERO_OR_X2;
+    #endif
     uint16 *ZERO;
     uint32 RealPitch; // True pitch of Screen buffer.
     uint32 Pitch2;    // Same as RealPitch except while using speed up hack for Glide.
@@ -167,7 +169,7 @@ struct SGFX{
     uint8  r2130;
     uint8  r2131;
     bool8  Pseudo;
-    
+
 #ifdef GFX_MULTI_FORMAT
     uint32 PixelFormat;
     uint32 (*BuildPixel) (uint32 R, uint32 G, uint32 B);
@@ -199,7 +201,7 @@ struct SBG
     uint32 StartPalette;
     uint32 PaletteShift;
     uint32 PaletteMask;
-    
+
     uint8 *Buffer;
     uint8 *Buffered;
     bool8  DirectColourMode;
@@ -228,9 +230,23 @@ extern uint8 sub32_32 [32][32];
 extern uint8 sub32_32_half [32][32];
 extern uint8 mul_brightness [16][32];
 
+#ifdef __ARM__
+// by Harald Kipp, from http://www.ethernut.de/en/documents/arm-inline-asm.html
+#define SWAP_DWORD(val) \
+    __asm__ __volatile__ ( \
+        "eor     r3, %1, %1, ror #16\n\t" \
+        "bic     r3, r3, #0x00FF0000\n\t" \
+        "mov     %0, %1, ror #8\n\t" \
+        "eor     %0, %0, r3, lsr #8" \
+        : "=r" (val) \
+        : "0"(val) \
+        : "r3", "cc" \
+    );
+#else
 // Could use BSWAP instruction on Intel port...
 #define SWAP_DWORD(dw) dw = ((dw & 0xff) << 24) | ((dw & 0xff00) << 8) | \
 		            ((dw & 0xff0000) >> 8) | ((dw & 0xff000000) >> 24)
+#endif
 
 #ifdef FAST_LSB_WORD_ACCESS
 #define READ_2BYTES(s) (*(uint16 *) (s))
@@ -250,14 +266,24 @@ extern uint8 mul_brightness [16][32];
 #define SUB_SCREEN_DEPTH 0
 #define MAIN_SCREEN_DEPTH 32
 
-#if defined(OLD_COLOUR_BLENDING)
-#define COLOR_ADD(C1, C2) \
-GFX.X2 [((((C1) & RGB_REMOVE_LOW_BITS_MASK) + \
-	  ((C2) & RGB_REMOVE_LOW_BITS_MASK)) >> 1) + \
-	((C1) & (C2) & RGB_LOW_BITS_MASK)]
-#else
+#define MASK1 0xF7DE
+#define MASK2 0x7BEF
+
 inline uint16 COLOR_ADD (uint16, uint16);
 
+#ifdef _FAST_GFX
+inline uint16 COLOR_ADD(uint16 C1, uint16 C2) {
+    uint16 a, b, c, z, c1, c2;
+
+    c1 = C1 & MASK1;
+    c2 = C2 & MASK1;
+    a = (c1>>1) + (c2>>1);
+    b = a & 0x8410;
+    c = b- (b >> 4);
+    z = ((a | c) & MASK2)<<1;
+    return z;
+}
+#else
 inline uint16 COLOR_ADD (uint16 C1, uint16 C2)
 {
 	if (C1 == 0)
@@ -274,18 +300,24 @@ inline uint16 COLOR_ADD (uint16 C1, uint16 C2)
           ((C2) & RGB_REMOVE_LOW_BITS_MASK)) >> 1) + \
          ((C1) & (C2) & RGB_LOW_BITS_MASK) | ALPHA_BITS_MASK)
 
-#if defined(OLD_COLOUR_BLENDING)
-#define COLOR_SUB(C1, C2) \
-GFX.ZERO_OR_X2 [(((C1) | RGB_HI_BITS_MASKx2) - \
-		 ((C2) & RGB_REMOVE_LOW_BITS_MASK)) >> 1]
-#elif !defined(NEW_COLOUR_BLENDING)
-#define COLOR_SUB(C1, C2) \
-(GFX.ZERO_OR_X2 [(((C1) | RGB_HI_BITS_MASKx2) - \
-                  ((C2) & RGB_REMOVE_LOW_BITS_MASK)) >> 1] + \
-((C1) & RGB_LOW_BITS_MASK) - ((C2) & RGB_LOW_BITS_MASK))
-#else
 inline uint16 COLOR_SUB(uint16, uint16);
 
+#ifdef _FAST_GFX
+inline uint16 COLOR_SUB(uint16 C1, uint16 C2)
+{
+    uint16 a, b, c, z, c1, c2;
+    c1 = (C1 & MASK1)>>1;
+    c2 = (C2 & MASK1)>>1;
+    c2 = (c2 ^ 0xffff) + 0x0821;
+    a = c1 + c2;
+    b = a & 0x8410;
+    c = b - (b>>4);
+    c = c ^ 0x7bcf;
+    z = ((a & c) & MASK2)<<1;
+
+    return z;
+}
+#else
 inline uint16 COLOR_SUB(uint16 C1, uint16 C2)
 {
 	uint16	mC1, mC2, v = 0;
@@ -293,7 +325,7 @@ inline uint16 COLOR_SUB(uint16 C1, uint16 C2)
 	mC1 = C1 & FIRST_COLOR_MASK;
 	mC2 = C2 & FIRST_COLOR_MASK;
 	if (mC1 > mC2) v += (mC1 - mC2);
-	
+
 	mC1 = C1 & SECOND_COLOR_MASK;
 	mC2 = C2 & SECOND_COLOR_MASK;
 	if (mC1 > mC2) v += (mC1 - mC2);
@@ -301,16 +333,35 @@ inline uint16 COLOR_SUB(uint16 C1, uint16 C2)
 	mC1 = C1 & THIRD_COLOR_MASK;
 	mC2 = C2 & THIRD_COLOR_MASK;
 	if (mC1 > mC2) v += (mC1 - mC2);
-	
+
 	return v;
 }
 #endif
 
+#ifdef _FAST_GFX
+inline uint16 COLOR_SUB1_2(uint16, uint16);
+
+inline uint16 COLOR_SUB1_2(uint16 C1, uint16 C2)
+{
+    uint16 a, b, c, z, c1, c2;
+    c1 = (C1 & MASK1)>>1;
+    c2 = (C2 & MASK1)>>1;
+    c2 = (c2 ^ 0xffff) + 0x0821;
+    a = c1 + c2;
+    b = a & 0x8410;
+    c = b - (b>>4);
+    c = c ^ 0x7bcf;
+    z = (a & c) & MASK2;
+
+    return z;
+}
+#else
 #define COLOR_SUB1_2(C1, C2) \
 GFX.ZERO [(((C1) | RGB_HI_BITS_MASKx2) - \
 	   ((C2) & RGB_REMOVE_LOW_BITS_MASK)) >> 1]
+#endif
 
-typedef void (*NormalTileRenderer) (uint32 Tile, uint32 Offset, 
+typedef void (*NormalTileRenderer) (uint32 Tile, uint32 Offset,
 				    uint32 StartLine, uint32 LineCount);
 typedef void (*ClippedTileRenderer) (uint32 Tile, uint32 Offset,
 				     uint32 StartPixel, uint32 Width,

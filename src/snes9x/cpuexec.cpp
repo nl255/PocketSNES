@@ -135,8 +135,12 @@ void S9xMainLoop_SA1_SFX (void)
 {
     for (;;)
 	{
-    	APU_EXECUTE ();
-    
+ #ifdef __ARM__
+	asm_APU_EXECUTE ();
+#else
+	APU_EXECUTE ();
+#endif
+
     	if (CPU.Flags)
     	{
     	    if (CPU.Flags & NMI_FLAG)
@@ -215,8 +219,12 @@ void S9xMainLoop_SA1_NoSFX (void)
 {
     for (;;)
 	{
-    	APU_EXECUTE ();
-    
+#ifdef __ARM__
+	asm_APU_EXECUTE ();
+#else
+	APU_EXECUTE ();
+#endif
+
     	if (CPU.Flags)
     	{
     	    if (CPU.Flags & NMI_FLAG)

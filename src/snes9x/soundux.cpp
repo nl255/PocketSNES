@@ -563,14 +563,13 @@ void AltDecodeBlock (Channel *ch)
     if ((ch->last_block = filter & 1))
 		ch->loop = (filter & 2) != 0;
 	
-#if (defined (USE_X86_ASM) && (defined (__i386__) || defined (__i486__) ||\
-               defined (__i586__) || defined (__WIN32__) || defined (__DJGPP)))
+#if __ARM__
     int16 *raw = ch->block = ch->decoded;
-	
-    if (Settings.AltSampleDecode == 1)
+
+    // if (Settings.AltSampleDecode == 1)
 		DecodeBlockAsm (compressed, raw, &ch->previous [0], &ch->previous [1]);
-    else
-		DecodeBlockAsm2 (compressed, raw, &ch->previous [0], &ch->previous [1]);
+    // else
+		// DecodeBlockAsm2 (compressed, raw, &ch->previous [0], &ch->previous [1]);
 #else
     int32 out;
     unsigned char shift;

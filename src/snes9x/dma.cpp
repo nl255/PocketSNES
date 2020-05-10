@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -135,23 +135,23 @@ static int S9xCompareSDD1IndexEntries (const void *p1, const void *p2)
 void S9xDoDMA (uint8 Channel)
 {
     uint8 Work;
-	
+
     if (Channel > 7 || CPU.InDMA)
 		return;
-	
+
     CPU.InDMA = TRUE;
     bool8 in_sa1_dma = FALSE;
     uint8 *in_sdd1_dma = NULL;
 	uint8 *spc7110_dma=NULL;
 	bool s7_wrap=false;
     SDMA *d = &DMA[Channel];
-	
+
 
     int count = d->TransferBytes;
-	
+
     if (count == 0)
 		count = 0x10000;
-	
+
     int inc = d->AAddressFixed ? 0 : (!d->AAddressDecrement ? 1 : -1);
 
 	if((d->ABank==0x7E||d->ABank==0x7F)&&d->BAddress==0x80)
@@ -234,7 +234,7 @@ void S9xDoDMA (uint8 Channel)
 		int num_chars = 1 << ((Memory.FillRAM [0x2231] >> 2) & 7);
 		int depth = (Memory.FillRAM [0x2231] & 3) == 0 ? 8 :
 		(Memory.FillRAM [0x2231] & 3) == 1 ? 4 : 2;
-		
+
 		int bytes_per_char = 8 * depth;
 		int bytes_per_line = depth * num_chars;
 		int char_line_bytes = bytes_per_char * num_chars;
@@ -244,22 +244,22 @@ void S9xDoDMA (uint8 Channel)
 		uint8 *p = buffer;
 		uint32 inc = char_line_bytes - (d->AAddress % char_line_bytes);
 		uint32 char_count = inc / bytes_per_char;
-		
+
 		in_sa1_dma = TRUE;
-		
+
 		//printf ("%08x,", base); fflush (stdout);
 		//printf ("depth = %d, count = %d, bytes_per_char = %d, bytes_per_line = %d, num_chars = %d, char_line_bytes = %d\n",
 		//depth, count, bytes_per_char, bytes_per_line, num_chars, char_line_bytes);
 		int i;
-		
+
 		switch (depth)
 		{
 		case 2:
-			for (i = 0; i < count; i += inc, base += char_line_bytes, 
+			for (i = 0; i < count; i += inc, base += char_line_bytes,
 				inc = char_line_bytes, char_count = num_chars)
 			{
 				uint8 *line = base + (num_chars - char_count) * 2;
-				for (uint32 j = 0; j < char_count && p - buffer < count; 
+				for (uint32 j = 0; j < char_count && p - buffer < count;
 				j++, line += 2)
 				{
 					uint8 *q = line;
@@ -283,11 +283,11 @@ void S9xDoDMA (uint8 Channel)
 			}
 			break;
 		case 4:
-			for (i = 0; i < count; i += inc, base += char_line_bytes, 
+			for (i = 0; i < count; i += inc, base += char_line_bytes,
 				inc = char_line_bytes, char_count = num_chars)
 			{
 				uint8 *line = base + (num_chars - char_count) * 4;
-				for (uint32 j = 0; j < char_count && p - buffer < count; 
+				for (uint32 j = 0; j < char_count && p - buffer < count;
 				j++, line += 4)
 				{
 					uint8 *q = line;
@@ -312,11 +312,11 @@ void S9xDoDMA (uint8 Channel)
 			}
 			break;
 		case 8:
-			for (i = 0; i < count; i += inc, base += char_line_bytes, 
+			for (i = 0; i < count; i += inc, base += char_line_bytes,
 				inc = char_line_bytes, char_count = num_chars)
 			{
 				uint8 *line = base + (num_chars - char_count) * 8;
-				for (uint32 j = 0; j < char_count && p - buffer < count; 
+				for (uint32 j = 0; j < char_count && p - buffer < count;
 				j++, line += 8)
 				{
 					uint8 *q = line;
@@ -342,7 +342,7 @@ void S9xDoDMA (uint8 Channel)
 			break;
 		}
     }
-	
+
 #ifdef DEBUGGER
     if (Settings.TraceDMA)
     {
@@ -361,16 +361,16 @@ void S9xDoDMA (uint8 Channel)
 
 		else
 			if (d->BAddress == 0x22 || d->BAddress == 0x3b)
-			
+
 				sprintf (String, "%s CGRAM: %02X (%x)", String, PPU.CGADD,
-					PPU.CGFLIP);			
+					PPU.CGFLIP);
 			else
 				if (d->BAddress == 0x04 || d->BAddress == 0x38)
 					sprintf (String, "%s OBJADDR: %04X", String, PPU.OAMAddr);
 				S9xMessage (S9X_TRACE, S9X_DMA_TRACE, String);
     }
 #endif
-	
+
     if (!d->TransferDirection)
     {
 		/* XXX: DMA is potentially broken here for cases where we DMA across
@@ -390,16 +390,16 @@ void S9xDoDMA (uint8 Channel)
 
 		uint8 *base = GetBasePointer ((d->ABank << 16) + d->AAddress);
 		uint16 p = d->AAddress;
-		
+
 		if (!base)
 			base = Memory.ROM;
-		
+
 		if (in_sa1_dma)
 		{
 			base = &Memory.ROM [CMemory::MAX_ROM_SIZE - 0x10000];
 			p = 0;
 		}
-		
+
 		if (in_sdd1_dma)
 		{
 			base = in_sdd1_dma;
@@ -415,7 +415,7 @@ void S9xDoDMA (uint8 Channel)
 		else
 			if (inc < 0)
 				d->AAddress -= count;
-			
+
 			if (d->TransferMode == 0 || d->TransferMode == 2 || d->TransferMode == 6)
 			{
 				switch (d->BAddress)
@@ -524,7 +524,7 @@ void S9xDoDMA (uint8 Channel)
 								Work = *(base + p);
 								REGISTER_2118_linear(Work);
 								p += inc;
-								
+
 								Work = *(base + p);
 								REGISTER_2119_linear(Work);
 								p += inc;
@@ -545,7 +545,7 @@ void S9xDoDMA (uint8 Channel)
 								Work = *(base + p);
 								REGISTER_2118_tile(Work);
 								p += inc;
-								
+
 								Work = *(base + p);
 								REGISTER_2119_tile(Work);
 								p += inc;
@@ -568,7 +568,7 @@ void S9xDoDMA (uint8 Channel)
 							Work = *(base + p);
 							S9xSetPPU (Work, 0x2100 + d->BAddress);
 							p += inc;
-							
+
 							Work = *(base + p);
 							S9xSetPPU (Work, 0x2101 + d->BAddress);
 							p += inc;
@@ -593,19 +593,19 @@ void S9xDoDMA (uint8 Channel)
 							p += inc;
 							if (count <= 1)
 								break;
-							
+
 							Work = *(base + p);
 							S9xSetPPU (Work, 0x2100 + d->BAddress);
 							p += inc;
 							if (count <= 2)
 								break;
-							
+
 							Work = *(base + p);
 							S9xSetPPU (Work, 0x2101 + d->BAddress);
 							p += inc;
 							if (count <= 3)
 								break;
-							
+
 							Work = *(base + p);
 							S9xSetPPU (Work, 0x2101 + d->BAddress);
 							p += inc;
@@ -623,19 +623,19 @@ void S9xDoDMA (uint8 Channel)
 								p += inc;
 								if (count <= 1)
 									break;
-								
+
 								Work = *(base + p);
 								S9xSetPPU (Work, 0x2101 + d->BAddress);
 								p += inc;
 								if (count <= 2)
 									break;
-								
+
 								Work = *(base + p);
 								S9xSetPPU (Work, 0x2102 + d->BAddress);
 								p += inc;
 								if (count <= 3)
 									break;
-								
+
 								Work = *(base + p);
 								S9xSetPPU (Work, 0x2103 + d->BAddress);
 								p += inc;
@@ -674,7 +674,7 @@ void S9xDoDMA (uint8 Channel)
 				d->AAddress += inc;
 				--count;
 				break;
-				
+
 			case 1:
 			case 5:
 				Work = S9xGetPPU (0x2100 + d->BAddress);
@@ -682,13 +682,13 @@ void S9xDoDMA (uint8 Channel)
 				d->AAddress += inc;
 				if (!--count)
 					break;
-				
+
 				Work = S9xGetPPU (0x2101 + d->BAddress);
 				S9xSetByte (Work, (d->ABank << 16) + d->AAddress);
 				d->AAddress += inc;
 				count--;
 				break;
-				
+
 			case 3:
 			case 7:
 				Work = S9xGetPPU (0x2100 + d->BAddress);
@@ -696,50 +696,50 @@ void S9xDoDMA (uint8 Channel)
 				d->AAddress += inc;
 				if (!--count)
 					break;
-				
+
 				Work = S9xGetPPU (0x2100 + d->BAddress);
 				S9xSetByte (Work, (d->ABank << 16) + d->AAddress);
 				d->AAddress += inc;
 				if (!--count)
 					break;
-				
+
 				Work = S9xGetPPU (0x2101 + d->BAddress);
 				S9xSetByte (Work, (d->ABank << 16) + d->AAddress);
 				d->AAddress += inc;
 				if (!--count)
 					break;
-				
+
 				Work = S9xGetPPU (0x2101 + d->BAddress);
 				S9xSetByte (Work, (d->ABank << 16) + d->AAddress);
 				d->AAddress += inc;
 				count--;
 				break;
-				
+
 			case 4:
 				Work = S9xGetPPU (0x2100 + d->BAddress);
 				S9xSetByte (Work, (d->ABank << 16) + d->AAddress);
 				d->AAddress += inc;
 				if (!--count)
 					break;
-				
+
 				Work = S9xGetPPU (0x2101 + d->BAddress);
 				S9xSetByte (Work, (d->ABank << 16) + d->AAddress);
 				d->AAddress += inc;
 				if (!--count)
 					break;
-				
+
 				Work = S9xGetPPU (0x2102 + d->BAddress);
 				S9xSetByte (Work, (d->ABank << 16) + d->AAddress);
 				d->AAddress += inc;
 				if (!--count)
 					break;
-				
+
 				Work = S9xGetPPU (0x2103 + d->BAddress);
 				S9xSetByte (Work, (d->ABank << 16) + d->AAddress);
 				d->AAddress += inc;
 				count--;
 				break;
-				
+
 			default:
 #ifdef DEBUGGER
 				if (1) //Settings.TraceDMA)
@@ -755,7 +755,7 @@ void S9xDoDMA (uint8 Channel)
 			CHECK_SOUND();
 		} while (count);
     }
-    
+
 #ifdef SPC700_C
     IAPU.APUExecuting = Settings.APUEnabled;
     APU_EXECUTE ();
@@ -778,15 +778,15 @@ update_address:
     // DMA transfer.
     Memory.FillRAM[0x4302 + (Channel << 4)] = (uint8) d->AAddress;
     Memory.FillRAM[0x4303 + (Channel << 4)] = d->AAddress >> 8;
-	
+
     // Secret of the Mana requires that the DMA bytes transfer count be set to
     // zero when DMA has completed.
     Memory.FillRAM [0x4305 + (Channel << 4)] = 0;
     Memory.FillRAM [0x4306 + (Channel << 4)] = 0;
-	
+
     DMA[Channel].IndirectAddress = 0;
     d->TransferBytes = 0;
-    
+
     CPU.InDMA = FALSE;
 
 
@@ -798,11 +798,11 @@ void S9xStartHDMA ()
 		IPPU.HDMA = 0;
     else
 		missing.hdma_this_frame = IPPU.HDMA = Memory.FillRAM [0x420c];
-	
+
 	//per anomie timing post
 	if(IPPU.HDMA!=0)
 		CPU.Cycles+=ONE_CYCLE*3;
-    
+
 	IPPU.HDMAStarted = TRUE;
 
     for (uint8 i = 0; i < 8; i++)
@@ -832,7 +832,7 @@ void S9xTraceSoundDSP (const char *s, int i1 = 0, int i2 = 0, int i3 = 0,
 uint8 S9xDoHDMA (uint8 byte)
 {
     struct SDMA *p = &DMA [0];
-    
+
     int d = 0;
 
 	CPU.InDMA = TRUE;
@@ -890,7 +890,7 @@ uint8 S9xDoHDMA (uint8 byte)
 					p->IndirectBank = p->ABank;
 					p->IndirectAddress = p->Address;
 				}
-				HDMABasePointers [d] = HDMAMemPointers [d] = 
+				HDMABasePointers [d] = HDMAMemPointers [d] =
 					S9xGetMemPointer ((p->IndirectBank << 16) + p->IndirectAddress);
 #ifdef SETA010_HDMA_FROM_CART
 				HDMARawPointers [d] = (p->IndirectBank << 16) + p->IndirectAddress;
@@ -911,7 +911,7 @@ uint8 S9xDoHDMA (uint8 byte)
 #ifdef SETA010_HDMA_FROM_CART
 				HDMARawPointers [d] = (p->IndirectBank << 16) + p->IndirectAddress;
 #endif
-				if (!(HDMABasePointers [d] = HDMAMemPointers [d] = 
+				if (!(HDMABasePointers [d] = HDMAMemPointers [d] =
 					  S9xGetMemPointer ((p->IndirectBank << 16) + p->IndirectAddress)))
 				{
 					/* XXX: Instead of this, goto a slow path that first
@@ -940,7 +940,7 @@ uint8 S9xDoHDMA (uint8 byte)
 			}
 
 #ifdef DEBUGGER
-			if (Settings.TraceSoundDSP && p->FirstLine && 
+			if (Settings.TraceSoundDSP && p->FirstLine &&
 					p->BAddress >= 0x40 && p->BAddress <= 0x43)
 				S9xTraceSoundDSP ("Spooling data!!!\n");
 			if (Settings.TraceHDMA && p->FirstLine)
@@ -1073,7 +1073,7 @@ void S9xResetDMA ()
     {
 		for (d = c; d < c + 12; d++)
 			Memory.FillRAM [d] = 0xff;
-		
+
 		Memory.FillRAM [c + 0xf] = 0xff;
     }
 }

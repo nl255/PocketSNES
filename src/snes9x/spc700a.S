@@ -82,27 +82,27 @@ spc700End:
 
   .ltorg
 
-GetAPUDSP:		
-	ldrb	r1, [spc_ram, #0xf2]		
+GetAPUDSP:
+	ldrb	r1, [spc_ram, #0xf2]
 	mov	r0, #0
-	and	r2, r1, #0X0f	
+	and	r2, r1, #0X0f
 	cmp	r2, #0x08
 	bxeq	lr
 	cmp	r2, #0x09
 	ldrne	r2, .APU_DSP
-	and	r1, r1, #0X7f	
-	ldrneb	r0, [r2, r1]		
-	bxne	lr		
+	and	r1, r1, #0X7f
+	ldrneb	r0, [r2, r1]
+	bxne	lr
 	ldr	r2, .SOUNDDATA_CHANNELS
-	mov	r1, r1, lsr #4		
-	ldr	r0, [r2, r1, asl #8]	
+	mov	r1, r1, lsr #4
+	ldr	r0, [r2, r1, asl #8]
 	add	r1, r2, r1, asl #8
-	cmp	r0, #0		
-	ldrneh	r1, [r1, #0x48]		
-	bxeq	lr		
+	cmp	r0, #0
+	ldrneh	r1, [r1, #0x48]
+	bxeq	lr
 	and	r0, r1, #0xff
 	orr	r0, r0, r1, lsr #8
-	bx	lr		
+	bx	lr
 .APU_DSP:
 	.long	APU + 0x0b
 .SOUNDDATA_CHANNELS:
@@ -136,34 +136,34 @@ Apu01_13:
 Apu02_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x01
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -173,14 +173,14 @@ Apu02_13:
 Apu03_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -195,14 +195,14 @@ Apu03_13:
 Apu04_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -217,15 +217,15 @@ Apu05_13:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -239,14 +239,14 @@ Apu05_13:
 Apu06_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -265,15 +265,15 @@ Apu07_13:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -298,47 +298,47 @@ Apu08_13:
 Apu09_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
    orr  r0, r0, r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#78
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -351,15 +351,15 @@ Apu0A_13:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -374,14 +374,14 @@ Apu0A_13:
 Apu0B_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -389,24 +389,24 @@ Apu0B_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -419,15 +419,15 @@ Apu0C_13:
   add   r0,r0,r14,lsl #8
   mov r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   tst   r0,#0x80
   orrne spc_p,spc_p,#flag_c
@@ -436,23 +436,23 @@ Apu0C_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -482,38 +482,38 @@ Apu0E_13:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r2,r0,spc_ya
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r2,lsl #24
   orr   r0,r0,spc_ya
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#78
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -578,34 +578,34 @@ Apu11_13:
 Apu12_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x01
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -615,14 +615,14 @@ Apu12_13:
 Apu13_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -638,14 +638,14 @@ Apu14_13:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -661,15 +661,15 @@ Apu15_13:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -686,15 +686,15 @@ Apu16_13:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -713,15 +713,15 @@ Apu17_13:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -735,37 +735,37 @@ Apu17_13:
 Apu18_13:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#1
   orr   r0,r0,r1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -775,47 +775,47 @@ Apu18_13:
 Apu19_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0, r3, r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -825,26 +825,26 @@ Apu19_13:
 Apu1A_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   sub   r0,r1,#1
   and   spc_p,spc_p,#0xff
@@ -853,44 +853,44 @@ Apu1A_13:
   orrne spc_p,spc_p,#0x01000000
   stmfd sp!,{r0}
   ldrb  r1,[spc_pc]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+2:
+	strb	r0, [r2, r1]
+1:
   ldmfd sp!,{r0}
   mov   r0,r0,lsr #8
   ldrb  r1,[spc_pc],#1
   add   r1,r1,#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#78
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -902,14 +902,14 @@ Apu1B_13:
   add   r0,r0,spc_x
   mov r3, r0
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -917,24 +917,24 @@ Apu1B_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -972,15 +972,15 @@ Apu1E_13:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   subs  r14,spc_x,r0
   orrcs spc_p,spc_p,#flag_c
@@ -1001,29 +1001,29 @@ Apu1F_13:
   sub   sp,sp,#8
   str   r0,[sp,#4]
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   str   r0,[sp]
   ldr   r0,[sp,#4]
   add   r0,r0,#1
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   ldr   r1,[sp],#8
   orr   r0,r1,r0,lsl #8
@@ -1062,34 +1062,34 @@ Apu21_13:
 Apu22_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x02
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -1099,14 +1099,14 @@ Apu22_13:
 Apu23_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x02
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -1121,14 +1121,14 @@ Apu23_13:
 Apu24_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -1144,15 +1144,15 @@ Apu25_13:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -1167,14 +1167,14 @@ Apu25_13:
 Apu26_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -1194,15 +1194,15 @@ Apu27_13:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -1229,47 +1229,47 @@ Apu28_13:
 Apu29_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#78
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -1282,15 +1282,15 @@ Apu2A_13:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -1305,14 +1305,14 @@ Apu2A_13:
 Apu2B_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r0,r0,lsl #1
   tst   spc_p,#flag_c
   orrne r0,r0,#1
@@ -1322,24 +1322,24 @@ Apu2B_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -1352,15 +1352,15 @@ Apu2C_13:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r0,r0,lsl #1
   tst   spc_p,#flag_c
@@ -1371,23 +1371,23 @@ Apu2C_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -1407,14 +1407,14 @@ Apu2D_13:
 Apu2E_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff
   cmp   r0,r1
   addeq spc_pc,spc_pc,#1
@@ -1467,34 +1467,34 @@ Apu31_13:
 Apu32_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x02
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -1504,14 +1504,14 @@ Apu32_13:
 Apu33_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x02
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -1527,14 +1527,14 @@ Apu34_13:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -1551,15 +1551,15 @@ Apu35_13:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -1577,15 +1577,15 @@ Apu36_13:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -1605,15 +1605,15 @@ Apu37_13:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -1628,37 +1628,37 @@ Apu37_13:
 Apu38_13:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   and   r0,r0,r1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -1668,47 +1668,47 @@ Apu38_13:
 Apu39_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -1718,26 +1718,26 @@ Apu39_13:
 Apu3A_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   add   r0,r1,#1
   and   spc_p,spc_p,#0xff
@@ -1746,44 +1746,44 @@ Apu3A_13:
   orrne spc_p,spc_p,#0x01000000
   stmfd sp!,{r0}
   ldrb  r1,[spc_pc]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+2:
+	strb	r0, [r2, r1]
+1:
   ldmfd sp!,{r0}
   mov   r0,r0,lsr #8
   ldrb  r1,[spc_pc],#1
   add   r1,r1,#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#78
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -1794,14 +1794,14 @@ Apu3B_13:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r0,r0,lsl #1
   tst   spc_p,#flag_c
   orrne r0,r0,#1
@@ -1812,24 +1812,24 @@ Apu3B_13:
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -1869,14 +1869,14 @@ Apu3D_13:
 Apu3E_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   subs  r14,spc_x,r0
   orrcs spc_p,spc_p,#flag_c
   biccc spc_p,spc_p,#flag_c
@@ -1934,34 +1934,34 @@ Apu41_13:
 Apu42_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x04
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -1971,14 +1971,14 @@ Apu42_13:
 Apu43_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x04
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -1993,14 +1993,14 @@ Apu43_13:
 Apu44_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -2015,15 +2015,15 @@ Apu45_13:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -2037,14 +2037,14 @@ Apu45_13:
 Apu46_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -2063,15 +2063,15 @@ Apu47_13:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -2096,47 +2096,47 @@ Apu48_13:
 Apu49_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#78
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -2149,15 +2149,15 @@ Apu4A_13:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -2172,14 +2172,14 @@ Apu4A_13:
 Apu4B_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -2187,24 +2187,24 @@ Apu4B_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -2217,15 +2217,15 @@ Apu4C_13:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   tst   r0,#0x01
   orrne spc_p,spc_p,#flag_c
@@ -2234,23 +2234,23 @@ Apu4C_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -2273,38 +2273,38 @@ Apu4E_13:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r2,r0,spc_ya
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r2,lsl #24
   bic   r0,r0,spc_ya
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#78
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -2358,34 +2358,34 @@ Apu51_13:
 Apu52_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x04
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -2395,14 +2395,14 @@ Apu52_13:
 Apu53_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x04
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -2418,14 +2418,14 @@ Apu54_13:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -2441,15 +2441,15 @@ Apu55_13:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -2466,15 +2466,15 @@ Apu56_13:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -2493,15 +2493,15 @@ Apu57_13:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -2515,37 +2515,37 @@ Apu57_13:
 Apu58_13:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   eor   r0,r0,r1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -2555,47 +2555,47 @@ Apu58_13:
 Apu59_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -2605,26 +2605,26 @@ Apu59_13:
 Apu5A_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc],#1
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   subs  r0,spc_ya,r1
   orrge spc_p,spc_p,#flag_c
@@ -2643,14 +2643,14 @@ Apu5B_13:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -2659,24 +2659,24 @@ Apu5B_13:
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -2714,15 +2714,15 @@ Apu5E_13:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1,spc_ya,lsr #8
   subs  r14,r1,r0
@@ -2774,34 +2774,34 @@ Apu61_13:
 Apu62_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x08
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -2811,14 +2811,14 @@ Apu62_13:
 Apu63_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x08
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -2833,14 +2833,14 @@ Apu63_13:
 Apu64_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
   orrcs spc_p,spc_p,#flag_c
@@ -2858,15 +2858,15 @@ Apu65_13:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -2883,14 +2883,14 @@ Apu65_13:
 Apu66_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
   orrcs spc_p,spc_p,#flag_c
@@ -2912,15 +2912,15 @@ Apu67_13:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -2951,25 +2951,25 @@ Apu68_13:
 Apu69_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_x,spc_x,r0,lsl #24
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r1,spc_x,lsr #24
   subs  r14,r0,r1
   orrcs spc_p,spc_p,#flag_c
@@ -2989,15 +2989,15 @@ Apu6A_13:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -3012,14 +3012,14 @@ Apu6A_13:
 Apu6B_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   spc_p,#flag_c
   orrne r0,r0,#0x100
   movs  r0,r0,lsr #1
@@ -3028,24 +3028,24 @@ Apu6B_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -3058,15 +3058,15 @@ Apu6C_13:
   add   r0,r0,r14,lsl #8
   mov r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   tst   spc_p,#flag_c
   orrne r0,r0,#0x100
@@ -3076,23 +3076,23 @@ Apu6C_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -3113,14 +3113,14 @@ Apu6D_13:
 Apu6E_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#1
   sub   r0,r0,#1
   tst   r0,r0
@@ -3128,24 +3128,24 @@ Apu6E_13:
   ldrnesb r2,[spc_pc],#1
   addne spc_pc,spc_pc,r2
   subne cycles,cycles,#26
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -3196,34 +3196,34 @@ Apu71_13:
 Apu72_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x08
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -3233,14 +3233,14 @@ Apu72_13:
 Apu73_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x08
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -3256,14 +3256,14 @@ Apu74_13:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
   orrcs spc_p,spc_p,#flag_c
@@ -3282,15 +3282,15 @@ Apu75_13:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -3310,15 +3310,15 @@ Apu76_13:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -3340,15 +3340,15 @@ Apu77_13:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -3365,14 +3365,14 @@ Apu77_13:
 Apu78_13:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   subs  r14,r0,r1
   orrcs spc_p,spc_p,#flag_c
@@ -3388,25 +3388,25 @@ Apu78_13:
 Apu79_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_x,spc_x,r0,lsl #24
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r1,spc_x,lsr #24
   subs  r14,r1,r0
   orrcs spc_p,spc_p,#flag_c
@@ -3423,26 +3423,26 @@ Apu79_13:
 Apu7A_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc],#1
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   add   r0,spc_ya,r1
   movs  r2,r0,lsr #16
@@ -3475,14 +3475,14 @@ Apu7B_13:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   spc_p,#flag_c
   orrne r0,r0,#0x100
   movs  r0,r0,lsr #1
@@ -3492,24 +3492,24 @@ Apu7B_13:
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -3547,14 +3547,14 @@ Apu7D_13:
 Apu7E_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r1,spc_ya,lsr #8
   subs  r14,r1,r0
   orrcs spc_p,spc_p,#flag_c
@@ -3617,34 +3617,34 @@ Apu81_13:
 Apu82_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x10
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -3654,14 +3654,14 @@ Apu82_13:
 Apu83_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x10
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -3676,14 +3676,14 @@ Apu83_13:
 Apu84_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   eor   r2,spc_ya,r0
@@ -3716,15 +3716,15 @@ Apu85_13:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -3756,14 +3756,14 @@ Apu85_13:
 Apu86_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   eor   r2,spc_ya,r0
@@ -3800,15 +3800,15 @@ Apu87_13:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -3869,25 +3869,25 @@ Apu88_13:
 Apu89_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r2,r0,r3
   movs  r14, spc_p, lsr #1
   adc   r0, r0, r3
@@ -3906,24 +3906,24 @@ Apu89_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#78
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -3936,15 +3936,15 @@ Apu8A_13:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -3959,36 +3959,36 @@ Apu8A_13:
 Apu8B_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   sub   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -4001,37 +4001,37 @@ Apu8C_13:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   sub   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -4070,24 +4070,24 @@ Apu8E_13:
 Apu8F_13:
   ldrb  r0,[spc_pc],#1
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -4125,34 +4125,34 @@ Apu91_13:
 Apu92_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x10
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -4162,14 +4162,14 @@ Apu92_13:
 Apu93_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x10
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -4185,14 +4185,14 @@ Apu94_13:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   eor   r2,spc_ya,r0
@@ -4226,15 +4226,15 @@ Apu95_13:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -4269,15 +4269,15 @@ Apu96_13:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -4314,15 +4314,15 @@ Apu97_13:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -4354,14 +4354,14 @@ Apu97_13:
 Apu98_13:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   eor   r2,r0,r1
   movs  r14, spc_p, lsr #1
@@ -4381,24 +4381,24 @@ Apu98_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -4408,25 +4408,25 @@ Apu98_13:
 Apu99_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r2,r0,r3
   movs  r14, spc_p, lsr #1
   adc   r0, r0, r3
@@ -4445,24 +4445,24 @@ Apu99_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -4472,26 +4472,26 @@ Apu99_13:
 Apu9A_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc],#1
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   subs  r0,spc_ya,r1
   orrge spc_p,spc_p,#flag_c
@@ -4523,37 +4523,37 @@ Apu9B_13:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   sub   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -4665,34 +4665,34 @@ ApuA1_13:
 ApuA2_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x20
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -4702,14 +4702,14 @@ ApuA2_13:
 ApuA3_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x20
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -4724,14 +4724,14 @@ ApuA3_13:
 ApuA4_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   movs  r14,spc_p,lsr #1
@@ -4764,15 +4764,15 @@ ApuA5_13:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -4804,14 +4804,14 @@ ApuA5_13:
 ApuA6_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   movs  r14,spc_p,lsr #1
@@ -4848,15 +4848,15 @@ ApuA7_13:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -4917,25 +4917,25 @@ ApuA8_13:
 ApuA9_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   movs  r14,spc_p,lsr #1
   sbcs  r2,r0,r3
   orrge spc_p,spc_p,#flag_c
@@ -4954,24 +4954,24 @@ ApuA9_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#78
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -4984,15 +4984,15 @@ ApuAA_13:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -5008,36 +5008,36 @@ ApuAA_13:
 ApuAB_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   add   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5050,37 +5050,37 @@ ApuAC_13:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   add   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5116,24 +5116,24 @@ ApuAE_13:
 ApuAF_13:
   mov   r0,spc_ya
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   add   spc_x,spc_x,#1
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
@@ -5173,34 +5173,34 @@ ApuB1_13:
 ApuB2_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x20
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5210,14 +5210,14 @@ ApuB2_13:
 ApuB3_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x20
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -5233,14 +5233,14 @@ ApuB4_13:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   movs  r14,spc_p,lsr #1
@@ -5274,15 +5274,15 @@ ApuB5_13:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -5317,15 +5317,15 @@ ApuB6_13:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -5362,15 +5362,15 @@ ApuB7_13:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -5402,14 +5402,14 @@ ApuB7_13:
 ApuB8_13:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   movs  r14,spc_p,lsr #1
   sbcs  r2,r0,r1
@@ -5429,24 +5429,24 @@ ApuB8_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5456,25 +5456,25 @@ ApuB8_13:
 ApuB9_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   movs  r14,spc_p,lsr #1
   sbcs  r2,r0,r3
   orrge spc_p,spc_p,#flag_c
@@ -5493,24 +5493,24 @@ ApuB9_13:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5520,26 +5520,26 @@ ApuB9_13:
 ApuBA_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1, [spc_pc],#1
   mov   spc_ya, r0
   add   r0, r1, #1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0,lsl #8
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #16
@@ -5555,37 +5555,37 @@ ApuBB_13:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   add   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5644,14 +5644,14 @@ ApuBE_13:
 ApuBF_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   add   spc_x,spc_x,#1
@@ -5691,34 +5691,34 @@ ApuC1_13:
 ApuC2_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x40
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5728,14 +5728,14 @@ ApuC2_13:
 ApuC3_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x40
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -5750,24 +5750,24 @@ ApuC3_13:
 ApuC4_13:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5779,23 +5779,23 @@ ApuC5_13:
   ldrb  r14,[spc_pc],#1
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5805,24 +5805,24 @@ ApuC5_13:
 ApuC6_13:
   mov   r0,spc_ya
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5838,23 +5838,23 @@ ApuC7_13:
   ldrb  r14,[r14,#1]
   orr   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#91
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5879,23 +5879,23 @@ ApuC9_13:
   ldrb  r14,[spc_pc],#1
   add   r1,r1,r14,lsl #8
   mov   r0,spc_x
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5908,15 +5908,15 @@ ApuCA_13:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r2,#1
@@ -5925,23 +5925,23 @@ ApuCA_13:
   orrne r0,r0,r2
   biceq r0,r0,r2
   bic   r1, r3, #0xe000
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#78
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5951,24 +5951,24 @@ ApuCA_13:
 ApuCB_13:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya,lsr #8
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -5980,23 +5980,23 @@ ApuCC_13:
   ldrb  r14,[spc_pc],#1
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya,lsr #8
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6068,34 +6068,34 @@ ApuD1_13:
 ApuD2_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x40
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6105,14 +6105,14 @@ ApuD2_13:
 ApuD3_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x40
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -6128,24 +6128,24 @@ ApuD4_13:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6158,23 +6158,23 @@ ApuD5_13:
   add   r1,r1,spc_x
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#78
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6187,23 +6187,23 @@ ApuD6_13:
   add   r1,r1,spc_ya, lsr #8
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#78
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6218,23 +6218,23 @@ ApuD7_13:
   add   r1,r1,spc_ya,lsr #8
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#91
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6244,24 +6244,24 @@ ApuD7_13:
 ApuD8_13:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6272,24 +6272,24 @@ ApuD9_13:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_x
   add   r1,r1,spc_ya,lsr #8
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6299,43 +6299,43 @@ ApuD9_13:
 ApuDA_13:
   ldrb  r1,[spc_pc]
   mov   r0,spc_ya
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+2:
+	strb	r0, [r2, r1]
+1:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya,lsr #8
   add   r1,r1,#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6346,24 +6346,24 @@ ApuDB_13:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya,lsr #8
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6399,14 +6399,14 @@ ApuDE_13:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff
   cmp   r0,r1
   addeq spc_pc,spc_pc,#1
@@ -6480,34 +6480,34 @@ ApuE1_13:
 ApuE2_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x80
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6517,14 +6517,14 @@ ApuE2_13:
 ApuE3_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -6539,14 +6539,14 @@ ApuE3_13:
 ApuE4_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -6562,15 +6562,15 @@ ApuE5_13:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -6585,14 +6585,14 @@ ApuE5_13:
 ApuE6_13:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -6612,15 +6612,15 @@ ApuE7_13:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -6649,15 +6649,15 @@ ApuE9_13:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   spc_x,r0
   and   spc_p,spc_p,#0xff
@@ -6674,38 +6674,38 @@ ApuEA_13:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r2,#1
   mov   r2,r2,lsl r1
   eor   r0,r0,r2
   bic   r1, r3, #0xe000
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6715,14 +6715,14 @@ ApuEA_13:
 ApuEB_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff
   orr   spc_ya,spc_ya,r0,lsl #8
   and   spc_p,spc_p,#0xff
@@ -6738,15 +6738,15 @@ ApuEC_13:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff
   orr   spc_ya,spc_ya,r0,lsl #8
@@ -6787,7 +6787,7 @@ ApuEF_13:
   ldrge  pc,[opcodes,opcode,lsl #2]
   b      spc700End
 5001:
-	.long	CPU	
+	.long	CPU
   subs   cycles,cycles,#39
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6825,34 +6825,34 @@ ApuF1_13:
 ApuF2_13:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x80
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#52
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -6862,14 +6862,14 @@ ApuF2_13:
 ApuF3_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -6885,14 +6885,14 @@ ApuF4_13:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -6909,15 +6909,15 @@ ApuF5_13:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -6935,15 +6935,15 @@ ApuF6_13:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -6963,15 +6963,15 @@ ApuF7_13:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -6986,14 +6986,14 @@ ApuF7_13:
 ApuF8_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   spc_x,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_x,lsl #24
@@ -7007,14 +7007,14 @@ ApuF9_13:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   spc_x,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_x,lsl #24
@@ -7027,33 +7027,33 @@ ApuF9_13:
 ApuFA_13:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#65
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -7064,14 +7064,14 @@ ApuFB_13:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff
   orr   spc_ya,spc_ya,r0,lsl #8
   and   spc_p,spc_p,#0xff
@@ -7131,7 +7131,7 @@ ApuFF_13:
   ldrge  pc,[opcodes,opcode,lsl #2]
   b      spc700End
 5001:
-	.long	CPU	
+	.long	CPU
   subs   cycles,cycles,#39
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -7200,34 +7200,34 @@ Apu01_14:
 Apu02_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x01
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -7237,14 +7237,14 @@ Apu02_14:
 Apu03_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -7259,14 +7259,14 @@ Apu03_14:
 Apu04_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -7281,15 +7281,15 @@ Apu05_14:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -7303,14 +7303,14 @@ Apu05_14:
 Apu06_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -7329,15 +7329,15 @@ Apu07_14:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -7362,47 +7362,47 @@ Apu08_14:
 Apu09_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
    orr  r0, r0, r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -7415,15 +7415,15 @@ Apu0A_14:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -7438,14 +7438,14 @@ Apu0A_14:
 Apu0B_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -7453,24 +7453,24 @@ Apu0B_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -7483,15 +7483,15 @@ Apu0C_14:
   add   r0,r0,r14,lsl #8
   mov r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   tst   r0,#0x80
   orrne spc_p,spc_p,#flag_c
@@ -7500,23 +7500,23 @@ Apu0C_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -7546,38 +7546,38 @@ Apu0E_14:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r2,r0,spc_ya
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r2,lsl #24
   orr   r0,r0,spc_ya
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -7642,34 +7642,34 @@ Apu11_14:
 Apu12_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x01
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -7679,14 +7679,14 @@ Apu12_14:
 Apu13_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -7702,14 +7702,14 @@ Apu14_14:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -7725,15 +7725,15 @@ Apu15_14:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -7750,15 +7750,15 @@ Apu16_14:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -7777,15 +7777,15 @@ Apu17_14:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -7799,37 +7799,37 @@ Apu17_14:
 Apu18_14:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#1
   orr   r0,r0,r1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -7839,47 +7839,47 @@ Apu18_14:
 Apu19_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0, r3, r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -7889,26 +7889,26 @@ Apu19_14:
 Apu1A_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   sub   r0,r1,#1
   and   spc_p,spc_p,#0xff
@@ -7917,44 +7917,44 @@ Apu1A_14:
   orrne spc_p,spc_p,#0x01000000
   stmfd sp!,{r0}
   ldrb  r1,[spc_pc]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+2:
+	strb	r0, [r2, r1]
+1:
   ldmfd sp!,{r0}
   mov   r0,r0,lsr #8
   ldrb  r1,[spc_pc],#1
   add   r1,r1,#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -7966,14 +7966,14 @@ Apu1B_14:
   add   r0,r0,spc_x
   mov r3, r0
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -7981,24 +7981,24 @@ Apu1B_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -8036,15 +8036,15 @@ Apu1E_14:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   subs  r14,spc_x,r0
   orrcs spc_p,spc_p,#flag_c
@@ -8065,29 +8065,29 @@ Apu1F_14:
   sub   sp,sp,#8
   str   r0,[sp,#4]
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   str   r0,[sp]
   ldr   r0,[sp,#4]
   add   r0,r0,#1
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   ldr   r1,[sp],#8
   orr   r0,r1,r0,lsl #8
@@ -8126,34 +8126,34 @@ Apu21_14:
 Apu22_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x02
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -8163,14 +8163,14 @@ Apu22_14:
 Apu23_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x02
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -8185,14 +8185,14 @@ Apu23_14:
 Apu24_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -8208,15 +8208,15 @@ Apu25_14:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -8231,14 +8231,14 @@ Apu25_14:
 Apu26_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -8258,15 +8258,15 @@ Apu27_14:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -8293,47 +8293,47 @@ Apu28_14:
 Apu29_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -8346,15 +8346,15 @@ Apu2A_14:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -8369,14 +8369,14 @@ Apu2A_14:
 Apu2B_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r0,r0,lsl #1
   tst   spc_p,#flag_c
   orrne r0,r0,#1
@@ -8386,24 +8386,24 @@ Apu2B_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -8416,15 +8416,15 @@ Apu2C_14:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r0,r0,lsl #1
   tst   spc_p,#flag_c
@@ -8435,23 +8435,23 @@ Apu2C_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -8471,14 +8471,14 @@ Apu2D_14:
 Apu2E_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff
   cmp   r0,r1
   addeq spc_pc,spc_pc,#1
@@ -8531,34 +8531,34 @@ Apu31_14:
 Apu32_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x02
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -8568,14 +8568,14 @@ Apu32_14:
 Apu33_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x02
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -8591,14 +8591,14 @@ Apu34_14:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -8615,15 +8615,15 @@ Apu35_14:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -8641,15 +8641,15 @@ Apu36_14:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -8669,15 +8669,15 @@ Apu37_14:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -8692,37 +8692,37 @@ Apu37_14:
 Apu38_14:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   and   r0,r0,r1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -8732,47 +8732,47 @@ Apu38_14:
 Apu39_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -8782,26 +8782,26 @@ Apu39_14:
 Apu3A_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   add   r0,r1,#1
   and   spc_p,spc_p,#0xff
@@ -8810,44 +8810,44 @@ Apu3A_14:
   orrne spc_p,spc_p,#0x01000000
   stmfd sp!,{r0}
   ldrb  r1,[spc_pc]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+2:
+	strb	r0, [r2, r1]
+1:
   ldmfd sp!,{r0}
   mov   r0,r0,lsr #8
   ldrb  r1,[spc_pc],#1
   add   r1,r1,#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -8858,14 +8858,14 @@ Apu3B_14:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r0,r0,lsl #1
   tst   spc_p,#flag_c
   orrne r0,r0,#1
@@ -8876,24 +8876,24 @@ Apu3B_14:
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -8933,14 +8933,14 @@ Apu3D_14:
 Apu3E_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   subs  r14,spc_x,r0
   orrcs spc_p,spc_p,#flag_c
   biccc spc_p,spc_p,#flag_c
@@ -8998,34 +8998,34 @@ Apu41_14:
 Apu42_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x04
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -9035,14 +9035,14 @@ Apu42_14:
 Apu43_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x04
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -9057,14 +9057,14 @@ Apu43_14:
 Apu44_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -9079,15 +9079,15 @@ Apu45_14:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -9101,14 +9101,14 @@ Apu45_14:
 Apu46_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -9127,15 +9127,15 @@ Apu47_14:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -9160,47 +9160,47 @@ Apu48_14:
 Apu49_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -9213,15 +9213,15 @@ Apu4A_14:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -9236,14 +9236,14 @@ Apu4A_14:
 Apu4B_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -9251,24 +9251,24 @@ Apu4B_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -9281,15 +9281,15 @@ Apu4C_14:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   tst   r0,#0x01
   orrne spc_p,spc_p,#flag_c
@@ -9298,23 +9298,23 @@ Apu4C_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -9337,38 +9337,38 @@ Apu4E_14:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r2,r0,spc_ya
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r2,lsl #24
   bic   r0,r0,spc_ya
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -9422,34 +9422,34 @@ Apu51_14:
 Apu52_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x04
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -9459,14 +9459,14 @@ Apu52_14:
 Apu53_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x04
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -9482,14 +9482,14 @@ Apu54_14:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -9505,15 +9505,15 @@ Apu55_14:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -9530,15 +9530,15 @@ Apu56_14:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -9557,15 +9557,15 @@ Apu57_14:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -9579,37 +9579,37 @@ Apu57_14:
 Apu58_14:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   eor   r0,r0,r1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -9619,47 +9619,47 @@ Apu58_14:
 Apu59_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -9669,26 +9669,26 @@ Apu59_14:
 Apu5A_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc],#1
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   subs  r0,spc_ya,r1
   orrge spc_p,spc_p,#flag_c
@@ -9707,14 +9707,14 @@ Apu5B_14:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -9723,24 +9723,24 @@ Apu5B_14:
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -9778,15 +9778,15 @@ Apu5E_14:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1,spc_ya,lsr #8
   subs  r14,r1,r0
@@ -9838,34 +9838,34 @@ Apu61_14:
 Apu62_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x08
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -9875,14 +9875,14 @@ Apu62_14:
 Apu63_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x08
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -9897,14 +9897,14 @@ Apu63_14:
 Apu64_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
   orrcs spc_p,spc_p,#flag_c
@@ -9922,15 +9922,15 @@ Apu65_14:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -9947,14 +9947,14 @@ Apu65_14:
 Apu66_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
   orrcs spc_p,spc_p,#flag_c
@@ -9976,15 +9976,15 @@ Apu67_14:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -10015,25 +10015,25 @@ Apu68_14:
 Apu69_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_x,spc_x,r0,lsl #24
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r1,spc_x,lsr #24
   subs  r14,r0,r1
   orrcs spc_p,spc_p,#flag_c
@@ -10053,15 +10053,15 @@ Apu6A_14:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -10076,14 +10076,14 @@ Apu6A_14:
 Apu6B_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   spc_p,#flag_c
   orrne r0,r0,#0x100
   movs  r0,r0,lsr #1
@@ -10092,24 +10092,24 @@ Apu6B_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -10122,15 +10122,15 @@ Apu6C_14:
   add   r0,r0,r14,lsl #8
   mov r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   tst   spc_p,#flag_c
   orrne r0,r0,#0x100
@@ -10140,23 +10140,23 @@ Apu6C_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -10177,14 +10177,14 @@ Apu6D_14:
 Apu6E_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#1
   sub   r0,r0,#1
   tst   r0,r0
@@ -10192,24 +10192,24 @@ Apu6E_14:
   ldrnesb r2,[spc_pc],#1
   addne spc_pc,spc_pc,r2
   subne cycles,cycles,#28
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -10260,34 +10260,34 @@ Apu71_14:
 Apu72_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x08
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -10297,14 +10297,14 @@ Apu72_14:
 Apu73_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x08
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -10320,14 +10320,14 @@ Apu74_14:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
   orrcs spc_p,spc_p,#flag_c
@@ -10346,15 +10346,15 @@ Apu75_14:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -10374,15 +10374,15 @@ Apu76_14:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -10404,15 +10404,15 @@ Apu77_14:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -10429,14 +10429,14 @@ Apu77_14:
 Apu78_14:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   subs  r14,r0,r1
   orrcs spc_p,spc_p,#flag_c
@@ -10452,25 +10452,25 @@ Apu78_14:
 Apu79_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_x,spc_x,r0,lsl #24
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r1,spc_x,lsr #24
   subs  r14,r1,r0
   orrcs spc_p,spc_p,#flag_c
@@ -10487,26 +10487,26 @@ Apu79_14:
 Apu7A_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc],#1
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   add   r0,spc_ya,r1
   movs  r2,r0,lsr #16
@@ -10539,14 +10539,14 @@ Apu7B_14:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   spc_p,#flag_c
   orrne r0,r0,#0x100
   movs  r0,r0,lsr #1
@@ -10556,24 +10556,24 @@ Apu7B_14:
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -10611,14 +10611,14 @@ Apu7D_14:
 Apu7E_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r1,spc_ya,lsr #8
   subs  r14,r1,r0
   orrcs spc_p,spc_p,#flag_c
@@ -10681,34 +10681,34 @@ Apu81_14:
 Apu82_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x10
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -10718,14 +10718,14 @@ Apu82_14:
 Apu83_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x10
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -10740,14 +10740,14 @@ Apu83_14:
 Apu84_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   eor   r2,spc_ya,r0
@@ -10780,15 +10780,15 @@ Apu85_14:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -10820,14 +10820,14 @@ Apu85_14:
 Apu86_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   eor   r2,spc_ya,r0
@@ -10864,15 +10864,15 @@ Apu87_14:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -10933,25 +10933,25 @@ Apu88_14:
 Apu89_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r2,r0,r3
   movs  r14, spc_p, lsr #1
   adc   r0, r0, r3
@@ -10970,24 +10970,24 @@ Apu89_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -11000,15 +11000,15 @@ Apu8A_14:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -11023,36 +11023,36 @@ Apu8A_14:
 Apu8B_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   sub   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -11065,37 +11065,37 @@ Apu8C_14:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   sub   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -11134,24 +11134,24 @@ Apu8E_14:
 Apu8F_14:
   ldrb  r0,[spc_pc],#1
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -11189,34 +11189,34 @@ Apu91_14:
 Apu92_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x10
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -11226,14 +11226,14 @@ Apu92_14:
 Apu93_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x10
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -11249,14 +11249,14 @@ Apu94_14:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   eor   r2,spc_ya,r0
@@ -11290,15 +11290,15 @@ Apu95_14:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -11333,15 +11333,15 @@ Apu96_14:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -11378,15 +11378,15 @@ Apu97_14:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -11418,14 +11418,14 @@ Apu97_14:
 Apu98_14:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   eor   r2,r0,r1
   movs  r14, spc_p, lsr #1
@@ -11445,24 +11445,24 @@ Apu98_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -11472,25 +11472,25 @@ Apu98_14:
 Apu99_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r2,r0,r3
   movs  r14, spc_p, lsr #1
   adc   r0, r0, r3
@@ -11509,24 +11509,24 @@ Apu99_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -11536,26 +11536,26 @@ Apu99_14:
 Apu9A_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc],#1
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   subs  r0,spc_ya,r1
   orrge spc_p,spc_p,#flag_c
@@ -11587,37 +11587,37 @@ Apu9B_14:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   sub   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -11729,34 +11729,34 @@ ApuA1_14:
 ApuA2_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x20
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -11766,14 +11766,14 @@ ApuA2_14:
 ApuA3_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x20
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -11788,14 +11788,14 @@ ApuA3_14:
 ApuA4_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   movs  r14,spc_p,lsr #1
@@ -11828,15 +11828,15 @@ ApuA5_14:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -11868,14 +11868,14 @@ ApuA5_14:
 ApuA6_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   movs  r14,spc_p,lsr #1
@@ -11912,15 +11912,15 @@ ApuA7_14:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -11981,25 +11981,25 @@ ApuA8_14:
 ApuA9_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   movs  r14,spc_p,lsr #1
   sbcs  r2,r0,r3
   orrge spc_p,spc_p,#flag_c
@@ -12018,24 +12018,24 @@ ApuA9_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12048,15 +12048,15 @@ ApuAA_14:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -12072,36 +12072,36 @@ ApuAA_14:
 ApuAB_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   add   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12114,37 +12114,37 @@ ApuAC_14:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   add   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12180,24 +12180,24 @@ ApuAE_14:
 ApuAF_14:
   mov   r0,spc_ya
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   add   spc_x,spc_x,#1
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
@@ -12237,34 +12237,34 @@ ApuB1_14:
 ApuB2_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x20
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12274,14 +12274,14 @@ ApuB2_14:
 ApuB3_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x20
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -12297,14 +12297,14 @@ ApuB4_14:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   movs  r14,spc_p,lsr #1
@@ -12338,15 +12338,15 @@ ApuB5_14:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -12381,15 +12381,15 @@ ApuB6_14:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -12426,15 +12426,15 @@ ApuB7_14:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -12466,14 +12466,14 @@ ApuB7_14:
 ApuB8_14:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   movs  r14,spc_p,lsr #1
   sbcs  r2,r0,r1
@@ -12493,24 +12493,24 @@ ApuB8_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12520,25 +12520,25 @@ ApuB8_14:
 ApuB9_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   movs  r14,spc_p,lsr #1
   sbcs  r2,r0,r3
   orrge spc_p,spc_p,#flag_c
@@ -12557,24 +12557,24 @@ ApuB9_14:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12584,26 +12584,26 @@ ApuB9_14:
 ApuBA_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1, [spc_pc],#1
   mov   spc_ya, r0
   add   r0, r1, #1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0,lsl #8
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #16
@@ -12619,37 +12619,37 @@ ApuBB_14:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   add   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12708,14 +12708,14 @@ ApuBE_14:
 ApuBF_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   add   spc_x,spc_x,#1
@@ -12755,34 +12755,34 @@ ApuC1_14:
 ApuC2_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x40
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12792,14 +12792,14 @@ ApuC2_14:
 ApuC3_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x40
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -12814,24 +12814,24 @@ ApuC3_14:
 ApuC4_14:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12843,23 +12843,23 @@ ApuC5_14:
   ldrb  r14,[spc_pc],#1
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12869,24 +12869,24 @@ ApuC5_14:
 ApuC6_14:
   mov   r0,spc_ya
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12902,23 +12902,23 @@ ApuC7_14:
   ldrb  r14,[r14,#1]
   orr   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#98
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12943,23 +12943,23 @@ ApuC9_14:
   ldrb  r14,[spc_pc],#1
   add   r1,r1,r14,lsl #8
   mov   r0,spc_x
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -12972,15 +12972,15 @@ ApuCA_14:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r2,#1
@@ -12989,23 +12989,23 @@ ApuCA_14:
   orrne r0,r0,r2
   biceq r0,r0,r2
   bic   r1, r3, #0xe000
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13015,24 +13015,24 @@ ApuCA_14:
 ApuCB_14:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya,lsr #8
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13044,23 +13044,23 @@ ApuCC_14:
   ldrb  r14,[spc_pc],#1
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya,lsr #8
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13132,34 +13132,34 @@ ApuD1_14:
 ApuD2_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x40
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13169,14 +13169,14 @@ ApuD2_14:
 ApuD3_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x40
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -13192,24 +13192,24 @@ ApuD4_14:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13222,23 +13222,23 @@ ApuD5_14:
   add   r1,r1,spc_x
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13251,23 +13251,23 @@ ApuD6_14:
   add   r1,r1,spc_ya, lsr #8
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13282,23 +13282,23 @@ ApuD7_14:
   add   r1,r1,spc_ya,lsr #8
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#98
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13308,24 +13308,24 @@ ApuD7_14:
 ApuD8_14:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13336,24 +13336,24 @@ ApuD9_14:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_x
   add   r1,r1,spc_ya,lsr #8
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13363,43 +13363,43 @@ ApuD9_14:
 ApuDA_14:
   ldrb  r1,[spc_pc]
   mov   r0,spc_ya
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+2:
+	strb	r0, [r2, r1]
+1:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya,lsr #8
   add   r1,r1,#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13410,24 +13410,24 @@ ApuDB_14:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya,lsr #8
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13463,14 +13463,14 @@ ApuDE_14:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff
   cmp   r0,r1
   addeq spc_pc,spc_pc,#1
@@ -13544,34 +13544,34 @@ ApuE1_14:
 ApuE2_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x80
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13581,14 +13581,14 @@ ApuE2_14:
 ApuE3_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -13603,14 +13603,14 @@ ApuE3_14:
 ApuE4_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -13626,15 +13626,15 @@ ApuE5_14:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -13649,14 +13649,14 @@ ApuE5_14:
 ApuE6_14:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -13676,15 +13676,15 @@ ApuE7_14:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -13713,15 +13713,15 @@ ApuE9_14:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   spc_x,r0
   and   spc_p,spc_p,#0xff
@@ -13738,38 +13738,38 @@ ApuEA_14:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r2,#1
   mov   r2,r2,lsl r1
   eor   r0,r0,r2
   bic   r1, r3, #0xe000
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13779,14 +13779,14 @@ ApuEA_14:
 ApuEB_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff
   orr   spc_ya,spc_ya,r0,lsl #8
   and   spc_p,spc_p,#0xff
@@ -13802,15 +13802,15 @@ ApuEC_14:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff
   orr   spc_ya,spc_ya,r0,lsl #8
@@ -13851,7 +13851,7 @@ ApuEF_14:
   ldrge  pc,[opcodes,opcode,lsl #2]
   b      spc700End
 5001:
-	.long	CPU	
+	.long	CPU
   subs   cycles,cycles,#42
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13889,34 +13889,34 @@ ApuF1_14:
 ApuF2_14:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x80
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#56
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -13926,14 +13926,14 @@ ApuF2_14:
 ApuF3_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -13949,14 +13949,14 @@ ApuF4_14:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -13973,15 +13973,15 @@ ApuF5_14:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -13999,15 +13999,15 @@ ApuF6_14:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -14027,15 +14027,15 @@ ApuF7_14:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -14050,14 +14050,14 @@ ApuF7_14:
 ApuF8_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   spc_x,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_x,lsl #24
@@ -14071,14 +14071,14 @@ ApuF9_14:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   spc_x,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_x,lsl #24
@@ -14091,33 +14091,33 @@ ApuF9_14:
 ApuFA_14:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#70
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -14128,14 +14128,14 @@ ApuFB_14:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff
   orr   spc_ya,spc_ya,r0,lsl #8
   and   spc_p,spc_p,#0xff
@@ -14195,7 +14195,7 @@ ApuFF_14:
   ldrge  pc,[opcodes,opcode,lsl #2]
   b      spc700End
 5001:
-	.long	CPU	
+	.long	CPU
   subs   cycles,cycles,#42
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -14264,34 +14264,34 @@ Apu01_15:
 Apu02_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x01
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -14301,14 +14301,14 @@ Apu02_15:
 Apu03_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -14323,14 +14323,14 @@ Apu03_15:
 Apu04_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -14345,15 +14345,15 @@ Apu05_15:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -14367,14 +14367,14 @@ Apu05_15:
 Apu06_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -14393,15 +14393,15 @@ Apu07_15:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -14426,47 +14426,47 @@ Apu08_15:
 Apu09_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
    orr  r0, r0, r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#90
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -14479,15 +14479,15 @@ Apu0A_15:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -14502,14 +14502,14 @@ Apu0A_15:
 Apu0B_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -14517,24 +14517,24 @@ Apu0B_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -14547,15 +14547,15 @@ Apu0C_15:
   add   r0,r0,r14,lsl #8
   mov r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   tst   r0,#0x80
   orrne spc_p,spc_p,#flag_c
@@ -14564,23 +14564,23 @@ Apu0C_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -14610,38 +14610,38 @@ Apu0E_15:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r2,r0,spc_ya
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r2,lsl #24
   orr   r0,r0,spc_ya
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#90
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -14706,34 +14706,34 @@ Apu11_15:
 Apu12_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x01
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -14743,14 +14743,14 @@ Apu12_15:
 Apu13_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -14766,14 +14766,14 @@ Apu14_15:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -14789,15 +14789,15 @@ Apu15_15:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -14814,15 +14814,15 @@ Apu16_15:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -14841,15 +14841,15 @@ Apu17_15:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -14863,37 +14863,37 @@ Apu17_15:
 Apu18_15:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#1
   orr   r0,r0,r1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -14903,47 +14903,47 @@ Apu18_15:
 Apu19_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0, r3, r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -14953,26 +14953,26 @@ Apu19_15:
 Apu1A_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   sub   r0,r1,#1
   and   spc_p,spc_p,#0xff
@@ -14981,44 +14981,44 @@ Apu1A_15:
   orrne spc_p,spc_p,#0x01000000
   stmfd sp!,{r0}
   ldrb  r1,[spc_pc]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+2:
+	strb	r0, [r2, r1]
+1:
   ldmfd sp!,{r0}
   mov   r0,r0,lsr #8
   ldrb  r1,[spc_pc],#1
   add   r1,r1,#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#90
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -15030,14 +15030,14 @@ Apu1B_15:
   add   r0,r0,spc_x
   mov r3, r0
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -15045,24 +15045,24 @@ Apu1B_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -15100,15 +15100,15 @@ Apu1E_15:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   subs  r14,spc_x,r0
   orrcs spc_p,spc_p,#flag_c
@@ -15129,29 +15129,29 @@ Apu1F_15:
   sub   sp,sp,#8
   str   r0,[sp,#4]
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   str   r0,[sp]
   ldr   r0,[sp,#4]
   add   r0,r0,#1
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   ldr   r1,[sp],#8
   orr   r0,r1,r0,lsl #8
@@ -15190,34 +15190,34 @@ Apu21_15:
 Apu22_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x02
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -15227,14 +15227,14 @@ Apu22_15:
 Apu23_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x02
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -15249,14 +15249,14 @@ Apu23_15:
 Apu24_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -15272,15 +15272,15 @@ Apu25_15:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -15295,14 +15295,14 @@ Apu25_15:
 Apu26_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -15322,15 +15322,15 @@ Apu27_15:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -15357,47 +15357,47 @@ Apu28_15:
 Apu29_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#90
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -15410,15 +15410,15 @@ Apu2A_15:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -15433,14 +15433,14 @@ Apu2A_15:
 Apu2B_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r0,r0,lsl #1
   tst   spc_p,#flag_c
   orrne r0,r0,#1
@@ -15450,24 +15450,24 @@ Apu2B_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -15480,15 +15480,15 @@ Apu2C_15:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r0,r0,lsl #1
   tst   spc_p,#flag_c
@@ -15499,23 +15499,23 @@ Apu2C_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -15535,14 +15535,14 @@ Apu2D_15:
 Apu2E_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff
   cmp   r0,r1
   addeq spc_pc,spc_pc,#1
@@ -15595,34 +15595,34 @@ Apu31_15:
 Apu32_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x02
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -15632,14 +15632,14 @@ Apu32_15:
 Apu33_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x02
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -15655,14 +15655,14 @@ Apu34_15:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -15679,15 +15679,15 @@ Apu35_15:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -15705,15 +15705,15 @@ Apu36_15:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -15733,15 +15733,15 @@ Apu37_15:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -15756,37 +15756,37 @@ Apu37_15:
 Apu38_15:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   and   r0,r0,r1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -15796,47 +15796,47 @@ Apu38_15:
 Apu39_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -15846,26 +15846,26 @@ Apu39_15:
 Apu3A_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   add   r0,r1,#1
   and   spc_p,spc_p,#0xff
@@ -15874,44 +15874,44 @@ Apu3A_15:
   orrne spc_p,spc_p,#0x01000000
   stmfd sp!,{r0}
   ldrb  r1,[spc_pc]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+2:
+	strb	r0, [r2, r1]
+1:
   ldmfd sp!,{r0}
   mov   r0,r0,lsr #8
   ldrb  r1,[spc_pc],#1
   add   r1,r1,#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#90
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -15922,14 +15922,14 @@ Apu3B_15:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r0,r0,lsl #1
   tst   spc_p,#flag_c
   orrne r0,r0,#1
@@ -15940,24 +15940,24 @@ Apu3B_15:
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -15997,14 +15997,14 @@ Apu3D_15:
 Apu3E_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   subs  r14,spc_x,r0
   orrcs spc_p,spc_p,#flag_c
   biccc spc_p,spc_p,#flag_c
@@ -16062,34 +16062,34 @@ Apu41_15:
 Apu42_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x04
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -16099,14 +16099,14 @@ Apu42_15:
 Apu43_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x04
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -16121,14 +16121,14 @@ Apu43_15:
 Apu44_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -16143,15 +16143,15 @@ Apu45_15:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -16165,14 +16165,14 @@ Apu45_15:
 Apu46_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -16191,15 +16191,15 @@ Apu47_15:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -16224,47 +16224,47 @@ Apu48_15:
 Apu49_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#90
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -16277,15 +16277,15 @@ Apu4A_15:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -16300,14 +16300,14 @@ Apu4A_15:
 Apu4B_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -16315,24 +16315,24 @@ Apu4B_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -16345,15 +16345,15 @@ Apu4C_15:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   tst   r0,#0x01
   orrne spc_p,spc_p,#flag_c
@@ -16362,23 +16362,23 @@ Apu4C_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -16401,38 +16401,38 @@ Apu4E_15:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r2,r0,spc_ya
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r2,lsl #24
   bic   r0,r0,spc_ya
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#90
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -16486,34 +16486,34 @@ Apu51_15:
 Apu52_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x04
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -16523,14 +16523,14 @@ Apu52_15:
 Apu53_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x04
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -16546,14 +16546,14 @@ Apu54_15:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -16569,15 +16569,15 @@ Apu55_15:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -16594,15 +16594,15 @@ Apu56_15:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -16621,15 +16621,15 @@ Apu57_15:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -16643,37 +16643,37 @@ Apu57_15:
 Apu58_15:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   eor   r0,r0,r1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -16683,47 +16683,47 @@ Apu58_15:
 Apu59_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -16733,26 +16733,26 @@ Apu59_15:
 Apu5A_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc],#1
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   subs  r0,spc_ya,r1
   orrge spc_p,spc_p,#flag_c
@@ -16771,14 +16771,14 @@ Apu5B_15:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -16787,24 +16787,24 @@ Apu5B_15:
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -16842,15 +16842,15 @@ Apu5E_15:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1,spc_ya,lsr #8
   subs  r14,r1,r0
@@ -16902,34 +16902,34 @@ Apu61_15:
 Apu62_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x08
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -16939,14 +16939,14 @@ Apu62_15:
 Apu63_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x08
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -16961,14 +16961,14 @@ Apu63_15:
 Apu64_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
   orrcs spc_p,spc_p,#flag_c
@@ -16986,15 +16986,15 @@ Apu65_15:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -17011,14 +17011,14 @@ Apu65_15:
 Apu66_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
   orrcs spc_p,spc_p,#flag_c
@@ -17040,15 +17040,15 @@ Apu67_15:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -17079,25 +17079,25 @@ Apu68_15:
 Apu69_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_x,spc_x,r0,lsl #24
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r1,spc_x,lsr #24
   subs  r14,r0,r1
   orrcs spc_p,spc_p,#flag_c
@@ -17117,15 +17117,15 @@ Apu6A_15:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -17140,14 +17140,14 @@ Apu6A_15:
 Apu6B_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   spc_p,#flag_c
   orrne r0,r0,#0x100
   movs  r0,r0,lsr #1
@@ -17156,24 +17156,24 @@ Apu6B_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -17186,15 +17186,15 @@ Apu6C_15:
   add   r0,r0,r14,lsl #8
   mov r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   tst   spc_p,#flag_c
   orrne r0,r0,#0x100
@@ -17204,23 +17204,23 @@ Apu6C_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -17241,14 +17241,14 @@ Apu6D_15:
 Apu6E_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#1
   sub   r0,r0,#1
   tst   r0,r0
@@ -17256,24 +17256,24 @@ Apu6E_15:
   ldrnesb r2,[spc_pc],#1
   addne spc_pc,spc_pc,r2
   subne cycles,cycles,#30
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -17324,34 +17324,34 @@ Apu71_15:
 Apu72_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x08
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -17361,14 +17361,14 @@ Apu72_15:
 Apu73_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x08
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -17384,14 +17384,14 @@ Apu74_15:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
   orrcs spc_p,spc_p,#flag_c
@@ -17410,15 +17410,15 @@ Apu75_15:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -17438,15 +17438,15 @@ Apu76_15:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -17468,15 +17468,15 @@ Apu77_15:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -17493,14 +17493,14 @@ Apu77_15:
 Apu78_15:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   subs  r14,r0,r1
   orrcs spc_p,spc_p,#flag_c
@@ -17516,25 +17516,25 @@ Apu78_15:
 Apu79_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_x,spc_x,r0,lsl #24
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r1,spc_x,lsr #24
   subs  r14,r1,r0
   orrcs spc_p,spc_p,#flag_c
@@ -17551,26 +17551,26 @@ Apu79_15:
 Apu7A_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc],#1
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   add   r0,spc_ya,r1
   movs  r2,r0,lsr #16
@@ -17603,14 +17603,14 @@ Apu7B_15:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   spc_p,#flag_c
   orrne r0,r0,#0x100
   movs  r0,r0,lsr #1
@@ -17620,24 +17620,24 @@ Apu7B_15:
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -17675,14 +17675,14 @@ Apu7D_15:
 Apu7E_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r1,spc_ya,lsr #8
   subs  r14,r1,r0
   orrcs spc_p,spc_p,#flag_c
@@ -17745,34 +17745,34 @@ Apu81_15:
 Apu82_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x10
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -17782,14 +17782,14 @@ Apu82_15:
 Apu83_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x10
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -17804,14 +17804,14 @@ Apu83_15:
 Apu84_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   eor   r2,spc_ya,r0
@@ -17844,15 +17844,15 @@ Apu85_15:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -17884,14 +17884,14 @@ Apu85_15:
 Apu86_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   eor   r2,spc_ya,r0
@@ -17928,15 +17928,15 @@ Apu87_15:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -17997,25 +17997,25 @@ Apu88_15:
 Apu89_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r2,r0,r3
   movs  r14, spc_p, lsr #1
   adc   r0, r0, r3
@@ -18034,24 +18034,24 @@ Apu89_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#90
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -18064,15 +18064,15 @@ Apu8A_15:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -18087,36 +18087,36 @@ Apu8A_15:
 Apu8B_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   sub   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -18129,37 +18129,37 @@ Apu8C_15:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   sub   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -18198,24 +18198,24 @@ Apu8E_15:
 Apu8F_15:
   ldrb  r0,[spc_pc],#1
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -18253,34 +18253,34 @@ Apu91_15:
 Apu92_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x10
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -18290,14 +18290,14 @@ Apu92_15:
 Apu93_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x10
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -18313,14 +18313,14 @@ Apu94_15:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   eor   r2,spc_ya,r0
@@ -18354,15 +18354,15 @@ Apu95_15:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -18397,15 +18397,15 @@ Apu96_15:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -18442,15 +18442,15 @@ Apu97_15:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -18482,14 +18482,14 @@ Apu97_15:
 Apu98_15:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   eor   r2,r0,r1
   movs  r14, spc_p, lsr #1
@@ -18509,24 +18509,24 @@ Apu98_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -18536,25 +18536,25 @@ Apu98_15:
 Apu99_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r2,r0,r3
   movs  r14, spc_p, lsr #1
   adc   r0, r0, r3
@@ -18573,24 +18573,24 @@ Apu99_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -18600,26 +18600,26 @@ Apu99_15:
 Apu9A_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc],#1
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   subs  r0,spc_ya,r1
   orrge spc_p,spc_p,#flag_c
@@ -18651,37 +18651,37 @@ Apu9B_15:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   sub   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -18793,34 +18793,34 @@ ApuA1_15:
 ApuA2_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x20
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -18830,14 +18830,14 @@ ApuA2_15:
 ApuA3_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x20
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -18852,14 +18852,14 @@ ApuA3_15:
 ApuA4_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   movs  r14,spc_p,lsr #1
@@ -18892,15 +18892,15 @@ ApuA5_15:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -18932,14 +18932,14 @@ ApuA5_15:
 ApuA6_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   movs  r14,spc_p,lsr #1
@@ -18976,15 +18976,15 @@ ApuA7_15:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -19045,25 +19045,25 @@ ApuA8_15:
 ApuA9_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   movs  r14,spc_p,lsr #1
   sbcs  r2,r0,r3
   orrge spc_p,spc_p,#flag_c
@@ -19082,24 +19082,24 @@ ApuA9_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#90
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -19112,15 +19112,15 @@ ApuAA_15:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -19136,36 +19136,36 @@ ApuAA_15:
 ApuAB_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   add   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -19178,37 +19178,37 @@ ApuAC_15:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   add   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -19244,24 +19244,24 @@ ApuAE_15:
 ApuAF_15:
   mov   r0,spc_ya
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   add   spc_x,spc_x,#1
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
@@ -19301,34 +19301,34 @@ ApuB1_15:
 ApuB2_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x20
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -19338,14 +19338,14 @@ ApuB2_15:
 ApuB3_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x20
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -19361,14 +19361,14 @@ ApuB4_15:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   movs  r14,spc_p,lsr #1
@@ -19402,15 +19402,15 @@ ApuB5_15:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -19445,15 +19445,15 @@ ApuB6_15:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -19490,15 +19490,15 @@ ApuB7_15:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -19530,14 +19530,14 @@ ApuB7_15:
 ApuB8_15:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   movs  r14,spc_p,lsr #1
   sbcs  r2,r0,r1
@@ -19557,24 +19557,24 @@ ApuB8_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -19584,25 +19584,25 @@ ApuB8_15:
 ApuB9_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   movs  r14,spc_p,lsr #1
   sbcs  r2,r0,r3
   orrge spc_p,spc_p,#flag_c
@@ -19621,24 +19621,24 @@ ApuB9_15:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -19648,26 +19648,26 @@ ApuB9_15:
 ApuBA_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1, [spc_pc],#1
   mov   spc_ya, r0
   add   r0, r1, #1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0,lsl #8
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #16
@@ -19683,37 +19683,37 @@ ApuBB_15:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   add   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -19772,14 +19772,14 @@ ApuBE_15:
 ApuBF_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   add   spc_x,spc_x,#1
@@ -19819,34 +19819,34 @@ ApuC1_15:
 ApuC2_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x40
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -19856,14 +19856,14 @@ ApuC2_15:
 ApuC3_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x40
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -19878,24 +19878,24 @@ ApuC3_15:
 ApuC4_15:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -19907,23 +19907,23 @@ ApuC5_15:
   ldrb  r14,[spc_pc],#1
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -19933,24 +19933,24 @@ ApuC5_15:
 ApuC6_15:
   mov   r0,spc_ya
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -19966,23 +19966,23 @@ ApuC7_15:
   ldrb  r14,[r14,#1]
   orr   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20007,23 +20007,23 @@ ApuC9_15:
   ldrb  r14,[spc_pc],#1
   add   r1,r1,r14,lsl #8
   mov   r0,spc_x
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20036,15 +20036,15 @@ ApuCA_15:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r2,#1
@@ -20053,23 +20053,23 @@ ApuCA_15:
   orrne r0,r0,r2
   biceq r0,r0,r2
   bic   r1, r3, #0xe000
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#90
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20079,24 +20079,24 @@ ApuCA_15:
 ApuCB_15:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya,lsr #8
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20108,23 +20108,23 @@ ApuCC_15:
   ldrb  r14,[spc_pc],#1
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya,lsr #8
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20196,34 +20196,34 @@ ApuD1_15:
 ApuD2_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x40
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20233,14 +20233,14 @@ ApuD2_15:
 ApuD3_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x40
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -20256,24 +20256,24 @@ ApuD4_15:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20286,23 +20286,23 @@ ApuD5_15:
   add   r1,r1,spc_x
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#90
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20315,23 +20315,23 @@ ApuD6_15:
   add   r1,r1,spc_ya, lsr #8
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#90
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20346,23 +20346,23 @@ ApuD7_15:
   add   r1,r1,spc_ya,lsr #8
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20372,24 +20372,24 @@ ApuD7_15:
 ApuD8_15:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20400,24 +20400,24 @@ ApuD9_15:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_x
   add   r1,r1,spc_ya,lsr #8
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20427,43 +20427,43 @@ ApuD9_15:
 ApuDA_15:
   ldrb  r1,[spc_pc]
   mov   r0,spc_ya
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+2:
+	strb	r0, [r2, r1]
+1:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya,lsr #8
   add   r1,r1,#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20474,24 +20474,24 @@ ApuDB_15:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya,lsr #8
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20527,14 +20527,14 @@ ApuDE_15:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff
   cmp   r0,r1
   addeq spc_pc,spc_pc,#1
@@ -20608,34 +20608,34 @@ ApuE1_15:
 ApuE2_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x80
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20645,14 +20645,14 @@ ApuE2_15:
 ApuE3_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -20667,14 +20667,14 @@ ApuE3_15:
 ApuE4_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -20690,15 +20690,15 @@ ApuE5_15:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -20713,14 +20713,14 @@ ApuE5_15:
 ApuE6_15:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -20740,15 +20740,15 @@ ApuE7_15:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -20777,15 +20777,15 @@ ApuE9_15:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   spc_x,r0
   and   spc_p,spc_p,#0xff
@@ -20802,38 +20802,38 @@ ApuEA_15:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r2,#1
   mov   r2,r2,lsl r1
   eor   r0,r0,r2
   bic   r1, r3, #0xe000
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20843,14 +20843,14 @@ ApuEA_15:
 ApuEB_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff
   orr   spc_ya,spc_ya,r0,lsl #8
   and   spc_p,spc_p,#0xff
@@ -20866,15 +20866,15 @@ ApuEC_15:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff
   orr   spc_ya,spc_ya,r0,lsl #8
@@ -20915,7 +20915,7 @@ ApuEF_15:
   ldrge  pc,[opcodes,opcode,lsl #2]
   b      spc700End
 5001:
-	.long	CPU	
+	.long	CPU
   subs   cycles,cycles,#45
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20953,34 +20953,34 @@ ApuF1_15:
 ApuF2_15:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x80
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#60
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -20990,14 +20990,14 @@ ApuF2_15:
 ApuF3_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -21013,14 +21013,14 @@ ApuF4_15:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -21037,15 +21037,15 @@ ApuF5_15:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -21063,15 +21063,15 @@ ApuF6_15:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -21091,15 +21091,15 @@ ApuF7_15:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -21114,14 +21114,14 @@ ApuF7_15:
 ApuF8_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   spc_x,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_x,lsl #24
@@ -21135,14 +21135,14 @@ ApuF9_15:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   spc_x,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_x,lsl #24
@@ -21155,33 +21155,33 @@ ApuF9_15:
 ApuFA_15:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#75
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -21192,14 +21192,14 @@ ApuFB_15:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff
   orr   spc_ya,spc_ya,r0,lsl #8
   and   spc_p,spc_p,#0xff
@@ -21259,7 +21259,7 @@ ApuFF_15:
   ldrge  pc,[opcodes,opcode,lsl #2]
   b      spc700End
 5001:
-	.long	CPU	
+	.long	CPU
   subs   cycles,cycles,#45
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -21328,34 +21328,34 @@ Apu01_21:
 Apu02_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x01
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -21365,14 +21365,14 @@ Apu02_21:
 Apu03_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -21387,14 +21387,14 @@ Apu03_21:
 Apu04_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -21409,15 +21409,15 @@ Apu05_21:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -21431,14 +21431,14 @@ Apu05_21:
 Apu06_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -21457,15 +21457,15 @@ Apu07_21:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -21490,47 +21490,47 @@ Apu08_21:
 Apu09_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
    orr  r0, r0, r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#126
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -21543,15 +21543,15 @@ Apu0A_21:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -21566,14 +21566,14 @@ Apu0A_21:
 Apu0B_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -21581,24 +21581,24 @@ Apu0B_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -21611,15 +21611,15 @@ Apu0C_21:
   add   r0,r0,r14,lsl #8
   mov r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   tst   r0,#0x80
   orrne spc_p,spc_p,#flag_c
@@ -21628,23 +21628,23 @@ Apu0C_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -21674,38 +21674,38 @@ Apu0E_21:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r2,r0,spc_ya
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r2,lsl #24
   orr   r0,r0,spc_ya
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#126
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -21770,34 +21770,34 @@ Apu11_21:
 Apu12_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x01
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -21807,14 +21807,14 @@ Apu12_21:
 Apu13_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -21830,14 +21830,14 @@ Apu14_21:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -21853,15 +21853,15 @@ Apu15_21:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -21878,15 +21878,15 @@ Apu16_21:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -21905,15 +21905,15 @@ Apu17_21:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -21927,37 +21927,37 @@ Apu17_21:
 Apu18_21:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#1
   orr   r0,r0,r1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -21967,47 +21967,47 @@ Apu18_21:
 Apu19_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0, r3, r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -22017,26 +22017,26 @@ Apu19_21:
 Apu1A_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   sub   r0,r1,#1
   and   spc_p,spc_p,#0xff
@@ -22045,44 +22045,44 @@ Apu1A_21:
   orrne spc_p,spc_p,#0x01000000
   stmfd sp!,{r0}
   ldrb  r1,[spc_pc]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+2:
+	strb	r0, [r2, r1]
+1:
   ldmfd sp!,{r0}
   mov   r0,r0,lsr #8
   ldrb  r1,[spc_pc],#1
   add   r1,r1,#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#126
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -22094,14 +22094,14 @@ Apu1B_21:
   add   r0,r0,spc_x
   mov r3, r0
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -22109,24 +22109,24 @@ Apu1B_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -22164,15 +22164,15 @@ Apu1E_21:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   subs  r14,spc_x,r0
   orrcs spc_p,spc_p,#flag_c
@@ -22193,29 +22193,29 @@ Apu1F_21:
   sub   sp,sp,#8
   str   r0,[sp,#4]
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   str   r0,[sp]
   ldr   r0,[sp,#4]
   add   r0,r0,#1
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   ldr   r1,[sp],#8
   orr   r0,r1,r0,lsl #8
@@ -22254,34 +22254,34 @@ Apu21_21:
 Apu22_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x02
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -22291,14 +22291,14 @@ Apu22_21:
 Apu23_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x02
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -22313,14 +22313,14 @@ Apu23_21:
 Apu24_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -22336,15 +22336,15 @@ Apu25_21:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -22359,14 +22359,14 @@ Apu25_21:
 Apu26_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -22386,15 +22386,15 @@ Apu27_21:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -22421,47 +22421,47 @@ Apu28_21:
 Apu29_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#126
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -22474,15 +22474,15 @@ Apu2A_21:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -22497,14 +22497,14 @@ Apu2A_21:
 Apu2B_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r0,r0,lsl #1
   tst   spc_p,#flag_c
   orrne r0,r0,#1
@@ -22514,24 +22514,24 @@ Apu2B_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -22544,15 +22544,15 @@ Apu2C_21:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r0,r0,lsl #1
   tst   spc_p,#flag_c
@@ -22563,23 +22563,23 @@ Apu2C_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -22599,14 +22599,14 @@ Apu2D_21:
 Apu2E_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff
   cmp   r0,r1
   addeq spc_pc,spc_pc,#1
@@ -22659,34 +22659,34 @@ Apu31_21:
 Apu32_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x02
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -22696,14 +22696,14 @@ Apu32_21:
 Apu33_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x02
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -22719,14 +22719,14 @@ Apu34_21:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -22743,15 +22743,15 @@ Apu35_21:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -22769,15 +22769,15 @@ Apu36_21:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -22797,15 +22797,15 @@ Apu37_21:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   orr   r0,r0,#0xff00
   and   spc_ya,spc_ya,r0
@@ -22820,37 +22820,37 @@ Apu37_21:
 Apu38_21:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   and   r0,r0,r1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -22860,47 +22860,47 @@ Apu38_21:
 Apu39_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -22910,26 +22910,26 @@ Apu39_21:
 Apu3A_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   add   r0,r1,#1
   and   spc_p,spc_p,#0xff
@@ -22938,44 +22938,44 @@ Apu3A_21:
   orrne spc_p,spc_p,#0x01000000
   stmfd sp!,{r0}
   ldrb  r1,[spc_pc]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+2:
+	strb	r0, [r2, r1]
+1:
   ldmfd sp!,{r0}
   mov   r0,r0,lsr #8
   ldrb  r1,[spc_pc],#1
   add   r1,r1,#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#126
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -22986,14 +22986,14 @@ Apu3B_21:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r0,r0,lsl #1
   tst   spc_p,#flag_c
   orrne r0,r0,#1
@@ -23004,24 +23004,24 @@ Apu3B_21:
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -23061,14 +23061,14 @@ Apu3D_21:
 Apu3E_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   subs  r14,spc_x,r0
   orrcs spc_p,spc_p,#flag_c
   biccc spc_p,spc_p,#flag_c
@@ -23126,34 +23126,34 @@ Apu41_21:
 Apu42_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x04
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -23163,14 +23163,14 @@ Apu42_21:
 Apu43_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x04
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -23185,14 +23185,14 @@ Apu43_21:
 Apu44_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -23207,15 +23207,15 @@ Apu45_21:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -23229,14 +23229,14 @@ Apu45_21:
 Apu46_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -23255,15 +23255,15 @@ Apu47_21:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -23288,47 +23288,47 @@ Apu48_21:
 Apu49_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#126
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -23341,15 +23341,15 @@ Apu4A_21:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -23364,14 +23364,14 @@ Apu4A_21:
 Apu4B_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -23379,24 +23379,24 @@ Apu4B_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -23409,15 +23409,15 @@ Apu4C_21:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   tst   r0,#0x01
   orrne spc_p,spc_p,#flag_c
@@ -23426,23 +23426,23 @@ Apu4C_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -23465,38 +23465,38 @@ Apu4E_21:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r2,r0,spc_ya
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r2,lsl #24
   bic   r0,r0,spc_ya
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#126
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -23550,34 +23550,34 @@ Apu51_21:
 Apu52_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x04
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -23587,14 +23587,14 @@ Apu52_21:
 Apu53_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x04
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -23610,14 +23610,14 @@ Apu54_21:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #24
@@ -23633,15 +23633,15 @@ Apu55_21:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -23658,15 +23658,15 @@ Apu56_21:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -23685,15 +23685,15 @@ Apu57_21:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   eor   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -23707,37 +23707,37 @@ Apu57_21:
 Apu58_21:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   eor   r0,r0,r1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -23747,47 +23747,47 @@ Apu58_21:
 Apu59_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r0,r0,r3
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -23797,26 +23797,26 @@ Apu59_21:
 Apu5A_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc],#1
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   subs  r0,spc_ya,r1
   orrge spc_p,spc_p,#flag_c
@@ -23835,14 +23835,14 @@ Apu5B_21:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x01
   orrne spc_p,spc_p,#flag_c
   biceq spc_p,spc_p,#flag_c
@@ -23851,24 +23851,24 @@ Apu5B_21:
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -23906,15 +23906,15 @@ Apu5E_21:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1,spc_ya,lsr #8
   subs  r14,r1,r0
@@ -23966,34 +23966,34 @@ Apu61_21:
 Apu62_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x08
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -24003,14 +24003,14 @@ Apu62_21:
 Apu63_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x08
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -24025,14 +24025,14 @@ Apu63_21:
 Apu64_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
   orrcs spc_p,spc_p,#flag_c
@@ -24050,15 +24050,15 @@ Apu65_21:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -24075,14 +24075,14 @@ Apu65_21:
 Apu66_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
   orrcs spc_p,spc_p,#flag_c
@@ -24104,15 +24104,15 @@ Apu67_21:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -24143,25 +24143,25 @@ Apu68_21:
 Apu69_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_x,spc_x,r0,lsl #24
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r1,spc_x,lsr #24
   subs  r14,r0,r1
   orrcs spc_p,spc_p,#flag_c
@@ -24181,15 +24181,15 @@ Apu6A_21:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -24204,14 +24204,14 @@ Apu6A_21:
 Apu6B_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   spc_p,#flag_c
   orrne r0,r0,#0x100
   movs  r0,r0,lsr #1
@@ -24220,24 +24220,24 @@ Apu6B_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -24250,15 +24250,15 @@ Apu6C_21:
   add   r0,r0,r14,lsl #8
   mov r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   tst   spc_p,#flag_c
   orrne r0,r0,#0x100
@@ -24268,23 +24268,23 @@ Apu6C_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -24305,14 +24305,14 @@ Apu6D_21:
 Apu6E_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#1
   sub   r0,r0,#1
   tst   r0,r0
@@ -24320,24 +24320,24 @@ Apu6E_21:
   ldrnesb r2,[spc_pc],#1
   addne spc_pc,spc_pc,r2
   subne cycles,cycles,#42
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -24388,34 +24388,34 @@ Apu71_21:
 Apu72_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x08
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -24425,14 +24425,14 @@ Apu72_21:
 Apu73_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x08
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -24448,14 +24448,14 @@ Apu74_21:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
   orrcs spc_p,spc_p,#flag_c
@@ -24474,15 +24474,15 @@ Apu75_21:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -24502,15 +24502,15 @@ Apu76_21:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -24532,15 +24532,15 @@ Apu77_21:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r14,spc_ya,#0xff
   subs  r14,r14,r0
@@ -24557,14 +24557,14 @@ Apu77_21:
 Apu78_21:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   subs  r14,r0,r1
   orrcs spc_p,spc_p,#flag_c
@@ -24580,25 +24580,25 @@ Apu78_21:
 Apu79_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_x,spc_x,r0,lsl #24
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r1,spc_x,lsr #24
   subs  r14,r1,r0
   orrcs spc_p,spc_p,#flag_c
@@ -24615,26 +24615,26 @@ Apu79_21:
 Apu7A_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc],#1
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   add   r0,spc_ya,r1
   movs  r2,r0,lsr #16
@@ -24667,14 +24667,14 @@ Apu7B_21:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   spc_p,#flag_c
   orrne r0,r0,#0x100
   movs  r0,r0,lsr #1
@@ -24684,24 +24684,24 @@ Apu7B_21:
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -24739,14 +24739,14 @@ Apu7D_21:
 Apu7E_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r1,spc_ya,lsr #8
   subs  r14,r1,r0
   orrcs spc_p,spc_p,#flag_c
@@ -24809,34 +24809,34 @@ Apu81_21:
 Apu82_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x10
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -24846,14 +24846,14 @@ Apu82_21:
 Apu83_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x10
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -24868,14 +24868,14 @@ Apu83_21:
 Apu84_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   eor   r2,spc_ya,r0
@@ -24908,15 +24908,15 @@ Apu85_21:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -24948,14 +24948,14 @@ Apu85_21:
 Apu86_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   eor   r2,spc_ya,r0
@@ -24992,15 +24992,15 @@ Apu87_21:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -25061,25 +25061,25 @@ Apu88_21:
 Apu89_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r2,r0,r3
   movs  r14, spc_p, lsr #1
   adc   r0, r0, r3
@@ -25098,24 +25098,24 @@ Apu89_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#126
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -25128,15 +25128,15 @@ Apu8A_21:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -25151,36 +25151,36 @@ Apu8A_21:
 Apu8B_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   sub   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -25193,37 +25193,37 @@ Apu8C_21:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   sub   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -25262,24 +25262,24 @@ Apu8E_21:
 Apu8F_21:
   ldrb  r0,[spc_pc],#1
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -25317,34 +25317,34 @@ Apu91_21:
 Apu92_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x10
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -25354,14 +25354,14 @@ Apu92_21:
 Apu93_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x10
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -25377,14 +25377,14 @@ Apu94_21:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   eor   r2,spc_ya,r0
@@ -25418,15 +25418,15 @@ Apu95_21:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -25461,15 +25461,15 @@ Apu96_21:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -25506,15 +25506,15 @@ Apu97_21:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -25546,14 +25546,14 @@ Apu97_21:
 Apu98_21:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   eor   r2,r0,r1
   movs  r14, spc_p, lsr #1
@@ -25573,24 +25573,24 @@ Apu98_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -25600,25 +25600,25 @@ Apu98_21:
 Apu99_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   eor   r2,r0,r3
   movs  r14, spc_p, lsr #1
   adc   r0, r0, r3
@@ -25637,24 +25637,24 @@ Apu99_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -25664,26 +25664,26 @@ Apu99_21:
 Apu9A_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   r3, r0
   ldrb  r0,[spc_pc],#1
   add   r0,r0,#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r1,r3,r0,lsl #8
   subs  r0,spc_ya,r1
   orrge spc_p,spc_p,#flag_c
@@ -25715,37 +25715,37 @@ Apu9B_21:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   sub   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -25857,34 +25857,34 @@ ApuA1_21:
 ApuA2_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x20
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -25894,14 +25894,14 @@ ApuA2_21:
 ApuA3_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x20
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -25916,14 +25916,14 @@ ApuA3_21:
 ApuA4_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   movs  r14,spc_p,lsr #1
@@ -25956,15 +25956,15 @@ ApuA5_21:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -25996,14 +25996,14 @@ ApuA5_21:
 ApuA6_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   movs  r14,spc_p,lsr #1
@@ -26040,15 +26040,15 @@ ApuA7_21:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -26109,25 +26109,25 @@ ApuA8_21:
 ApuA9_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   movs  r14,spc_p,lsr #1
   sbcs  r2,r0,r3
   orrge spc_p,spc_p,#flag_c
@@ -26146,24 +26146,24 @@ ApuA9_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#126
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -26176,15 +26176,15 @@ ApuAA_21:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r0,r0,lsr r1
@@ -26200,36 +26200,36 @@ ApuAA_21:
 ApuAB_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   add   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -26242,37 +26242,37 @@ ApuAC_21:
   add   r0,r0,r14,lsl #8
   mov   r3, r0
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   add   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1, r3
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -26308,24 +26308,24 @@ ApuAE_21:
 ApuAF_21:
   mov   r0,spc_ya
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   add   spc_x,spc_x,#1
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
@@ -26365,34 +26365,34 @@ ApuB1_21:
 ApuB2_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x20
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -26402,14 +26402,14 @@ ApuB2_21:
 ApuB3_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x20
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -26425,14 +26425,14 @@ ApuB4_21:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
   movs  r14,spc_p,lsr #1
@@ -26466,15 +26466,15 @@ ApuB5_21:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -26509,15 +26509,15 @@ ApuB6_21:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -26554,15 +26554,15 @@ ApuB7_21:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   r1,spc_ya,#0xff00
   and   spc_ya,spc_ya,#0xff
@@ -26594,14 +26594,14 @@ ApuB7_21:
 ApuB8_21:
   ldrb  r0,[spc_pc,#1]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#2
   movs  r14,spc_p,lsr #1
   sbcs  r2,r0,r1
@@ -26621,24 +26621,24 @@ ApuB8_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc,#-1]
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -26648,25 +26648,25 @@ ApuB8_21:
 ApuB9_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov r3, r0
   mov   r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   movs  r14,spc_p,lsr #1
   sbcs  r2,r0,r3
   orrge spc_p,spc_p,#flag_c
@@ -26685,24 +26685,24 @@ ApuB9_21:
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -26712,26 +26712,26 @@ ApuB9_21:
 ApuBA_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1, [spc_pc],#1
   mov   spc_ya, r0
   add   r0, r1, #1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   spc_ya,spc_ya,r0,lsl #8
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_ya,lsl #16
@@ -26747,37 +26747,37 @@ ApuBB_21:
   ldrb  r0,[spc_pc]
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   add   r0,r0,#1
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,r0,lsl #24
   ldrb  r1,[spc_pc],#1
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -26836,14 +26836,14 @@ ApuBE_21:
 ApuBF_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   add   spc_x,spc_x,#1
@@ -26883,34 +26883,34 @@ ApuC1_21:
 ApuC2_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x40
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -26920,14 +26920,14 @@ ApuC2_21:
 ApuC3_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x40
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -26942,24 +26942,24 @@ ApuC3_21:
 ApuC4_21:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -26971,23 +26971,23 @@ ApuC5_21:
   ldrb  r14,[spc_pc],#1
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -26997,24 +26997,24 @@ ApuC5_21:
 ApuC6_21:
   mov   r0,spc_ya
   mov   r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27030,23 +27030,23 @@ ApuC7_21:
   ldrb  r14,[r14,#1]
   orr   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#147
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27071,23 +27071,23 @@ ApuC9_21:
   ldrb  r14,[spc_pc],#1
   add   r1,r1,r14,lsl #8
   mov   r0,spc_x
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27100,15 +27100,15 @@ ApuCA_21:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r2,#1
@@ -27117,23 +27117,23 @@ ApuCA_21:
   orrne r0,r0,r2
   biceq r0,r0,r2
   bic   r1, r3, #0xe000
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#126
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27143,24 +27143,24 @@ ApuCA_21:
 ApuCB_21:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya,lsr #8
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27172,23 +27172,23 @@ ApuCC_21:
   ldrb  r14,[spc_pc],#1
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya,lsr #8
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27260,34 +27260,34 @@ ApuD1_21:
 ApuD2_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x40
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27297,14 +27297,14 @@ ApuD2_21:
 ApuD3_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x40
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -27320,24 +27320,24 @@ ApuD4_21:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27350,23 +27350,23 @@ ApuD5_21:
   add   r1,r1,spc_x
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#126
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27379,23 +27379,23 @@ ApuD6_21:
   add   r1,r1,spc_ya, lsr #8
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#126
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27410,23 +27410,23 @@ ApuD7_21:
   add   r1,r1,spc_ya,lsr #8
   add   r1,r1,r14,lsl #8
   mov   r0,spc_ya
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#147
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27436,24 +27436,24 @@ ApuD7_21:
 ApuD8_21:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27464,24 +27464,24 @@ ApuD9_21:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_x
   add   r1,r1,spc_ya,lsr #8
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27491,43 +27491,43 @@ ApuD9_21:
 ApuDA_21:
   ldrb  r1,[spc_pc]
   mov   r0,spc_ya
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+2:
+	strb	r0, [r2, r1]
+1:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya,lsr #8
   add   r1,r1,#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27538,24 +27538,24 @@ ApuDB_21:
   ldrb  r1,[spc_pc],#1
   mov   r0,spc_ya,lsr #8
   add   r1,r1,spc_x
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27591,14 +27591,14 @@ ApuDE_21:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   r1,spc_ya,#0xff
   cmp   r0,r1
   addeq spc_pc,spc_pc,#1
@@ -27672,34 +27672,34 @@ ApuE1_21:
 ApuE2_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   orr   r0,r0,#0x80
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27709,14 +27709,14 @@ ApuE2_21:
 ApuE3_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   addeq spc_pc,spc_pc,#1
   ldrnesb r0,[spc_pc],#1
@@ -27731,14 +27731,14 @@ ApuE3_21:
 ApuE4_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -27754,15 +27754,15 @@ ApuE5_21:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -27777,14 +27777,14 @@ ApuE5_21:
 ApuE6_21:
   mov   r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -27804,15 +27804,15 @@ ApuE7_21:
   ldrb  r14,[r14,#1]
   orr   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -27841,15 +27841,15 @@ ApuE9_21:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   spc_x,r0
   and   spc_p,spc_p,#0xff
@@ -27866,38 +27866,38 @@ ApuEA_21:
   add   r3,r0,r3,lsl #8
   bic   r0, r3, #0xe000
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   mov   r1, r3, lsr #13
   mov   r2,#1
   mov   r2,r2,lsl r1
   eor   r0,r0,r2
   bic   r1, r3, #0xe000
-	add	r2, r1, #40			
-	tst	r2, #0x10000			
-	bne	1f				
+	add	r2, r1, #40
+	tst	r2, #0x10000
+	bne	1f
 	bic	r2, r1, #0x0f
 	cmp	r2, #0xf0
-	strneb	r0, [spc_ram, r1]		
+	strneb	r0, [spc_ram, r1]
 	bne	3f
 	add	lr, pc, #20
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-1:						
-	bl	S9xAPUSetByteFFC0		
-	ldr   	spc_ram, [context, #iapu_ram]	
-3:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+1:
+	bl	S9xAPUSetByteFFC0
+	ldr   	spc_ram, [context, #iapu_ram]
+3:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -27907,14 +27907,14 @@ ApuEA_21:
 ApuEB_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff
   orr   spc_ya,spc_ya,r0,lsl #8
   and   spc_p,spc_p,#0xff
@@ -27930,15 +27930,15 @@ ApuEC_21:
   ldrb  r14,[spc_pc],#1
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff
   orr   spc_ya,spc_ya,r0,lsl #8
@@ -27979,7 +27979,7 @@ ApuEF_21:
   ldrge  pc,[opcodes,opcode,lsl #2]
   b      spc700End
 5001:
-	.long	CPU	
+	.long	CPU
   subs   cycles,cycles,#63
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -28017,34 +28017,34 @@ ApuF1_21:
 ApuF2_21:
   ldrb  r0,[spc_pc]
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   bic   r0,r0,#0x80
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#84
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -28054,14 +28054,14 @@ ApuF2_21:
 ApuF3_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   tst   r0,#0x80
   addne spc_pc,spc_pc,#1
   ldreqsb r0,[spc_pc],#1
@@ -28077,14 +28077,14 @@ ApuF4_21:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
   and   spc_p,spc_p,#0xff
@@ -28101,15 +28101,15 @@ ApuF5_21:
   add   r0,r0,spc_x
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -28127,15 +28127,15 @@ ApuF6_21:
   add   r0,r0,spc_ya, lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -28155,15 +28155,15 @@ ApuF7_21:
   add   r0,r0,spc_ya,lsr #8
   add   r0,r0,r14,lsl #8
 	mov	r1, r0
-	ldrb	r0, [spc_ram, r1]		
+	ldrb	r0, [spc_ram, r1]
 	cmp	r1, #0x0ff
-	bhi	1f	
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #12	
-	beq	GetAPUDSP			
-	cmp	r1, #0xfd			
-	movhs	r2, #0				
-	strhsb	r2, [spc_ram, r1]		
+	bhi	1f
+	cmp	r1, #0xf3
+	addeq	lr, pc, #12
+	beq	GetAPUDSP
+	cmp	r1, #0xfd
+	movhs	r2, #0
+	strhsb	r2, [spc_ram, r1]
 1:
   and   spc_ya,spc_ya,#0xff00
   orr   spc_ya,spc_ya,r0
@@ -28178,14 +28178,14 @@ ApuF7_21:
 ApuF8_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   spc_x,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_x,lsl #24
@@ -28199,14 +28199,14 @@ ApuF9_21:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_ya,lsr #8
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   mov   spc_x,r0
   and   spc_p,spc_p,#0xff
   orr   spc_p,spc_p,spc_x,lsl #24
@@ -28219,33 +28219,33 @@ ApuF9_21:
 ApuFA_21:
   ldrb  r0,[spc_pc],#1
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   ldrb  r1,[spc_pc],#1
-	ldr	r2, [context, #iapu_directpage]	
-	cmp	r2, spc_ram			
-	bne	2f				
-	cmp	r1, #0xf0			
-	blo  	2f				
-	cmp	r1, #0xfe			
-	bhs	1f				
+	ldr	r2, [context, #iapu_directpage]
+	cmp	r2, spc_ram
+	bne	2f
+	cmp	r1, #0xf0
+	blo  	2f
+	cmp	r1, #0xfe
+	bhs	1f
 	add	lr, pc, #16
-	cmp	r1, #0xf1			
-	beq	S9xSetAPUControl		
-	cmp	r1, #0xf3			
-	beq	S9xSetAPUDSP			
-	b	S9xAPUSetByteFFtoF0		
-   	ldr   	spc_ram, [context, #iapu_ram]	
-	b	1f				
-2:						
-	strb	r0, [r2, r1]			
-1:						
+	cmp	r1, #0xf1
+	beq	S9xSetAPUControl
+	cmp	r1, #0xf3
+	beq	S9xSetAPUDSP
+	b	S9xAPUSetByteFFtoF0
+   	ldr   	spc_ram, [context, #iapu_ram]
+	b	1f
+2:
+	strb	r0, [r2, r1]
+1:
   subs   cycles,cycles,#105
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]
@@ -28256,14 +28256,14 @@ ApuFB_21:
   ldrb  r0,[spc_pc],#1
   add   r0,r0,spc_x
 	mov	r1, r0
-	cmp	r1, #0xf3			
-	addeq	lr, pc, #20	
-	beq	GetAPUDSP			
+	cmp	r1, #0xf3
+	addeq	lr, pc, #20
+	beq	GetAPUDSP
 	ldr	r14, [context, #iapu_directpage]
-	cmp	r1, #0xfd			
-	ldrb	r0, [r14, r1]			
-	movhs	r2, #0				
-	strhsb	r2, [r14, r1]			
+	cmp	r1, #0xfd
+	ldrb	r0, [r14, r1]
+	movhs	r2, #0
+	strhsb	r2, [r14, r1]
   and   spc_ya,spc_ya,#0xff
   orr   spc_ya,spc_ya,r0,lsl #8
   and   spc_p,spc_p,#0xff
@@ -28323,7 +28323,7 @@ ApuFF_21:
   ldrge  pc,[opcodes,opcode,lsl #2]
   b      spc700End
 5001:
-	.long	CPU	
+	.long	CPU
   subs   cycles,cycles,#63
   ldrgeb opcode,[spc_pc],#1
   ldrge  pc,[opcodes,opcode,lsl #2]

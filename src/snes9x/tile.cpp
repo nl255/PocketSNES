@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -1231,7 +1231,7 @@ void DrawClippedTile16FixedAdd1_2 (uint32 Tile, uint32 Offset,
     register uint8 *bp;
 
     TILE_CLIP_PREAMBLE
-    RENDER_CLIPPED_TILE(WRITE_4PIXELS16_ADDF1_2, 
+    RENDER_CLIPPED_TILE(WRITE_4PIXELS16_ADDF1_2,
 			WRITE_4PIXELS16_FLIPPED_ADDF1_2, 4)
 }
 
@@ -1252,7 +1252,7 @@ void DrawClippedTile16FixedSub1_2 (uint32 Tile, uint32 Offset,
     register uint8 *bp;
 
     TILE_CLIP_PREAMBLE
-    RENDER_CLIPPED_TILE(WRITE_4PIXELS16_SUBF1_2, 
+    RENDER_CLIPPED_TILE(WRITE_4PIXELS16_SUBF1_2,
 			WRITE_4PIXELS16_FLIPPED_SUBF1_2, 4)
 }
 
@@ -1271,7 +1271,7 @@ void DrawLargePixel16Add (uint32 Tile, uint32 Offset,
 			       COLOR_ADD (p, *(s + GFX.Delta))    : \
 			       COLOR_ADD (p, GFX.FixedColour)) \
 			    : p)
-			      
+
     RENDER_TILE_LARGE (ScreenColors [pixel], LARGE_ADD_PIXEL)
 }
 
@@ -1290,7 +1290,7 @@ void DrawLargePixel16Add1_2 (uint32 Tile, uint32 Offset,
 			       COLOR_ADD1_2 (p, *(s + GFX.Delta))    : \
 			       COLOR_ADD (p, GFX.FixedColour)) \
 			    : p))
-			      
+
     RENDER_TILE_LARGE (ScreenColors [pixel], LARGE_ADD_PIXEL1_2)
 }
 
@@ -1309,7 +1309,7 @@ void DrawLargePixel16Sub (uint32 Tile, uint32 Offset,
 			       COLOR_SUB (p, *(s + GFX.Delta))    : \
 			       COLOR_SUB (p, GFX.FixedColour)) \
 			    : p)
-			      
+
     RENDER_TILE_LARGE (ScreenColors [pixel], LARGE_SUB_PIXEL)
 }
 
@@ -1328,7 +1328,7 @@ void DrawLargePixel16Sub1_2 (uint32 Tile, uint32 Offset,
 			       COLOR_SUB1_2 (p, *(s + GFX.Delta))    : \
 			       COLOR_SUB (p, GFX.FixedColour)) \
 			    : p)
-			      
+
     RENDER_TILE_LARGE (ScreenColors [pixel], LARGE_SUB_PIXEL1_2)
 }
 

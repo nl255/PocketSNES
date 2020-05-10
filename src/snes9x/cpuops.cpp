@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -707,7 +707,7 @@ static void Op89M0 (void)
     ICPU._Zero = (ICPU.Registers.A.W & *(uint16 *) CPU.PC) != 0;
 #else
     ICPU._Zero = (ICPU.Registers.A.W & (*CPU.PC + (*(CPU.PC + 1) << 8))) != 0;
-#endif	
+#endif
 #ifndef SA1_OPCODES
     CPU.Cycles += CPU.MemSpeedx2;
 #endif
@@ -801,7 +801,7 @@ static void OpC9M1 (void)
 static void OpC9M0 (void)
 {
     int32 Int32;
-#ifdef FAST_LSB_WORD_ACCESS    
+#ifdef FAST_LSB_WORD_ACCESS
     Int32 = (long) ICPU.Registers.A.W - (long) *(uint16 *) CPU.PC;
 #else
     Int32 = (long) ICPU.Registers.A.W -
@@ -1063,7 +1063,7 @@ static void OpE0X1 (void)
 static void OpE0X0 (void)
 {
     int32 Int32;
-#ifdef FAST_LSB_WORD_ACCESS    
+#ifdef FAST_LSB_WORD_ACCESS
     Int32 = (long) ICPU.Registers.X.W - (long) *(uint16 *) CPU.PC;
 #else
     Int32 = (long) ICPU.Registers.X.W -
@@ -1125,7 +1125,7 @@ static void OpC0X1 (void)
 static void OpC0X0 (void)
 {
     int32 Int32;
-#ifdef FAST_LSB_WORD_ACCESS    
+#ifdef FAST_LSB_WORD_ACCESS
     Int32 = (long) ICPU.Registers.Y.W - (long) *(uint16 *) CPU.PC;
 #else
     Int32 = (long) ICPU.Registers.Y.W -
@@ -3372,7 +3372,7 @@ inline void CPUShutdown()
 	// the delay could allow the shutdown code to cycle skip again.
 	// Was causing screen flashing on Top Gear 3000.
 
-	if (CPU.WaitCounter == 0 && 
+	if (CPU.WaitCounter == 0 &&
 	    !(CPU.Flags & (IRQ_PENDING_FLAG | NMI_FLAG)))
 	{
 	    CPU.WaitAddress = NULL;
@@ -3756,7 +3756,7 @@ static void OpEA (void)
 /* PUSH Instructions ************************************************************************* */
 /* #define PushW(w) \
  *    S9xSetWord (w, ICPU.Registers.S.W - 1);\
- *    ICPU.Registers.S.W -= 2;                 
+ *    ICPU.Registers.S.W -= 2;
  */
 #define PushB(b)\
     S9xSetByte (b, ICPU.Registers.S.W--);
@@ -4012,7 +4012,7 @@ static void Op5AX0 (void)
 
 #define PullWENew(w) \
 	PullW(w);\
-	ICPU.Registers.SH=0x01;	
+	ICPU.Registers.SH=0x01;
 
 //PLA
 static void Op68E1 (void)
@@ -4496,7 +4496,7 @@ void S9xOpcode_IRQ (void)
 			 (Memory.FillRAM [0x2208] << 8));
 #else
 	if (Settings.SA1 && (Memory.FillRAM [0x2209] & 0x40))
-	    S9xSetPCBase (Memory.FillRAM [0x220e] | 
+	    S9xSetPCBase (Memory.FillRAM [0x220e] |
 			  (Memory.FillRAM [0x220f] << 8));
 	else
 	    S9xSetPCBase (S9xGetWord (0xFFEE));
@@ -4519,7 +4519,7 @@ void S9xOpcode_IRQ (void)
 			 (Memory.FillRAM [0x2208] << 8));
 #else
 	if (Settings.SA1 && (Memory.FillRAM [0x2209] & 0x40))
-	    S9xSetPCBase (Memory.FillRAM [0x220e] | 
+	    S9xSetPCBase (Memory.FillRAM [0x220e] |
 			  (Memory.FillRAM [0x220f] << 8));
 	else
 	    S9xSetPCBase (S9xGetWord (0xFFFE));
@@ -4593,7 +4593,7 @@ static void Op02 (void)
 #ifdef DEBUGGER
     if (CPU.Flags & TRACE_FLAG)
 	S9xTraceMessage ("*** COP");
-#endif	
+#endif
     if (!CheckEmulation())
     {
 	PushB (ICPU.Registers.PB);
@@ -4787,12 +4787,12 @@ static void Op54X1 (void)
 #ifndef SA1_OPCODES
     CPU.Cycles += CPU.MemSpeedx2 + TWO_CYCLES;
 #endif
-    
+
     ICPU.Registers.DB = *CPU.PC++;
     ICPU.ShiftedDB = ICPU.Registers.DB << 16;
     OpenBus = SrcBank = *CPU.PC++;
 
-    S9xSetByte (S9xGetByte ((SrcBank << 16) + ICPU.Registers.X.W), 
+    S9xSetByte (S9xGetByte ((SrcBank << 16) + ICPU.Registers.X.W),
 	     ICPU.ShiftedDB + ICPU.Registers.Y.W);
 
     ICPU.Registers.XL++;
@@ -4809,12 +4809,12 @@ static void Op54X0 (void)
 #ifndef SA1_OPCODES
     CPU.Cycles += CPU.MemSpeedx2 + TWO_CYCLES;
 #endif
-    
+
     ICPU.Registers.DB = *CPU.PC++;
     ICPU.ShiftedDB = ICPU.Registers.DB << 16;
     OpenBus = SrcBank = *CPU.PC++;
 
-    S9xSetByte (S9xGetByte ((SrcBank << 16) + ICPU.Registers.X.W), 
+    S9xSetByte (S9xGetByte ((SrcBank << 16) + ICPU.Registers.X.W),
 	     ICPU.ShiftedDB + ICPU.Registers.Y.W);
 
     ICPU.Registers.X.W++;
@@ -4830,11 +4830,11 @@ static void Op44X1 (void)
 
 #ifndef SA1_OPCODES
     CPU.Cycles += CPU.MemSpeedx2 + TWO_CYCLES;
-#endif    
+#endif
     ICPU.Registers.DB = *CPU.PC++;
     ICPU.ShiftedDB = ICPU.Registers.DB << 16;
     OpenBus = SrcBank = *CPU.PC++;
-    S9xSetByte (S9xGetByte ((SrcBank << 16) + ICPU.Registers.X.W), 
+    S9xSetByte (S9xGetByte ((SrcBank << 16) + ICPU.Registers.X.W),
 	     ICPU.ShiftedDB + ICPU.Registers.Y.W);
 
     ICPU.Registers.XL--;
@@ -4850,11 +4850,11 @@ static void Op44X0 (void)
 
 #ifndef SA1_OPCODES
     CPU.Cycles += CPU.MemSpeedx2 + TWO_CYCLES;
-#endif    
+#endif
     ICPU.Registers.DB = *CPU.PC++;
     ICPU.ShiftedDB = ICPU.Registers.DB << 16;
     OpenBus = SrcBank = *CPU.PC++;
-    S9xSetByte (S9xGetByte ((SrcBank << 16) + ICPU.Registers.X.W), 
+    S9xSetByte (S9xGetByte ((SrcBank << 16) + ICPU.Registers.X.W),
 	     ICPU.ShiftedDB + ICPU.Registers.Y.W);
 
     ICPU.Registers.X.W--;

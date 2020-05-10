@@ -8,7 +8,7 @@ static u32 mFrameTime;
 u32 sal_TimerRead()
 {
 	struct timeval tval; // timing
-  
+
   	gettimeofday(&tval, 0);
   	//tval.tv_usec
   	//tval.tv_sec
@@ -30,6 +30,6 @@ s32 sal_TimerInit(s32 frametime)
    	return SAL_OK;
 }
 
-void sal_TimerClose(void) 
+void sal_TimerClose(void)
 {
 }

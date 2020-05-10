@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -189,7 +189,7 @@ void S9xMainLoop_SA1_SFX (void)
     	CPU.Cycles += CPU.MemSpeed;
 
     	(*ICPU.S9xOpcodes [*CPU.PC++].S9xOpcode) ();
-	
+
     	if (SA1.Executing)
     	    S9xSA1MainLoop ();
     	DO_HBLANK_CHECK_SFX();
@@ -273,7 +273,7 @@ void S9xMainLoop_SA1_NoSFX (void)
     	CPU.Cycles += CPU.MemSpeed;
 
     	(*ICPU.S9xOpcodes [*CPU.PC++].S9xOpcode) ();
-	
+
     	if (SA1.Executing)
     	    S9xSA1MainLoop ();
     	DO_HBLANK_CHECK_NoSFX();
@@ -295,7 +295,7 @@ void S9xMainLoop_NoSA1_SFX (void)
     for (;;)
 	{
     	APU_EXECUTE ();
-    
+
     	if (CPU.Flags)
     	{
     	    if (CPU.Flags & NMI_FLAG)
@@ -344,7 +344,7 @@ void S9xMainLoop_NoSA1_SFX (void)
     	CPU.Cycles += CPU.MemSpeed;
 
     	(*ICPU.S9xOpcodes [*CPU.PC++].S9xOpcode) ();
-	
+
     	DO_HBLANK_CHECK_SFX();
     }
 
@@ -373,7 +373,7 @@ void S9xMainLoop_NoSA1_NoSFX (void)
     for (;;)
 	{
     	APU_EXECUTE ();
-    
+
     	if (CPU.Flags)
     	{
     	    if (CPU.Flags & NMI_FLAG)
@@ -422,7 +422,7 @@ void S9xMainLoop_NoSA1_NoSFX (void)
     	CPU.Cycles += CPU.MemSpeed;
 
     	(*ICPU.S9xOpcodes [*CPU.PC++].S9xOpcode) ();
-	
+
     	DO_HBLANK_CHECK_NoSFX();
     }
 
@@ -444,7 +444,7 @@ void S9xSetIRQ (uint32 source)
     CPU.IRQCycleCount = 3;
     if (CPU.WaitingForInterrupt)
     {
-	// Force IRQ to trigger immediately after WAI - 
+	// Force IRQ to trigger immediately after WAI -
 	// Final Fantasy Mystic Quest crashes without this.
 	CPU.IRQCycleCount = 0;
 	CPU.WaitingForInterrupt = FALSE;
@@ -596,7 +596,7 @@ void S9xDoHBlankProcessing_SFX ()
 			{
 				IAPU.RAM [0xff] = (IAPU.RAM [0xff] + 1) & 0xf;
 				APU.Timer [2] -= APU.TimerTarget [2];
-#ifdef SPC700_SHUTDOWN		
+#ifdef SPC700_SHUTDOWN
 				IAPU.WaitCounter++;
 				IAPU.APUExecuting = TRUE;
 #endif
@@ -611,7 +611,7 @@ void S9xDoHBlankProcessing_SFX ()
 				{
 					IAPU.RAM [0xfd] = (IAPU.RAM [0xfd] + 1) & 0xf;
 					APU.Timer [0] = 0;
-#ifdef SPC700_SHUTDOWN		
+#ifdef SPC700_SHUTDOWN
 					IAPU.WaitCounter++;
 					IAPU.APUExecuting = TRUE;
 #endif
@@ -624,10 +624,10 @@ void S9xDoHBlankProcessing_SFX ()
 				{
 					IAPU.RAM [0xfe] = (IAPU.RAM [0xfe] + 1) & 0xf;
 					APU.Timer [1] = 0;
-#ifdef SPC700_SHUTDOWN		
+#ifdef SPC700_SHUTDOWN
 					IAPU.WaitCounter++;
 					IAPU.APUExecuting = TRUE;
-#endif		    
+#endif
 				}
 			}
 	    }
@@ -775,7 +775,7 @@ void S9xDoHBlankProcessing_NoSFX ()
 			{
 				IAPU.RAM [0xff] = (IAPU.RAM [0xff] + 1) & 0xf;
 				APU.Timer [2] -= APU.TimerTarget [2];
-#ifdef SPC700_SHUTDOWN		
+#ifdef SPC700_SHUTDOWN
 				IAPU.WaitCounter++;
 				IAPU.APUExecuting = TRUE;
 #endif
@@ -790,7 +790,7 @@ void S9xDoHBlankProcessing_NoSFX ()
 				{
 					IAPU.RAM [0xfd] = (IAPU.RAM [0xfd] + 1) & 0xf;
 					APU.Timer [0] = 0;
-#ifdef SPC700_SHUTDOWN		
+#ifdef SPC700_SHUTDOWN
 					IAPU.WaitCounter++;
 					IAPU.APUExecuting = TRUE;
 #endif
@@ -803,10 +803,10 @@ void S9xDoHBlankProcessing_NoSFX ()
 				{
 					IAPU.RAM [0xfe] = (IAPU.RAM [0xfe] + 1) & 0xf;
 					APU.Timer [1] = 0;
-#ifdef SPC700_SHUTDOWN		
+#ifdef SPC700_SHUTDOWN
 					IAPU.WaitCounter++;
 					IAPU.APUExecuting = TRUE;
-#endif		    
+#endif
 				}
 			}
 	    }

@@ -50,7 +50,7 @@
 # define ALLOC(size) (malloc(size))
 #endif
 #ifndef TRYFREE
-# define TRYFREE(p) {if (p) free(p);} 
+# define TRYFREE(p) {if (p) free(p);}
 #endif
 
 /*
@@ -971,7 +971,7 @@ extern int ZEXPORT zipWriteInFileInZip (file, buf, len)
 {
     zip_internal* zi;
     int err=ZIP_OK;
-    
+
     if (file == NULL)
         return ZIP_PARAMERROR;
     zi = (zip_internal*)file;
@@ -1096,14 +1096,14 @@ extern int ZEXPORT zipCloseFileInZipRaw (file, uncompressed_size, crc32)
         err = add_data_in_datablock(&zi->central_dir,zi->ci.central_header,
                                       (uLong)zi->ci.size_centralheader);
     TRYFREE(zi->ci.central_header)
-    
+
     if (err==ZIP_OK)
     {
         long cur_pos_inzip = ZTELL(zi->z_filefunc,zi->filestream);
         if (ZSEEK(zi->z_filefunc,zi->filestream,
                   zi->ci.pos_local_header + 14,ZLIB_FILEFUNC_SEEK_SET)!=0)
             err = ZIP_ERRNO;
-   
+
     if (err==ZIP_OK)
             err = ziplocal_putValue(&zi->z_filefunc,zi->filestream,crc32,4); /* crc 32, unknown */
 

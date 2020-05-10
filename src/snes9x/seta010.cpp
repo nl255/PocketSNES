@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -252,7 +252,7 @@ short ST010_Cos(short Theta)
 void ST010_OP01(short x0, short y0, short &x1, short &y1, short &Quadrant, short &Theta)
 {
  	if ((x0 < 0) && (y0 < 0))
-	{	
+	{
 		x1 = -x0;
 		y1 = -y0;
 		Quadrant = -0x8000;
@@ -272,7 +272,7 @@ void ST010_OP01(short x0, short y0, short &x1, short &y1, short &Quadrant, short
 	else
 	{
 		x1 = x0;
-		y1 = y0;	
+		y1 = y0;
 		Quadrant = 0x0000;
 	}
 
@@ -311,7 +311,7 @@ void SETA_Distance(short Y0, short X0, short &Distance)
 	Distance = ((X0 * 0x7af0) + 0x4000) >> 15;
 }
 
-void ST010_SortDrivers(uint16 Positions, uint16 Places[32], uint16 Drivers[32]) 
+void ST010_SortDrivers(uint16 Positions, uint16 Places[32], uint16 Drivers[32])
 {
 	bool Sorted;
 	uint16 Temp;
@@ -320,7 +320,7 @@ void ST010_SortDrivers(uint16 Positions, uint16 Places[32], uint16 Drivers[32])
 		do {
 			Sorted = true;
 			for (int i = 0; i < Positions - 1; i++)
-				if (Places[i] < Places[i + 1]) 
+				if (Places[i] < Places[i + 1])
 				{
 					Temp = Places[i + 1];
 					Places[i + 1] = Places[i];
@@ -378,7 +378,7 @@ void S9xSetST010(uint32 Address, uint8 Byte)
 
 				Offset = 0;
 
-				for (Pos = 0; Pos < Positions; Pos++) 
+				for (Pos = 0; Pos < Positions; Pos++)
 				{
 					Places[Pos] = ST010_WORD(0x0040 + Offset);
 					Offset += 2;
@@ -394,9 +394,9 @@ void S9xSetST010(uint32 Address, uint8 Byte)
 					SRAM[0x0041 + Offset]=(uint8)(Places[Pos] >> 8);
 					Offset += 2;
 				}
-#endif			
+#endif
 				break;
-				
+
 			}
 
 		// Two Dimensional Coordinate Scale
@@ -476,23 +476,23 @@ void S9xSetST010(uint32 Address, uint8 Byte)
 				{
 					// Calculate Mode 7 Matrix A/D data
 					data = ST010_M7Scale[line] * ST010_Cos(Theta) >> 15;
-				
+
 					Memory.SRAM[0x00f0 + offset]=(uint8)(data);
 					Memory.SRAM[0x00f1 + offset]=(uint8)(data >> 8);
 					Memory.SRAM[0x0510 + offset]=(uint8)(data);
-					Memory.SRAM[0x0511 + offset]=(uint8)(data >> 8); 
+					Memory.SRAM[0x0511 + offset]=(uint8)(data >> 8);
 
 					// Calculate Mode 7 Matrix B/C data
-					data = ST010_M7Scale[line] * ST010_Sin(Theta) >> 15;  
+					data = ST010_M7Scale[line] * ST010_Sin(Theta) >> 15;
 
 					Memory.SRAM[0x0250 + offset]=(uint8)(data);
 					Memory.SRAM[0x0251 + offset]=(uint8)(data >> 8);
-		
+
 					if (data) data = ~data;
-				 
+
 					Memory.SRAM[0x03b0 + offset]=(uint8)(data);
 					Memory.SRAM[0x03b1 + offset]=(uint8)(data >> 8);
-		
+
 					offset += 2;
 				}
 

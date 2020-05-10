@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -100,20 +100,20 @@
  * 3004 - R2	pixel plot Y position register
  * 3006 - R3
  * 3008 - R4	lower 16 bit result of lmult
- * 300a - R5 
+ * 300a - R5
  * 300c - R6	multiplier for fmult and lmult
  * 300e - R7	fixed point texel X position for merge
  * 3010 - R8	fixed point texel Y position for merge
- * 3012 - R9 
- * 3014 - R10 
+ * 3012 - R9
+ * 3014 - R10
  * 3016 - R11	return address set by link
  * 3018 - R12	loop counter
  * 301a - R13	loop point address
  * 301c - R14	rom address for getb, getbh, getbl, getbs
- * 301e - R15	program counter 
+ * 301e - R15	program counter
  *
  * 3020-302f -	unused
- * 
+ *
  * Other internal registers
  * 3030 - SFR	status flag register (16bit)
  * 3032 -	unused
@@ -135,21 +135,21 @@
  * 3100-32ff -	CACHERAM 512 bytes of GSU cache memory
  *
  * SFR status flag register bits:
- *  0   -	
+ *  0   -
  *  1   Z	Zero flag
  *  2   CY	Carry flag
  *  3   S	Sign flag
  *  4   OV	Overflow flag
  *  5   G	Go flag (set to 1 when the GSU is running)
  *  6   R	Set to 1 when reading ROM using R14 address
- *  7   -	
+ *  7   -
  *  8   ALT1	Mode set-up flag for the next instruction
  *  9   ALT2	Mode set-up flag for the next instruction
  * 10   IL	Immediate lower 8-bit flag
  * 11   IH	Immediate higher 8-bit flag
  * 12   B	Set to 1 when the WITH instruction is executed
- * 13   -	
- * 14   -	
+ * 13   -
+ * 14   -
  * 15   IRQ	Set to 1 when GSU caused an interrupt
  *              Set to 0 when read by 658c16
  *
@@ -157,13 +157,13 @@
  * BRAMR = 1, BackupRAM is enabled
  *
  * CFGR control flags register bits:
- *  0   -	
- *  1   -	
- *  2   -	
- *  3   -	
- *  4   -	
+ *  0   -
+ *  1   -
+ *  2   -
+ *  3   -
+ *  4   -
  *  5   MS0	Multiplier speed, 0=standard, 1=high speed
- *  6   -	
+ *  6   -
  *  7   IRQ	Set to 1 when GSU interrupt request is masked
  *
  * CLSR clock speed register bits:
@@ -176,8 +176,8 @@
  *  3	RAN	RAM access control
  *  4	RON	ROM access control
  *  5	HT1	screen height bit 2
- *  6	-	
- *  7	-	
+ *  6	-
+ *  7	-
  *
  * RON = 0	SNES CPU has ROM access
  * RON = 1	GSU has ROM access
@@ -240,12 +240,12 @@ struct FxRegs_s
     uint32	vZero;			/* v == 0 */
     uint32	vCarry;			/* a value of 1 or 0 */
     int32	vOverflow;		/* (v >= 0x8000 || v < -0x8000) */
-    
+
     /* Other emulator variables */
-    
+
     int32	vErrorCode;
     uint32	vIllegalAddress;
-    
+
     uint8 *	pvRegisters;	/* 768 bytes located in the memory at address 0x3000 */
     uint32	nRamBanks;	/* Number of 64kb-banks in FxRam (Don't confuse it with SNES-Ram!!!) */
     uint8 *	pvRam;		/* Pointer to FxRam */
@@ -261,7 +261,7 @@ struct FxRegs_s
     uint32	vScreenRealHeight;	/* 128, 160, 192 or 256 */
     uint32	vPrevScreenHeight;
     uint32	vScreenSize;
-    
+
     uint8 *	pvRamBank;		/* Pointer to current RAM-bank */
     uint8 *	pvRomBank;		/* Pointer to current ROM-bank */
     uint8 *	pvPrgBank;		/* Pointer to current program ROM-bank */

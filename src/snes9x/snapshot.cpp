@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -206,28 +206,28 @@ static FreezeData SnapPPU [] = {
     {OFFSET (BG[0].BGSize), 1, INT_V},
     {OFFSET (BG[0].NameBase), 2, INT_V},
     {OFFSET (BG[0].SCSize), 2, INT_V},
-	
+
     {OFFSET (BG[1].SCBase), 2, INT_V},
     {OFFSET (BG[1].VOffset), 2, INT_V},
     {OFFSET (BG[1].HOffset), 2, INT_V},
     {OFFSET (BG[1].BGSize), 1, INT_V},
     {OFFSET (BG[1].NameBase), 2, INT_V},
     {OFFSET (BG[1].SCSize), 2, INT_V},
-	
+
     {OFFSET (BG[2].SCBase), 2, INT_V},
     {OFFSET (BG[2].VOffset), 2, INT_V},
     {OFFSET (BG[2].HOffset), 2, INT_V},
     {OFFSET (BG[2].BGSize), 1, INT_V},
     {OFFSET (BG[2].NameBase), 2, INT_V},
     {OFFSET (BG[2].SCSize), 2, INT_V},
-	
+
     {OFFSET (BG[3].SCBase), 2, INT_V},
     {OFFSET (BG[3].VOffset), 2, INT_V},
     {OFFSET (BG[3].HOffset), 2, INT_V},
     {OFFSET (BG[3].BGSize), 1, INT_V},
     {OFFSET (BG[3].NameBase), 2, INT_V},
     {OFFSET (BG[3].SCSize), 2, INT_V},
-	
+
     {OFFSET (CGFLIP), 1, INT_V},
     {OFFSET (CGDATA), 256, uint16_ARRAY_V},
     {OFFSET (FirstSprite), 1, INT_V},
@@ -240,7 +240,7 @@ static FreezeData SnapPPU [] = {
     {OFFSET (OBJ[N].Priority), 1, INT_V}, \
     {OFFSET (OBJ[N].Palette), 1, INT_V}, \
     {OFFSET (OBJ[N].Size), 1, INT_V}
-	
+
     O(  0), O(  1), O(  2), O(  3), O(  4), O(  5), O(  6), O(  7),
     O(  8), O(  9), O( 10), O( 11), O( 12), O( 13), O( 14), O( 15),
     O( 16), O( 17), O( 18), O( 19), O( 20), O( 21), O( 22), O( 23),
@@ -307,11 +307,11 @@ static FreezeData SnapPPU [] = {
     {OFFSET (ClipWindow2Enable[N]), 1, INT_V}, \
     {OFFSET (ClipWindow1Inside[N]), 1, INT_V}, \
     {OFFSET (ClipWindow2Inside[N]), 1, INT_V}
-	
+
     O(0), O(1), O(2), O(3), O(4), O(5),
-	
+
 #undef O
-	
+
     {OFFSET (CGFLIPRead), 1, INT_V},
     {OFFSET (Need16x8Mulitply), 1, INT_V},
     {OFFSET (BGMosaic), 4, uint8_ARRAY_V},
@@ -340,7 +340,7 @@ static FreezeData SnapDMA [] = {
     {(int) (OFFSET (Repeat) + N * sizeof (struct SDMA)), 1, INT_V}, \
     {(int) (OFFSET (LineCount) + N * sizeof (struct SDMA)), 1, INT_V}, \
     {(int) (OFFSET (FirstLine) + N * sizeof (struct SDMA)), 1, INT_V}
-	
+
     O(0), O(1), O(2), O(3), O(4), O(5), O(6), O(7)
 #undef O
 };
@@ -425,7 +425,7 @@ static FreezeData SnapSoundData [] = {
     {OFFSET (channels [N].block_pointer), 4, INT_V}, \
     {OFFSET (channels [N].sample_pointer), 4, INT_V}, \
     {OFFSET (channels [N].mode), 4, INT_V}
-	
+
     O(0), O(1), O(2), O(3), O(4), O(5), O(6), O(7)
 #undef O
 };
@@ -585,7 +585,7 @@ bool8 S9xUnfreezeGame (const char *filename)
 {
     if (S9xLoadOrigSnapshot (filename))
 		return (TRUE);
-	
+
     if (S9xUnfreezeZSNES (filename))
 		return (TRUE);
 
@@ -603,7 +603,7 @@ bool8 S9xUnfreezeGame (const char *filename)
 		switch (result)
 		{
 			case WRONG_FORMAT:
-				S9xMessage (S9X_ERROR, S9X_WRONG_FORMAT, 
+				S9xMessage (S9X_ERROR, S9X_WRONG_FORMAT,
 					"File not in Snes9x freeze format");
 				break;
 			case WRONG_VERSION:
@@ -642,16 +642,16 @@ void S9xFreezeToStream (STREAM stream)
 {
     char buffer [1024];
     int i;
-	
+
     S9xSetSoundMute (TRUE);
 #ifdef ZSNES_FX
     if (Settings.SuperFX)
 		S9xSuperFXPreSaveState ();
 #endif
-	
+
 	S9xUpdateRTC();
     S9xSRTCPreSaveState ();
-	
+
     for (i = 0; i < 8; i++)
     {
 		SoundData.channels [i].previous16 [0] = (int16) SoundData.channels [i].previous [0];
@@ -687,10 +687,10 @@ void S9xFreezeToStream (STREAM stream)
 		SA1.Registers.PC = SA1.PC - SA1.PCBase;
 		S9xSA1PackStatus ();
 		FreezeStruct (stream, "SA1", &SA1, SnapSA1, COUNT (SnapSA1));
-		FreezeStruct (stream, "SAR", &SA1.Registers, SnapSA1Registers, 
+		FreezeStruct (stream, "SAR", &SA1.Registers, SnapSA1Registers,
 			COUNT (SnapSA1Registers));
     }
-	
+
 	if (Settings.SPC7110)
     {
 		FreezeStruct (stream, "SP7", &s7r, SnapSPC7110, COUNT (SnapSPC7110));
@@ -728,7 +728,7 @@ int S9xUnfreezeFromStream (STREAM stream)
     char buffer [_MAX_PATH + 1];
     char rom_filename [_MAX_PATH + 1];
     int result;
-	
+
     int version;
     unsigned int len = strlen (SNAPSHOT_MAGIC) + 1 + 4 + 1;
     if (READ_STREAM (buffer, len, stream) != len)
@@ -737,17 +737,17 @@ int S9xUnfreezeFromStream (STREAM stream)
 		return (WRONG_FORMAT);
     if ((version = atoi (&buffer [strlen (SNAPSHOT_MAGIC) + 1])) > SNAPSHOT_VERSION)
 		return (WRONG_VERSION);
-	
+
     if ((result = UnfreezeBlock (stream, "NAM", (uint8 *) rom_filename, _MAX_PATH)) != SUCCESS)
 		return (result);
-	
+
     if (strcasecmp (rom_filename, Memory.ROMFilename) != 0 &&
 		strcasecmp (S9xBasename (rom_filename), S9xBasename (Memory.ROMFilename)) != 0)
     {
 		S9xMessage (S9X_WARNING, S9X_FREEZE_ROM_NAME,
 			"Current loaded ROM image doesn't match that required by freeze-game file.");
     }
-	
+
 // ## begin load ##
 	uint8* local_cpu = NULL;
 	uint8* local_registers = NULL;
@@ -799,7 +799,7 @@ int S9xUnfreezeFromStream (STREAM stream)
 			if ((result = UnfreezeStructCopy (stream, "SAR", &local_sa1_registers, SnapSA1Registers, COUNT (SnapSA1Registers))) != SUCCESS)
 				break;
 		}
-		
+
 		if ((result = UnfreezeStructCopy (stream, "SP7", &local_spc, SnapSPC7110, COUNT(SnapSPC7110))) != SUCCESS)
 		{
 			if(Settings.SPC7110)
@@ -937,7 +937,7 @@ int S9xUnfreezeFromStream (STREAM stream)
 		if (Settings.SuperFX)
 			S9xSuperFXPostLoadState ();
 #endif
-		
+
 		S9xSRTCPostLoadState ();
 		if (Settings.SDD1)
 			S9xSDD1PostLoadState ();
@@ -984,21 +984,21 @@ void FreezeStruct (STREAM stream, const char *name, void *base, FreezeData *fiel
     int len = 0;
     int i;
     int j;
-	
+
     for (i = 0; i < num_fields; i++)
     {
-		if (fields [i].offset + FreezeSize (fields [i].size, 
+		if (fields [i].offset + FreezeSize (fields [i].size,
 			fields [i].type) > len)
-			len = fields [i].offset + FreezeSize (fields [i].size, 
+			len = fields [i].offset + FreezeSize (fields [i].size,
 			fields [i].type);
     }
-	
+
     uint8 *block = new uint8 [len];
     uint8 *ptr = block;
     uint16 word;
     uint32 dword;
     int64  qword;
-	
+
     // Build the block ready to be streamed out
     for (i = 0; i < num_fields; i++)
     {
@@ -1060,7 +1060,7 @@ void FreezeStruct (STREAM stream, const char *name, void *base, FreezeData *fiel
 				break;
 		}
     }
-	
+
     FreezeBlock (stream, name, block, len);
     delete[] block;
 }
@@ -1071,7 +1071,7 @@ void FreezeBlock (STREAM stream, const char *name, uint8 *block, int size)
     sprintf (buffer, "%s:%06d:", name, size);
     WRITE_STREAM (buffer, strlen (buffer), stream);
     WRITE_STREAM ((char*)block, size, stream);
-    
+
 }
 
 int UnfreezeStruct (STREAM stream, const char *name, void *base, FreezeData *fields,
@@ -1081,28 +1081,28 @@ int UnfreezeStruct (STREAM stream, const char *name, void *base, FreezeData *fie
     int len = 0;
     int i;
     int j;
-	
+
     for (i = 0; i < num_fields; i++)
     {
-		if (fields [i].offset + FreezeSize (fields [i].size, 
+		if (fields [i].offset + FreezeSize (fields [i].size,
 			fields [i].type) > len)
-			len = fields [i].offset + FreezeSize (fields [i].size, 
+			len = fields [i].offset + FreezeSize (fields [i].size,
 			fields [i].type);
     }
-	
+
     uint8 *block = new uint8 [len];
     uint8 *ptr = block;
     uint16 word;
     uint32 dword;
     int64  qword;
     int result;
-	
+
     if ((result = UnfreezeBlock (stream, name, block, len)) != SUCCESS)
     {
 		delete block;
 		return (result);
     }
-	
+
     // Unpack the block of data into a C structure
     for (i = 0; i < num_fields; i++)
     {
@@ -1164,7 +1164,7 @@ int UnfreezeStruct (STREAM stream, const char *name, void *base, FreezeData *fie
 				break;
 		}
     }
-	
+
     delete [] block;
     return (result);
 }
@@ -1199,7 +1199,7 @@ int UnfreezeBlock (STREAM stream, const char *name, uint8 *block, int size)
 		READ_STREAM (junk, rem, stream);
 		delete [] junk;
     }
-	
+
     return (SUCCESS);
 }
 
@@ -1208,15 +1208,15 @@ int UnfreezeStructCopy (STREAM stream, const char *name, uint8** block, FreezeDa
     // Work out the size of the required block
     int len = 0;
     int i;
-	
+
     for (i = 0; i < num_fields; i++)
     {
-		if (fields [i].offset + FreezeSize (fields [i].size, 
+		if (fields [i].offset + FreezeSize (fields [i].size,
 			fields [i].type) > len)
-			len = fields [i].offset + FreezeSize (fields [i].size, 
+			len = fields [i].offset + FreezeSize (fields [i].size,
 			fields [i].type);
     }
-	
+
     return (UnfreezeBlockCopy (stream, name, block, len));
 }
 
@@ -1228,7 +1228,7 @@ void UnfreezeStructFromCopy (void *base, FreezeData *fields, int num_fields, uin
     uint16 word;
     uint32 dword;
     int64  qword;
-	
+
     // Unpack the block of data into a C structure
     for (i = 0; i < num_fields; i++)
     {
@@ -1296,14 +1296,14 @@ int UnfreezeBlockCopy (STREAM stream, const char *name, uint8** block, int size)
 {
     *block = new uint8 [size];
     int result;
-	
+
     if ((result = UnfreezeBlock (stream, name, *block, size)) != SUCCESS)
     {
 		delete [] (*block);
 		*block = NULL;
 		return (result);
     }
-	
+
     return (result);
 }
 
@@ -1321,14 +1321,14 @@ bool8 S9xSPCDump (const char *filename)
     static uint8 version = {
 		0x1e
     };
-	
+
     FILE *fs;
-	
+
     S9xSetSoundMute (TRUE);
-	
+
     if (!(fs = fopen (filename, "wb")))
 		return (FALSE);
-	
+
     // The SPC file format:
     // 0000: header:	'SNES-SPC700 Sound File Data v0.30',26,26,26
     // 0036: version:	$1e
@@ -1351,7 +1351,7 @@ bool8 S9xSPCDump (const char *filename)
     // 0000: Reserved: 36 bytes
     // 0256: SPC700 RAM: 64K
     // ----: DSP Registers: 256 bytes
-	
+
     if (fwrite (header, sizeof (header), 1, fs) != 1 ||
 		fputc (version, fs) == EOF ||
 		fseek (fs, 37, SEEK_SET) == EOF ||
@@ -1380,24 +1380,24 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 {
     FILE *fs;
     uint8 t [4000];
-	
+
     if (!(fs = fopen (filename, "rb")))
 		return (FALSE);
-	
+
     if (fread ((char*)t, 64, 1, fs) == 1 &&
 		strncmp ((char *) t, "ZSNES Save State File V0.6", 26) == 0)
     {
 		S9xReset ();
 		S9xSetSoundMute (TRUE);
-		
+
 		// 28 Curr cycle
 		CPU.V_Counter = READ_WORD (&t [29]);
 		// 33 instrset
 		Settings.APUEnabled = t [36];
-		
+
 		// 34 bcycpl cycles per scanline
 		// 35 cycphb cyclers per hblank
-		
+
 		ICPU.Registers.A.W   = READ_WORD (&t [41]);
 		ICPU.Registers.DB    = t [43];
 		ICPU.Registers.PB    = t [44];
@@ -1407,7 +1407,7 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 		ICPU.Registers.Y.W   = READ_WORD (&t [51]);
 		ICPU.Registers.P.W   = READ_WORD (&t [53]);
 		ICPU.Registers.PC    = READ_WORD (&t [55]);
-		
+
 		fread ((char*)t, 1, 8, fs);
 		fread ((char*)t, 1, 3019, fs);
 		S9xSetCPU (t [2], 0x4200);
@@ -1416,11 +1416,11 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 		PPU.IRQHBeamPos = READ_WORD (&t [2527]);
 		PPU.Brightness = t [6];
 		PPU.ForcedBlanking = t [8] >> 7;
-		
+
 		int i;
 		for (i = 0; i < 544; i++)
 			S9xSetPPU (t [0464 + i], 0x2104);
-		
+
 		PPU.OBJNameBase = READ_WORD (&t [9]);
 		PPU.OBJNameSelect = READ_WORD (&t [13]) - PPU.OBJNameBase;
 		switch (t [18])
@@ -1491,7 +1491,7 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 		PPU.VMA.Address = READ_DWORD (&t [101]);
 		for (i = 0; i < 512; i++)
 			S9xSetPPU (t [1488 + i], 0x2122);
-		
+
 		PPU.CGADD = (uint8) READ_WORD (&t [105]);
 		Memory.FillRAM [0x212c] = t [108];
 		Memory.FillRAM [0x212d] = t [109];
@@ -1530,13 +1530,13 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 		Memory.FillRAM [0x2135] = t [157]; // Matrix mult
 		Memory.FillRAM [0x2136] = t [158]; // Matrix mult
 		PPU.WRAM = READ_DWORD (&t [161]);
-		
+
 		for (i = 0; i < 128; i++)
 			S9xSetCPU (t [165 + i], 0x4300 + i);
-		
+
 		if (t [294])
 			CPU.IRQActive |= PPU_V_BEAM_IRQ_SOURCE | PPU_H_BEAM_IRQ_SOURCE;
-		
+
 		S9xSetCPU (t [296], 0x420c);
 		// hdmadata t[297] + 8 * 19
 		PPU.FixedColourRed = t [450];
@@ -1545,35 +1545,35 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 		S9xSetPPU (t [454], 0x2130);
 		S9xSetPPU (t [455], 0x2131);
 		// vraminctype ...
-		
+
 		fread ((char*)Memory.RAM, 1, 128 * 1024, fs);
 		fread ((char*)Memory.VRAM, 1, 64 * 1024, fs);
-		
+
 		if (Settings.APUEnabled)
 		{
 			// SNES SPC700 RAM (64K)
 			fread ((char*)IAPU.RAM, 1, 64 * 1024, fs);
-			
+
 			// Junk 16 bytes
 			fread ((char*)t, 1, 16, fs);
-			
+
 			// SNES SPC700 state and internal ZSNES SPC700 emulation state
 			fread ((char*)t, 1, 304, fs);
-			
+
 			IAPU.Registers.PC   = READ_DWORD (&t [0]);
 			IAPU.Registers.YA.B.A = t [4];
 			IAPU.Registers.X    = t [8];
 			IAPU.Registers.YA.B.Y = t [12];
 			IAPU.Registers.P    = t [16];
 			IAPU.Registers.S    = t [24];
-			
+
 			APU.Cycles = READ_DWORD (&t [32]);
 			APU.ShowROM = (IAPU.RAM [0xf1] & 0x80) != 0;
 			APU.OutPorts [0] = t [36];
 			APU.OutPorts [1] = t [37];
 			APU.OutPorts [2] = t [38];
 			APU.OutPorts [3] = t [39];
-			
+
 			APU.TimerEnabled [0] = (t [40] & 1) != 0;
 			APU.TimerEnabled [1] = (t [40] & 2) != 0;
 			APU.TimerEnabled [2] = (t [40] & 4) != 0;
@@ -1583,18 +1583,18 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 			APU.Timer [0] = t [44];
 			APU.Timer [1] = t [45];
 			APU.Timer [2] = t [46];
-			
+
 			// memmove converted: Different mallocs [Neb]
 			memmove (APU.ExtraRAM, &t [48], 64);
-			
+
 			// Internal ZSNES sound DSP state
 			fread (t, 1, 1068, fs);
-			
+
 			// SNES sound DSP register values
 			fread (t, 1, 256, fs);
-			
+
 			uint8 saved = IAPU.RAM [0xf2];
-			
+
 			for (i = 0; i < 128; i++)
 			{
 				switch (i)
@@ -1613,7 +1613,7 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 			IAPU.RAM [0xf2] = APU_KON;
 			S9xSetAPUDSP (t [APU_KON]);
 			IAPU.RAM [0xf2] = saved;
-			
+
 			S9xSetSoundMute (FALSE);
 			IAPU.PC = IAPU.RAM + IAPU.Registers.PC;
 			S9xAPUUnpackStatus ();
@@ -1630,7 +1630,7 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 			IAPU.APUExecuting = FALSE;
 			S9xSetSoundMute (TRUE);
 		}
-		
+
 		if (Settings.SuperFX)
 		{
 			fread (::SRAM, 1, 64 * 1024, fs);
@@ -1650,7 +1650,7 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 			S9xSetSA1 (((READ_DWORD (&t [28]) - (4096*1024-0x6000))) >> 13, 0x2224);
 			S9xSetSA1 (t [36], 0x2201);
 			S9xSetSA1 (t [41], 0x2209);
-			
+
 			SA1.Registers.A.W = READ_DWORD (&t [592]);
 			SA1.Registers.X.W = READ_DWORD (&t [596]);
 			SA1.Registers.Y.W = READ_DWORD (&t [600]);
@@ -1660,11 +1660,11 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 			SA1.Registers.S.W = READ_DWORD (&t [616]);
 			SA1.Registers.PC  = READ_DWORD (&t [636]);
 			SA1.Registers.P.W = t [620] | (t [624] << 8);
-			
+
 			// memmove converted: Different mallocs [Neb]
 			// DS2 DMA notes: This code path is not used [Neb]
 			memmove (&Memory.FillRAM [0x3000], t + 692, 2 * 1024);
-			
+
 			fread (::SRAM, 1, 64 * 1024, fs);
 			fseek (fs, 64 * 1024, SEEK_CUR);
 			S9xFixSA1AfterSnapshotLoad ();
@@ -1673,10 +1673,10 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 		{
 			uint32 temp;
 			fread(&s7r.bank50, 1,0x10000, fs);
-			
+
 			//NEWSYM SPCMultA, dd 0  4820-23
 			fread(&temp, 1, 4, fs);
-			
+
 			s7r.reg4820=temp&(0x0FF);
 			s7r.reg4821=(temp>>8)&(0x0FF);
 			s7r.reg4822=(temp>>16)&(0x0FF);
@@ -1695,12 +1695,12 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 
 			//NEWSYM SPCMulRes, dd 0				4828-B
 			fread(&temp, 1, 4, fs);
-			
+
 			s7r.reg4828=temp&(0x0FF);
 			s7r.reg4829=(temp>>8)&(0x0FF);
 			s7r.reg482A=(temp>>16)&(0x0FF);
 			s7r.reg482B=(temp>>24)&(0x0FF);
-			
+
 			//NEWSYM SPCDivRes, dd 0				482C-D
 			fread(&temp, 1,4,fs);
 			s7r.reg482C=temp&(0x0FF);
@@ -1708,14 +1708,14 @@ bool8 S9xUnfreezeZSNES (const char *filename)
 
 			//NEWSYM SPC7110BankA, dd 020100h		4831-3
 			fread(&temp, 1, 4, fs);
-			
+
 			s7r.reg4831=temp&(0x0FF);
 			s7r.reg4832=(temp>>8)&(0x0FF);
 			s7r.reg4833=(temp>>16)&(0x0FF);
-			
+
 			//NEWSYM SPC7110RTCStat, dd 0			4840,init,command, index
 			fread(&temp, 1, 4, fs);
-			
+
 			s7r.reg4840=temp&(0x0FF);
 
 //NEWSYM SPC7110RTC, db 00,00,00,00,00,00,01,00,01,00,00,00,00,00,0Fh,00
@@ -1759,7 +1759,7 @@ fread(&temp, 1, 4, fs);
 
 //NEWSYM SPCROMPtr, dd 0		4811-4813
 			fread(&temp, 1, 4, fs);
-			
+
 			s7r.reg4811=temp&(0x0FF);
 			s7r.reg4812=(temp>>8)&(0x0FF);
 			s7r.reg4813=(temp>>16)&(0x0FF);
@@ -1775,13 +1775,13 @@ fread(&temp, 1, 4, fs);
 			s7r.reg4817=(temp>>8)&(0x0FF);
 //NEWSYM SPCROMCom, dd 0		4818
 fread(&temp, 1, 4, fs);
-			
+
 			s7r.reg4818=temp&(0x0FF);
 //NEWSYM SPCCompPtr, dd 0  4801-4804 (+b50i) if"manual"
 			fread(&temp, 1, 4, fs);
 
 			//do table check
-			
+
 			s7r.reg4801=temp&(0x0FF);
 			s7r.reg4802=(temp>>8)&(0x0FF);
 			s7r.reg4803=(temp>>16)&(0x0FF);
@@ -1796,26 +1796,26 @@ fread(&temp, 1, 4, fs);
 			s7r.reg480A=(temp>>8)&(0x0FF);
 //NEWSYM SPCCompCommand, dd 0  480B
 fread(&temp, 1, 4, fs);
-			
+
 			s7r.reg480B=temp&(0x0FF);
 //NEWSYM SPCCheckFix, dd 0		written(if 1, then set writtne to max value!)
 fread(&temp, 1, 4, fs);
 (temp&(0x0FF))?s7r.written=0x1F:s7r.written=0x00;
 //NEWSYM SPCSignedVal, dd 0	482E
 fread(&temp, 1, 4, fs);
-			
+
 			s7r.reg482E=temp&(0x0FF);
-			
+
 		}
 		fclose (fs);
-		
+
 		Memory.FixROMSpeed ();
 		IPPU.ColorsChanged = TRUE;
 		IPPU.OBJChanged = TRUE;
 		CPU.InDMA = FALSE;
 		S9xFixColourBrightness ();
 		IPPU.RenderThisFrame = FALSE;
-		
+
 		S9xFixSoundAfterSnapshotLoad ();
 		ICPU.ShiftedPB = ICPU.Registers.PB << 16;
 		ICPU.ShiftedDB = ICPU.Registers.DB << 16;

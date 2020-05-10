@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -896,7 +896,7 @@ void S9xSetPPU (uint8 Byte, uint16 Address)
 		  case 0x217c: case 0x217d: case 0x217e: case 0x217f:
 #ifdef SPCTOOL
 			_SPCInPB (Address & 3, Byte);
-#else	
+#else
 			//	CPU.Flags |= DEBUG_MODE_FLAG;
 			Memory.FillRAM [Address] = Byte;
 			IAPU.RAM [(Address & 3) + 0xf4] = Byte;
@@ -1215,7 +1215,7 @@ uint8 S9xGetPPU (uint16 Address)
 			}
 			else
 				byte = Memory.VRAM[((PPU.VMA.Address << 1) - 2) & 0xffff];
-			
+
 			if (!PPU.VMA.High)
 			{
 				PPU.VMA.Address += PPU.VMA.Increment;
@@ -1281,7 +1281,7 @@ uint8 S9xGetPPU (uint16 Address)
 
 	    PPU.CGFLIPRead ^= 1;
 	    return (PPU.OpenBus2 = byte);
-	    
+
 	case 0x213C:
 	    // Horizontal counter value 0-339
 #ifdef DEBUGGER
@@ -1345,7 +1345,7 @@ uint8 S9xGetPPU (uint16 Address)
 	    return ((uint8) _SPCOutP [Address & 3]);
 #else
     //	CPU.Flags |= DEBUG_MODE_FLAG;
-#ifdef SPC700_SHUTDOWN	
+#ifdef SPC700_SHUTDOWN
 	    IAPU.APUExecuting = Settings.APUEnabled;
 	    IAPU.WaitCounter++;
 #endif
@@ -1357,7 +1357,7 @@ uint8 S9xGetPPU (uint16 Address)
 		if (SNESGameFixes.APU_OutPorts_ReturnValueFix &&
 		    Address >= 0x2140 && Address <= 0x2143 && !CPU.V_Counter)
 		{
-                    return (uint8)((Address & 1) ? ((rand() & 0xff00) >> 8) : 
+                    return (uint8)((Address & 1) ? ((rand() & 0xff00) >> 8) :
 				   (rand() & 0xff));
 		}
 
@@ -1434,7 +1434,7 @@ uint8 S9xGetPPU (uint16 Address)
 		if (Settings.SRTC)
 		    return (S9xGetSRTC (Address));
 		/*FALL*/
-			    
+
 	    default:
 #ifdef DEBUGGER
 	        missing.unknownppu_read = Address;
@@ -1447,7 +1447,7 @@ uint8 S9xGetPPU (uint16 Address)
 		return OpenBus;
 	    }
 	}
-	
+
 	if (!Settings.SuperFX)
 		return OpenBus;
 #ifdef ZSNES_FX
@@ -1459,7 +1459,7 @@ uint8 S9xGetPPU (uint16 Address)
 #ifdef CPU_SHUTDOWN
 	if (Address == 0x3030)
 	    CPU.WaitAddress = CPU.PCAtOpcodeStart;
-#endif	
+#endif
 	if (Address == 0x3031)
 	    CLEAR_IRQ_SOURCE (GSU_IRQ_SOURCE);
 #else
@@ -1575,10 +1575,10 @@ void S9xSetCPU (uint8 byte, uint16 Address)
 			if (!Settings.DaffyDuck)
 				CLEAR_IRQ_SOURCE (PPU_V_BEAM_IRQ_SOURCE | PPU_H_BEAM_IRQ_SOURCE);
 
-			if ((byte & 0x80) && 
+			if ((byte & 0x80) &&
 				!(Memory.FillRAM [0x4200] & 0x80) &&
 				CPU.V_Counter >= PPU.ScreenHeight + FIRST_VISIBLE_LINE &&
-				CPU.V_Counter <= PPU.ScreenHeight + 
+				CPU.V_Counter <= PPU.ScreenHeight +
 				(SNESGameFixes.alienVSpredetorFix ? 25 : 15) &&   //jyam 15->25 alien vs predetor
 // Panic Bomberman clears the NMI pending flag @ scanline 230 before enabling
 // NMIs again. The NMI routine crashes the CPU if it is called without the NMI
@@ -1718,7 +1718,7 @@ void S9xSetCPU (uint8 byte, uint16 Address)
 		  case 0x420C:
 #ifdef DEBUGGER
 			missing.hdma_this_frame |= byte;
-			missing.hdma_channels |= byte; 
+			missing.hdma_channels |= byte;
 #endif
 			if (Settings.DisableHDMA)
 				byte = 0;
@@ -2159,7 +2159,7 @@ uint8 S9xGetCPU (uint16 Address)
 	  case 0x4210:
 #ifdef CPU_SHUTDOWN
 		CPU.WaitAddress = CPU.PCAtOpcodeStart;
-#endif	
+#endif
 		byte = Memory.FillRAM[0x4210];
 		Memory.FillRAM[0x4210] = Model->_5A22;
 		//SNEeSe returns 2 for 5A22 version.
@@ -2349,7 +2349,7 @@ uint8 S9xGetCPU (uint16 Address)
 	    sprintf (String, "Unknown register read: $%04X\n", Address);
 	    S9xMessage (S9X_TRACE, S9X_PPU_TRACE, String);
 	}
-	    
+
 #endif
 
 		if(Address>= 0x4800&&Settings.SPC7110)
@@ -2598,12 +2598,12 @@ void S9xProcessMouse (int which1)
 {
     int x, y;
     uint32 buttons;
-    
+
     if ((IPPU.Controller == SNES_MOUSE || IPPU.Controller == SNES_MOUSE_SWAPPED) && S9xReadMousePosition (which1, x, y, buttons))
     {
 		int delta_x, delta_y;
 #define MOUSE_SIGNATURE 0x1
-		IPPU.Mouse [which1] = MOUSE_SIGNATURE | 
+		IPPU.Mouse [which1] = MOUSE_SIGNATURE |
 			      (PPU.MouseSpeed [which1] << 4) |
 		              ((buttons & 1) << 6) | ((buttons & 2) << 6);
 
@@ -2769,9 +2769,9 @@ void S9xUpdateJustifiers()
 
 	if(Memory.FillRAM[0x4201]&0x80)
 	{
-		
+
 		S9xReadSuperScopePosition(x,y,buttons);
-		
+
 		x+=40;
 		if (x > 295)
 			x = 295;
@@ -2781,13 +2781,13 @@ void S9xUpdateJustifiers()
 			y = PPU.ScreenHeight - 1;
 		if (y < 0)
 			y = 0;
-		
+
 		if(last_p1)
 		{
-			
+
 			PPU.HVBeamCounterLatched = FALSE;
 			Memory.FillRAM [0x213F] = Model->_5C78;
-			
+
 			//process latch as Justifier 2
 			if(Settings.SecondJustifier)
 			{
@@ -2795,7 +2795,7 @@ void S9xUpdateJustifiers()
 				{
 					if(!offscreen)
 					{
-						
+
 						PPU.VBeamPosLatched = (uint16) (y + 1);
 						PPU.HBeamPosLatched = (uint16) x;
 						PPU.HVBeamCounterLatched = TRUE;
@@ -2806,10 +2806,10 @@ void S9xUpdateJustifiers()
 		}
 		else
 		{
-			
+
 			PPU.HVBeamCounterLatched = FALSE;
 			Memory.FillRAM [0x213F] = Model->_5C78;
-			
+
 			//emulate player 1.
 			if(IPPU.Controller==SNES_JUSTIFIER)
 			{
@@ -2822,11 +2822,11 @@ void S9xUpdateJustifiers()
 				}
 			}
 		}
-		
+
 		//needs restructure
 		if(!offscreen)
 		{
-			
+
 			if((!last_p1&&IPPU.Controller==SNES_JUSTIFIER)||(last_p1&&IPPU.Controller==SNES_JUSTIFIER_2))
 			{
 				PPU.VBeamPosLatched = (uint16) (y + 1);
@@ -2838,7 +2838,7 @@ void S9xUpdateJustifiers()
 			{
 				PPU.HVBeamCounterLatched = FALSE;
 				Memory.FillRAM [0x213F] = Model->_5C78;
-				
+
 			}
 		}
 		else
@@ -2867,7 +2867,7 @@ void S9xUpdateJoypads ()
 		if ((IPPU.Joypads [i] & (SNES_UP_MASK | SNES_DOWN_MASK)) == (SNES_UP_MASK | SNES_DOWN_MASK))
 			IPPU.Joypads [i] &= ~SNES_DOWN_MASK;
 	}
-	
+
     // BJ: This is correct behavior AFAICT (used to be Touhaiden hack)
     if (IPPU.Controller == SNES_JOYPAD || IPPU.Controller == SNES_MULTIPLAYER5)
     {
@@ -2877,18 +2877,18 @@ void S9xUpdateJoypads ()
 				IPPU.Joypads [i] |= 0xffff0000;
 		}
     }
-	
+
     // Read mouse position if enabled
     if (Settings.MouseMaster)
     {
 		for (i = 0; i < 2; i++)
 			S9xProcessMouse (i);
     }
-	
+
     // Read SuperScope if enabled
     if (Settings.SuperScopeMaster)
 		ProcessSuperScope ();
-	
+
     if (Memory.FillRAM [0x4200] & 1)
     {
 		PPU.Joypad1ButtonReadPos = 16;
@@ -2903,7 +2903,7 @@ void S9xUpdateJoypads ()
 			PPU.Joypad3ButtonReadPos = 16;
 		}
 		int ind = Settings.SwapJoypads ? 1 : 0;
-		
+
 		Memory.FillRAM [0x4218] = (uint8) IPPU.Joypads [ind];
 		Memory.FillRAM [0x4219] = (uint8) (IPPU.Joypads [ind] >> 8);
 		Memory.FillRAM [0x421a] = (uint8) IPPU.Joypads [ind ^ 1];
@@ -2929,7 +2929,7 @@ void S9xUpdateJoypads ()
 		Memory.FillRAM [0x421b] = 0;
 		S9xUpdateJustifiers();
 	}
- 
+
 }
 
 #ifndef ZSNES_FX
@@ -3242,7 +3242,7 @@ void REGISTER_2118 (uint8 Byte)
             Memory.FillRAM[0x2115] & 3,
             (Memory.FillRAM [0x2115] & 0x0c) >> 2);
     }
-#endif  
+#endif
     PPU.VMA.Address += PPU.VMA.Increment;
     }
 //    Memory.FillRAM [0x2118] = Byte;
@@ -3303,7 +3303,7 @@ void REGISTER_2119 (uint8 Byte)
             Memory.FillRAM[0x2115] & 3,
             (Memory.FillRAM [0x2115] & 0x0c) >> 2);
     }
-#endif  
+#endif
     PPU.VMA.Address += PPU.VMA.Increment;
     }
 //    Memory.FillRAM [0x2119] = Byte;

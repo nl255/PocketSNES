@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -164,7 +164,7 @@ char *HelpMessage[] = {
     "bs [Number] [Address] - Enable/Disable Breakpoint",
     "                        [Enable example: BS #2 $02:8002]",
     "                        [Disable example: BS #2]",
-    "c		       - Dump SNES colour palette", 
+    "c		       - Dump SNES colour palette",
     "W		       - Show what SNES hardware features a ROM is using",
     "			 which might not be implemented yet.",
     "w		       - Show some SNES hardware features used so far in this frame",
@@ -1146,7 +1146,7 @@ void ProcessDebugCommand (char *Line)
 	    S9xAddCheat (TRUE, TRUE, Address, Byte);
 	return;
     }
-    
+
     if (strncasecmp (Line, "dump", 4) == 0)
     {
 	int Count;
@@ -1377,7 +1377,7 @@ void ProcessDebugCommand (char *Line)
 	printf ("SPC700 sample addresses at 0x%04x:\n", APU.DSP [APU_DIR] << 8);
 	for (int i = 0; i < 256; i++)
 	{
-	    uint8 *dir = IAPU.RAM + 
+	    uint8 *dir = IAPU.RAM +
 		    (((APU.DSP [APU_DIR] << 8) +
 		      i * 4) & 0xffff);
 	    int addr = *dir + (*(dir + 1) << 8);
@@ -1664,7 +1664,7 @@ void ProcessDebugCommand (char *Line)
 		 (Registers.P.W & 1) != 0 ? "C" : "c",
 		 (Registers.P.W & 256) != 0 ? "E" : "e");
 	DPrint (String);
-#endif	
+#endif
 	S9xOPrint (String, Bank, Address);
 	DPrint (String);
     }
@@ -1736,7 +1736,7 @@ static void WhatsUsed ()
     printf ("Screen mode: %d, ", PPU.BGMode);
     if (PPU.BGMode <= 1 && (Memory.FillRAM [0x2105] & 8))
 	printf ("(BG#2 Priority)");
-    
+
     printf ("Brightness: %d", PPU.Brightness);
     if (Memory.FillRAM[0x2100] & 0x80)
 	printf (" (screen blanked)");
@@ -1819,7 +1819,7 @@ static void WhatsUsed ()
     {
 	printf ("BG%d: VOffset:%d, HOffset:%d, W:%d, H:%d, TS:%d, BA:0x%04x, TA:0x%04X\n",
 		i, PPU.BG[i].VOffset, PPU.BG[i].HOffset,
-		(PPU.BG[i].SCSize & 1) * 32 + 32, 
+		(PPU.BG[i].SCSize & 1) * 32 + 32,
 		(PPU.BG[i].SCSize & 2) * 16 + 32,
 		PPU.BG[i].BGSize * 8 + 8,
 		PPU.BG[i].SCBase,
@@ -1854,7 +1854,7 @@ static void WhatsUsed ()
 		printf ("OBJ,");
 		break;
 	    }
-    
+
     switch ((Memory.FillRAM [0x2130] & 0x30) >> 4)
     {
     case 0: s = "always on";   break;
@@ -1862,7 +1862,7 @@ static void WhatsUsed ()
     case 2: s = "outside";   break;
     case 3: s = "always off";   break;
     }
-	
+
     printf ("\nSub-screen (%s): ", s);
     for (i = 0; i < 5; i++)
 	if (Memory.FillRAM[0x212d] & (1 << i))

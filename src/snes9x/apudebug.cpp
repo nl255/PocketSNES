@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -276,7 +276,7 @@ void S9xTraceSoundDSP (const char *s, int i1 = 0, int i2 = 0, int i3 = 0,
 int S9xTraceAPU ()
 {
     char buffer [200];
-    
+
     uint8 b = S9xAPUOPrint (buffer, IAPU.PC - IAPU.RAM);
     if (apu_trace == NULL)
 	apu_trace = fopen ("apu_trace.log", "wb");
@@ -291,7 +291,7 @@ int S9xAPUOPrint (char *buffer, uint16 Address)
     uint8 *p = IAPU.RAM + Address;
     int mode = Modes [*p];
     int bytes = ModesToBytes [mode];
-    
+
     switch (bytes)
     {
     case 1:
@@ -353,7 +353,7 @@ int S9xAPUOPrint (char *buffer, uint16 Address)
 	     CPU.V_Counter,
 	     CPU.Cycles,
 	     APU.Cycles);
-		
+
     return (bytes);
 }
 
@@ -423,7 +423,7 @@ void S9xPrintAPUState ()
 	    printf ("left: %d, right: %d, ",
 		    ch->volume_left, ch->volume_right);
 
-	    static char* envelope [] = 
+	    static char* envelope [] =
 	    {
 		"silent", "attack", "decay", "sustain", "release", "gain",
 		"inc_lin", "inc_bent", "dec_lin", "dec_exp"

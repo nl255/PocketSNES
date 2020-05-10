@@ -58,7 +58,7 @@ s32 sal_AudioInit(s32 rate, s32 bits, s32 stereo, s32 Hz)
 	if (!stereo && (audiospec.samples & 1))
 		audiospec.samples--;
 
-	 
+	
 	SamplesPerFrame = audiospec.samples;
 	BytesPerSample = audiospec.channels * (bits >> 3);
 

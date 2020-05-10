@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -316,17 +316,17 @@ void S9xSA1SetPCBase (uint32 address)
 	SA1.PCBase = Memory.FillRAM - 0x2000;
 	SA1.PC = SA1.PCBase + (address & 0xffff);
 	return;
-	
+
     case CMemory::MAP_CPU:
 	SA1.PCBase = Memory.FillRAM - 0x4000;
 	SA1.PC = SA1.PCBase + (address & 0xffff);
 	return;
-	
+
     case CMemory::MAP_DSP:
 	SA1.PCBase = Memory.FillRAM - 0x6000;
 	SA1.PC = SA1.PCBase + (address & 0xffff);
 	return;
-	
+
     case CMemory::MAP_SA1RAM:
     case CMemory::MAP_LOROM_SRAM:
 	SA1.PCBase = Memory.SRAM;
@@ -346,7 +346,7 @@ void S9xSA1SetPCBase (uint32 address)
 #ifdef DEBUGGER
 	printf ("SBP %06x\n", address);
 #endif
-	
+
     default:
     case CMemory::MAP_NONE:
 	SA1.PCBase = Memory.RAM;
@@ -386,7 +386,7 @@ void S9xSetSA1MemMap (uint32 which1, uint8 map)
 	for (i = c; i < c + 16; i++)
 	    Memory.Map [start + i] = SA1.Map [start + i] = block;
     }
-    
+
     for (c = 0; c < 0x200; c += 16)
     {
 	uint8 *block = &Memory.ROM [(map & 7) * 0x100000 + (c << 11) - 0x8000];
@@ -403,7 +403,7 @@ uint8 S9xGetSA1 (uint32 address)
     switch (address)
     {
     case 0x2300:
-	return ((uint8) ((Memory.FillRAM [0x2209] & 0x5f) | 
+	return ((uint8) ((Memory.FillRAM [0x2209] & 0x5f) |
 		 (CPU.IRQActive & (SA1_IRQ_SOURCE | SA1_DMA_IRQ_SOURCE))));
     case 0x2301:
 	return ((Memory.FillRAM [0x2200] & 0xf) |
@@ -430,7 +430,7 @@ uint8 S9xGetSA1 (uint32 address)
 	}
 	return (byte);
     }
-    default:	
+    default:
 	printf ("R: %04x\n", address);
 	break;
     }
@@ -673,7 +673,7 @@ void S9xSetSA1 (uint8 byte, uint32 address)
     case 0x2234:
 	Memory.FillRAM [address] = byte;
 #if 0
-	printf ("DMA source start %06x\n", 
+	printf ("DMA source start %06x\n",
 		Memory.FillRAM [0x2232] | (Memory.FillRAM [0x2233] << 8) |
 		(Memory.FillRAM [0x2234] << 16));
 #endif
@@ -705,7 +705,7 @@ void S9xSetSA1 (uint8 byte, uint32 address)
 	    S9xSA1DMA ();
 	}
 #if 0
-	printf ("DMA dest address %06x\n", 
+	printf ("DMA dest address %06x\n",
 		Memory.FillRAM [0x2235] | (Memory.FillRAM [0x2236] << 8) |
 		(Memory.FillRAM [0x2237] << 16));
 #endif
@@ -714,7 +714,7 @@ void S9xSetSA1 (uint8 byte, uint32 address)
     case 0x2239:
 	Memory.FillRAM [address] = byte;
 #if 0
-	printf ("DMA length %04x\n", 
+	printf ("DMA length %04x\n",
 		Memory.FillRAM [0x2238] | (Memory.FillRAM [0x2239] << 8));
 #endif
 	break;
@@ -757,7 +757,7 @@ void S9xSetSA1 (uint8 byte, uint32 address)
 	    SA1.sum = 0;
 	SA1.arithmetic_op = byte & 3;
 	break;
-    
+
     case 0x2251:
 	SA1.op1 = (SA1.op1 & 0xff00) | byte;
 	break;
@@ -899,7 +899,7 @@ static void S9xSA1DMA ()
     // memmove required: Can overlap arbitrarily [Neb]
     memmove (d, s, len);
     Memory.FillRAM [0x2301] |= 0x20;
-    
+
     if (Memory.FillRAM [0x220a] & 0x20)
     {
 	SA1.Flags |= IRQ_PENDING_FLAG;

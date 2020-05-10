@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -146,7 +146,7 @@ const char *S9xGoldFingerToRaw (const char *code, uint32 *address, bool8 *sram,
 const char *S9xGameGenieToRaw (const char *code, uint32 *address, uint8 *byte)
 {
     char new_code [12];
-    
+
     if (strlen (code) != 9 || *(code + 4) != '-' || !S9xAllHex (code, 4) ||
         !S9xAllHex (code + 5, 4))
 	return ("Invalid Game Genie(tm) code - should be 'xxxx-xxxx'.");
@@ -157,7 +157,7 @@ const char *S9xGameGenieToRaw (const char *code, uint32 *address, uint8 *byte)
 
     static const char *real_hex  = "0123456789ABCDEF";
     static const char *genie_hex = "DF4709156BC8A23E";
-    
+
     for (int i = 2; i < 10; i++)
     {
 	if (islower (new_code [i]))
@@ -230,7 +230,7 @@ void S9xStartCheatSearch (SCheatData *d)
  (s) == S9X_24_BITS ? (((int32) ((*((m) + (o)) + (*((m) + (o) + 1) << 8) + (*((m) + (o) + 2) << 16)) << 8)) >> 8): \
  ((int32) (*((m) + (o)) + (*((m) + (o) + 1) << 8) + (*((m) + (o) + 2) << 16) + (*((m) + (o) + 3) << 24))))
 
-void S9xSearchForChange (SCheatData *d, S9xCheatComparisonType cmp, 
+void S9xSearchForChange (SCheatData *d, S9xCheatComparisonType cmp,
                          S9xCheatDataSize size, bool8 is_signed, bool8 update)
 {
     int l;
@@ -258,7 +258,7 @@ void S9xSearchForChange (SCheatData *d, S9xCheatComparisonType cmp,
             else
                 BIT_CLEAR (d->WRAM_BITS, i);
         }
-        
+
         for (i = 0; i < 0x10000 - l; i++)
         {
             if (TEST_BIT (d->SRAM_BITS, i) &&
@@ -270,7 +270,7 @@ void S9xSearchForChange (SCheatData *d, S9xCheatComparisonType cmp,
             else
                 BIT_CLEAR (d->SRAM_BITS, i);
         }
-        
+
         for (i = 0; i < 0x2000 - l; i++)
         {
             if (TEST_BIT (d->IRAM_BITS, i) &&
@@ -296,7 +296,7 @@ void S9xSearchForChange (SCheatData *d, S9xCheatComparisonType cmp,
             else
                 BIT_CLEAR (d->WRAM_BITS, i);
         }
-        
+
         for (i = 0; i < 0x10000 - l; i++)
         {
             if (TEST_BIT (d->SRAM_BITS, i) &&
@@ -308,7 +308,7 @@ void S9xSearchForChange (SCheatData *d, S9xCheatComparisonType cmp,
             else
                 BIT_CLEAR (d->SRAM_BITS, i);
         }
-        
+
         for (i = 0; i < 0x2000 - l; i++)
         {
             if (TEST_BIT (d->IRAM_BITS, i) &&
@@ -323,8 +323,8 @@ void S9xSearchForChange (SCheatData *d, S9xCheatComparisonType cmp,
     }
 }
 
-void S9xSearchForValue (SCheatData *d, S9xCheatComparisonType cmp, 
-                        S9xCheatDataSize size, uint32 value, 
+void S9xSearchForValue (SCheatData *d, S9xCheatComparisonType cmp,
+                        S9xCheatDataSize size, uint32 value,
                         bool8 is_signed, bool8 update)
 {
     int l;
@@ -353,7 +353,7 @@ void S9xSearchForValue (SCheatData *d, S9xCheatComparisonType cmp,
             else
                 BIT_CLEAR (d->WRAM_BITS, i);
         }
-        
+
         for (i = 0; i < 0x10000 - l; i++)
         {
             if (TEST_BIT (d->SRAM_BITS, i) &&
@@ -365,7 +365,7 @@ void S9xSearchForValue (SCheatData *d, S9xCheatComparisonType cmp,
             else
                 BIT_CLEAR (d->SRAM_BITS, i);
         }
-        
+
         for (i = 0; i < 0x2000 - l; i++)
         {
             if (TEST_BIT (d->IRAM_BITS, i) &&
@@ -391,7 +391,7 @@ void S9xSearchForValue (SCheatData *d, S9xCheatComparisonType cmp,
             else
                 BIT_CLEAR (d->WRAM_BITS, i);
         }
-        
+
         for (i = 0; i < 0x10000 - l; i++)
         {
             if (TEST_BIT (d->SRAM_BITS, i) &&
@@ -403,7 +403,7 @@ void S9xSearchForValue (SCheatData *d, S9xCheatComparisonType cmp,
             else
                 BIT_CLEAR (d->SRAM_BITS, i);
         }
-        
+
         for (i = 0; i < 0x2000 - l; i++)
         {
             if (TEST_BIT (d->IRAM_BITS, i) &&

@@ -1,6 +1,6 @@
 
 /*
-sal_common.c 
+sal_common.c
 
 This file contains the code which is common to all SALs
 It should be included in the sal.c of each SAL.
@@ -41,7 +41,7 @@ static u32 mInputIgnore=0;
 
 s8 *sal_LastErrorGet()
 {
-	return &mLastError[0]; 
+	return &mLastError[0];
 }
 
 void sal_LastErrorSet(char *msg)
@@ -50,7 +50,7 @@ void sal_LastErrorSet(char *msg)
 }
 
 /* alekmaul's scaler taken from mame4all */
-void sal_VideoBitmapScale(int startx, int starty, int viswidth, int visheight, int newwidth, int newheight,int pitch, uint16_t *src, uint16_t *dst) 
+void sal_VideoBitmapScale(int startx, int starty, int viswidth, int visheight, int newwidth, int newheight,int pitch, uint16_t *src, uint16_t *dst)
 {
   unsigned int W,H,ix,iy,x,y;
   x=startx<<16;
@@ -81,7 +81,7 @@ static void sal_VideoDrawRect8(s32 x, s32 y, s32 width, s32 height, u8 color, ui
 	pixy = pixy + y * sal_VideoGetPitch() + x;
 	for(h=0;h<height;h++)
 	{
-		pixx=pixy;		
+		pixx=pixy;
 		for(w=0; w<width; w++)
 		{
 			*pixx++ = color;
@@ -98,7 +98,7 @@ static void sal_VideoDrawRect16(s32 x, s32 y, s32 width, s32 height, u16 color, 
 	pixy = ((u16*) ((u8*) pixy + y * sal_VideoGetPitch())) + x;
 	for(h=0;h<height;h++)
 	{
-		pixx=pixy;		
+		pixx=pixy;
 		for(w=0; w<width; w++)
 		{
 			*pixx++ = color;
@@ -127,7 +127,7 @@ static void sal_VideoPrint8(s32 x, s32 y, const char *buffer, u8 color, uint32_t
 	s32 maxLen=(sal_VideoGetWidth()>>3)-(x>>3);
 
 	pix = pix + y * sal_VideoGetPitch() + x;
-	while(1) 
+	while(1)
 	{
 		s8 letter = *buffer++;
 		u32 *offset;
@@ -137,7 +137,7 @@ static void sal_VideoPrint8(s32 x, s32 y, const char *buffer, u8 color, uint32_t
 
 		//Get pointer to graphics for letter
 		offset=mFont8x8+((letter)<<1);
-		
+
 		//read first 32bits of char pixel mask data
 		for (m=0; m<2; m++)
 		{
@@ -175,7 +175,7 @@ static void sal_VideoPrint16(s32 x, s32 y, const char *buffer, u16 color, uint32
 	s32 maxLen=(sal_VideoGetWidth()>>3)-(x>>3);
 
 	pix = ((u16*) ((u8*) pix + y * sal_VideoGetPitch())) + x;
-	while(1) 
+	while(1)
 	{
 		s8 letter = *buffer++;
 		u32 *offset;
@@ -185,7 +185,7 @@ static void sal_VideoPrint16(s32 x, s32 y, const char *buffer, u16 color, uint32
 
 		//Get pointer to graphics for letter
 		offset=mFont8x8+((letter)<<1);
-		
+
 		//read first 32bits of char pixel mask data
 		for (m=0; m<2; m++)
 		{
@@ -226,7 +226,7 @@ void sal_VideoPrint(s32 x, s32 y, const char *buffer, u32 color)
 // 	else sal_VideoPrint16(x,y,buffer,(u16)color, (uint32_t *)sal_RS97VideoGetBuffer());
 // }
 
-static 
+static
 void sal_VideoClear16(u16 color)
 {
 	s32 x,y,w,h,pitch;
@@ -246,7 +246,7 @@ void sal_VideoClear16(u16 color)
 	}
 }
 
-static 
+static
 void sal_VideoClear8(u8 color)
 {
 	s32 x,y,w,h,pitch;
@@ -296,11 +296,11 @@ void sal_InputWaitForRelease()
 {
 	int i=0;
 	unsigned int keys=0;
-	
+
 	for(i=0;i<100;i++)
 	{
 		while(1)
-		{     
+		{
 			keys=sal_InputPoll();
 			if(keys==0) break;
 		}
@@ -311,11 +311,11 @@ void sal_InputWaitForPress()
 {
 	int i=0;
 	unsigned int keys=0;
-	
+
 	for(i=0;i<100;i++)
 	{
 		while(1)
-		{     
+		{
 			keys=sal_InputPoll();
 			if(keys!=0) break;
 		}
@@ -350,7 +350,7 @@ void sal_ZipGetFirstFilename(const char *filename, s8 *longfilename)
    u8 romname_len=0;
    fd = (FILE*)fopen(filename, "rb");
    if(fd)
-   {    
+   {
 		fseek(fd, 26,SEEK_SET);
 		if(fread((void*)&romname_len, 1, 1, fd)==1) // read 1 byte - name length
 		{
@@ -368,24 +368,24 @@ void sal_ZipGetFirstFilename(const char *filename, s8 *longfilename)
 		fclose(fd);
     }
 }
-			
+
 s32 sal_ZipGetFirstCrc(const char *filename, s32 *crc)
 {
 	FILE *fd = NULL;
 	s32 retVal=SAL_OK;
-   
+
 	fd = (FILE*)fopen(filename, "rb");
 	if(fd)
-	{    
+	{
 		fseek(fd, 14,SEEK_SET);
 		if(fread((s8*)crc, 1, 4, fd)!=4) // read 1 byte - name length
 		{
-			retVal=SAL_ERROR;			
+			retVal=SAL_ERROR;
 			*crc=0;
 		}
 		fclose(fd);
 	}
-    
+
     return retVal;
 }
 
@@ -397,7 +397,7 @@ s32 sal_ZipLoad(const char *filename, s8 *buffer, s32 bufferMaxSize, s32 *file_s
     unzFile *fd = NULL;
     unz_file_info info;
     s32 ret = SAL_OK;
-        
+
     /* Attempt to open the archive */
     fd = unzOpen(filename);
     if(!fd)
@@ -510,12 +510,12 @@ s32 sal_ZipSave(const char *filename, s8 *firstFilename, s8 *buffer, s32 size)
 			    NULL,
 			    Z_DEFLATED,
 			    Z_BEST_COMPRESSION);
-			    
+
     if(ret != ZIP_OK)
     {
        zipClose(fd,NULL);
        sal_LastErrorSet("Failed to create file in zip");
-       return SAL_ERROR;    
+       return SAL_ERROR;
     }
 
     ret=zipWriteInFileInZip(fd,buffer,size);
@@ -642,11 +642,11 @@ s32 sal_StringCompare(const char *string1, const char *string2)
 		c1=string1[i];
 		c2=string2[i];
 		// check for string end
-		
+
 		if ((c1 == 0) && (c2 == 0)) return 0;
 		if (c1 == 0) return -1;
 		if (c2 == 0) return 1;
-		
+
 		if ((c1 >= 0x61)&&(c1<=0x7A)) c1-=0x20;
 		if ((c2 >= 0x61)&&(c2<=0x7A)) c2-=0x20;
 		if (c1>c2)
@@ -686,20 +686,20 @@ void sal_DirectorySplitFilename(const char *wholeFilename, s8* path, s8 *filenam
 	ext[0]=0;
 	filename[0]=0;
 	path[0]=0;
-	
+
 	//Check given string is not null
 	if (len<=0)
 	{
 		return;
 	}
-	
+
 	for(i=len-2;i>0;i--)
 	{
 		if ((wholeFilename[i]=='.') && (dot==-1))
 		{
 			dot=i;
 		}
-		
+
 		if ((wholeFilename[i]==(s8)SAL_DIR_SEP[0]) && (slash==-1))
 		{
 			slash=i;
@@ -714,7 +714,7 @@ void sal_DirectorySplitFilename(const char *wholeFilename, s8* path, s8 *filenam
 		memmove(path,wholeFilename,slash);
 		path[slash]=0;
 	}
-	
+
 	if (dot>=0)
 	{
 		// /ppppppp/ppppppp/ffffff.eeeee
@@ -755,7 +755,7 @@ void sal_DirectoryCombine(s8 *path, const char *name)
 }
 
 s32 sal_ImageDrawTiled(u16 *image, u32 width, u32 height, s32 xScroll, s32 yScroll, s32 x, s32 y)
-{	
+{
 	s16 x2=0, x3=0;
 	s16 y2=0, y3=0;
 	u16 *fbStart = (u16*)sal_VideoGetBuffer();
@@ -767,7 +767,7 @@ s32 sal_ImageDrawTiled(u16 *image, u32 width, u32 height, s32 xScroll, s32 yScro
 	y2=(yScroll*width);
 	graphics1 = image+y2;
 	for (y3=y; y3<sal_VideoGetHeight(); y3++)
-	{		
+	{
 		fb=fbStart;
 		for (x3=0; x3<(sal_VideoGetWidth()-x); x3++)
 		{
@@ -785,7 +785,7 @@ s32 sal_ImageDrawTiled(u16 *image, u32 width, u32 height, s32 xScroll, s32 yScro
 }
 
 s32 sal_ImageDraw(u16 *image, u32 width, u32 height, s32 x, s32 y)
-{	
+{
 	u16 *fbStart = (u16*)sal_VideoGetBuffer();
 	u16 *fb;
 	u16 *graphics = (u16*)image;
@@ -880,7 +880,7 @@ s32 sal_ImageLoad(const char *fname, void *dest, u32 width, u32 height)
 		sal_LastErrorSet("Null destination");
 		return SAL_ERROR;
 	}
-	
+
 	if (fname == NULL)
 	{
 		sal_LastErrorSet("Null filename");
@@ -913,7 +913,7 @@ s32 sal_ImageLoad(const char *fname, void *dest, u32 width, u32 height)
 
 	// Start reading
 	png_init_io(png_ptr, fp);
-	
+
 	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_STRIP_ALPHA | PNG_TRANSFORM_PACKING, NULL);
 	row_ptr = png_get_rows(png_ptr, info_ptr);
 	if (row_ptr == NULL)
@@ -926,7 +926,7 @@ s32 sal_ImageLoad(const char *fname, void *dest, u32 width, u32 height)
 
 	u32 h;
 	unsigned short *dst = dest;
-	
+
 	if (png_get_bit_depth(png_ptr, info_ptr) != 8 || png_get_color_type(png_ptr, info_ptr) != PNG_COLOR_TYPE_RGB)
 	{
 		sal_LastErrorSet("bg image not 24bpp");
@@ -934,7 +934,7 @@ s32 sal_ImageLoad(const char *fname, void *dest, u32 width, u32 height)
 		fclose(fp);
 		return SAL_ERROR;
 	}
-	
+
 	if (height != png_get_image_height(png_ptr, info_ptr))
 	{
 		sal_LastErrorSet("image height invalid");
@@ -942,7 +942,7 @@ s32 sal_ImageLoad(const char *fname, void *dest, u32 width, u32 height)
 		fclose(fp);
 		return SAL_ERROR;
 	}
-	
+
 	if (width != png_get_image_width(png_ptr, info_ptr))
 	{
 		sal_LastErrorSet("image width is invalid");
@@ -950,7 +950,7 @@ s32 sal_ImageLoad(const char *fname, void *dest, u32 width, u32 height)
 		fclose(fp);
 		return SAL_ERROR;
 	}
-	
+
 	for (h = 0; h < height; h++)
 	{
 		unsigned char *src = row_ptr[h];

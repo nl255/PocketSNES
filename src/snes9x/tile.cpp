@@ -1307,7 +1307,7 @@ void DrawLargePixel16Sub (uint32 Tile, uint32 Offset,
 #define LARGE_SUB_PIXEL(s, p) \
 (Depth [z + GFX.DepthDelta] ? (Depth [z + GFX.DepthDelta] != 1 ? \
 			       COLOR_SUB (p, *(s + GFX.Delta))    : \
-			       COLOR_SUB (p, GFX.FixedColour)) \
+			       COLOR_SUB1_2 (p, GFX.FixedColour)) \
 			    : p)
 
     RENDER_TILE_LARGE (ScreenColors [pixel], LARGE_SUB_PIXEL)

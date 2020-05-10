@@ -56,7 +56,7 @@ void DefaultMenuOptions(void)
 	mMenuOptions->fullScreen=0;
 #endif
 	mMenuOptions->autoSaveSram=1;
-	mMenuOptions->soundSync=0;
+	mMenuOptions->soundSync=1;
 }
 
 s32 LoadMenuOptions(const char *path, const char *filename, const char *ext,

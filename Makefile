@@ -33,7 +33,7 @@ ifeq ($(PGO), GENERATE)
   CCFLAGS += -fprofile-generate -fprofile-dir=./profile
   LDFLAGS += -lgcov
 else ifeq ($(PGO), APPLY)
-  OPTIMISE += -fprofile-use -fprofile-dir=./profile -fbranch-probabilities
+  CCFLAGS += -fprofile-use -fprofile-dir=./profile -fbranch-probabilities
 endif
 
 # Find all source files

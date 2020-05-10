@@ -58,10 +58,8 @@ s32 sal_AudioInit(s32 rate, s32 bits, s32 stereo, s32 Hz)
 	if (!stereo && (audiospec.samples & 1))
 		audiospec.samples--;
 
-	
 	SamplesPerFrame = audiospec.samples;
 	BytesPerSample = audiospec.channels * (bits >> 3);
-
 
 	audiospec.callback = sdl_audio_callback;
 	//RS-97 fix, need to be power of 2
@@ -69,7 +67,7 @@ s32 sal_AudioInit(s32 rate, s32 bits, s32 stereo, s32 Hz)
 	{
 		buffer*=2;
 	}
-	audiospec.samples = buffer;
+	audiospec.samples = buffer / 2;
 
 	if (SDL_OpenAudio(&audiospec, NULL) < 0) {
 		fprintf(stderr, "Unable to initialize audio.\n");

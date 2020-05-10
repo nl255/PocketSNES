@@ -21,16 +21,20 @@ INCLUDE = -I src \
 		-I src/include \
 		-I menu -I src/linux -I src/snes9x
 
-CFLAGS =  --std=gnu11 $(INCLUDE) -DRC_OPTIMIZED -D__LINUX__ -D__DINGUX__ -D_FAST_GFX -D__ARM__ -DFOREVER_16_BIT  $(SDL_CFLAGS)
-CFLAGS += -O3 -fdata-sections -ffunction-sections -fomit-frame-pointer -fno-builtin -march=armv5te -mtune=arm926ej-s
-CFLAGS += -fno-common -Wno-write-strings -Wno-sign-compare -ffast-math -ftree-vectorize
-CFLAGS += -funswitch-loops -fno-strict-aliasing
-CFLAGS += -DFAST_LSB_WORD_ACCESS
-CFLAGS += -fprofile-use -fprofile-dir=./profile
+CCFLAGS =  $(INCLUDE) -DRC_OPTIMIZED -D__LINUX__ -D__DINGUX__ -D_FAST_GFX -D__ARM__ -DFOREVER_16_BIT  $(SDL_CFLAGS)
+CCFLAGS += -Ofast --fast-math -fomit-frame-pointer -fno-strength-reduce -falign-functions=2 -fno-stack-protector
 
-CXXFLAGS = $(filter-out --std=gnu11,$(CFLAGS)) --std=gnu++11 -fno-exceptions -fno-rtti -fno-math-errno -fno-threadsafe-statics
+CFLAGS = --std=gnu11 $(CCFLAGS)
+CXXFLAGS = --std=gnu++11 $(CCFLAGS) -fno-exceptions -fno-rtti -fno-math-errno -fno-threadsafe-statics
 
 LDFLAGS = $(CXXFLAGS) -lpthread -lz -lpng  $(SDL_LIBS) -Wl,--as-needed -Wl,--gc-sections -s
+
+ifeq ($(PGO), GENERATE)
+  CCFLAGS += -fprofile-generate -fprofile-dir=./profile
+  LDFLAGS += -lgcov
+else ifeq ($(PGO), APPLY)
+  OPTIMISE += -fprofile-use -fprofile-dir=./profile -fbranch-probabilities
+endif
 
 # Find all source files
 SOURCE = src/snes9x menu sal/linux sal

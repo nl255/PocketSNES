@@ -578,14 +578,16 @@ bool8 S9xGraphicsInit ()
 	    }
 	}
 #endif
-#if !defined(FOREVER_16_BIT) || !defined(_FAST_GFX)
+#ifndef FOREVER_16_BIT
     }
+#ifndef _FAST_GFX
     else
     {
 	GFX.X2 = NULL;
 	GFX.ZERO_OR_X2 = NULL;
 	GFX.ZERO = NULL;
     }
+#endif
 #endif
 
     return (TRUE);

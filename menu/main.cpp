@@ -617,11 +617,11 @@ int SnesInit()
 	GFX.ZPitch = GFX.Pitch >> 1;
 
 	if (Settings.ForceNoTransparency)
-         Settings.Transparency = FALSE;
+	    Settings.Transparency = FALSE;
 
 #ifndef FOREVER_16_BIT
 	if (Settings.Transparency)
-         Settings.SixteenBit = TRUE;
+	    Settings.SixteenBit = TRUE;
 #endif
 
 	Settings.HBlankStart = (256 * Settings.H_Max) / SNES_HCOUNTER_MAX;

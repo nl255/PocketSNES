@@ -7,8 +7,8 @@ TARGET = pocketsnes/PocketSNES
 
 CROSS_COMPILE := arm-linux-
 
-CC  := $(CROSS_COMPILE)gcc
-CXX := $(CROSS_COMPILE)g++
+CC    := $(CROSS_COMPILE)gcc
+CXX   := $(CROSS_COMPILE)g++
 STRIP := $(CROSS_COMPILE)strip
 
 SYSROOT := $(shell $(CC) --print-sysroot)
@@ -21,12 +21,13 @@ INCLUDE = -I src \
 		-I menu -I src/linux -I src/snes9x
 
 CCFLAGS =  $(INCLUDE) -DRC_OPTIMIZED -D__LINUX__ -D__DINGUX__ -D_FAST_GFX -D__ARM__ -DFOREVER_16_BIT  $(SDL_CFLAGS)
-CCFLAGS += -Ofast --fast-math -fomit-frame-pointer -fno-strength-reduce -falign-functions=2 -fno-stack-protector
+CCFLAGS += -Ofast -march=armv5te -mtune=arm926ej-s
+CCFLAGS += --fast-math -fomit-frame-pointer -fno-strength-reduce -falign-functions=2 -fno-stack-protector
 
 CFLAGS = --std=gnu11 $(CCFLAGS)
 CXXFLAGS = --std=gnu++11 $(CCFLAGS) -fno-exceptions -fno-rtti -fno-math-errno -fno-threadsafe-statics
 
-LDFLAGS = $(CXXFLAGS) -lpthread -lz -lpng  $(SDL_LIBS) -Wl,--as-needed -Wl,--gc-sections -s
+LDFLAGS = -lpthread -lz -lpng $(SDL_LIBS) -Wl,--as-needed -Wl,--gc-sections -s
 
 ifeq ($(PGO), GENERATE)
   CCFLAGS += -fprofile-generate -fprofile-dir=./profile
@@ -49,16 +50,17 @@ OBJS    = $(OBJ_CPP) $(OBJ_C) $(OBJ_ASM)
 all : $(TARGET)
 
 $(TARGET) : $(OBJS)
-	$(CMD)$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+	$(STRIP) $(TARGET)
 
 %.o: %.c
-	$(CMD)$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 %.o: %.cpp
-	$(CMD)$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 %.o: %.S
-	$(CMD)$(CXX) $(INCLUDES) $(CXXFLAGS) $(DEFINES) $(LDFLAGS) -Wa,-I./src/ -c $< -o $@
+	$(CXX) $(INCLUDES) $(CXXFLAGS) $(LDFLAGS) -Wa,-I./src/ -c $< -o $@
 
 .PHONY : clean
 
@@ -76,4 +78,4 @@ opk: all
 	-all-root -noappend -no-exports -no-xattrs
 
 clean :
-	$(CMD)rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(TARGET)

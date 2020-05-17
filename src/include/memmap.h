@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -93,35 +93,25 @@
 #include "snes9x.h"
 
 #ifdef FAST_LSB_WORD_ACCESS
-#define READ_WORD(s) (*(uint16 *) (s))
-#define READ_DWORD(s) (*(uint32 *) (s))
-#define WRITE_WORD(s, d) (*(uint16 *) (s)) = (d)
-#define WRITE_DWORD(s, d) (*(uint32 *) (s)) = (d)
+#define READ_WORD(s) (*(uint16 *)(s))
+#define READ_DWORD(s) (*(uint32 *)(s))
+#define WRITE_WORD(s, d) (*(uint16 *)(s)) = (d)
+#define WRITE_DWORD(s, d) (*(uint32 *)(s)) = (d)
 
-#define READ_3WORD(s) (0x00ffffff & *(uint32 *) (s))
-#define WRITE_3WORD(s, d) *(uint16 *) (s) = (uint16)(d),\
-                          *((uint8 *) (s) + 2) = (uint8) ((d) >> 16)
-
+#define READ_3WORD(s) (0x00ffffff & *(uint32 *)(s))
+#define WRITE_3WORD(s, d) *(uint16 *)(s) = (uint16)(d), *((uint8 *)(s) + 2) = (uint8)((d) >> 16)
 
 #else
-#define READ_WORD(s) ( *(uint8 *) (s) |\
-		      (*((uint8 *) (s) + 1) << 8))
-#define READ_DWORD(s) ( *(uint8 *) (s) |\
-		       (*((uint8 *) (s) + 1) << 8) |\
-		       (*((uint8 *) (s) + 2) << 16) |\
-		       (*((uint8 *) (s) + 3) << 24))
-#define WRITE_WORD(s, d) *(uint8 *) (s) = (d), \
-                         *((uint8 *) (s) + 1) = (d) >> 8
-#define WRITE_DWORD(s, d) *(uint8 *) (s) = (uint8) (d), \
-                          *((uint8 *) (s) + 1) = (uint8) ((d) >> 8),\
-                          *((uint8 *) (s) + 2) = (uint8) ((d) >> 16),\
-                          *((uint8 *) (s) + 3) = (uint8) ((d) >> 24)
-#define WRITE_3WORD(s, d) *(uint8 *) (s) = (uint8) (d), \
-                          *((uint8 *) (s) + 1) = (uint8) ((d) >> 8),\
-                          *((uint8 *) (s) + 2) = (uint8) ((d) >> 16)
-#define READ_3WORD(s) ( *(uint8 *) (s) |\
-                       (*((uint8 *) (s) + 1) << 8) |\
-                       (*((uint8 *) (s) + 2) << 16))
+#define READ_WORD(s) (*(uint8 *)(s) | (*((uint8 *)(s) + 1) << 8))
+#define READ_DWORD(s)                                                                                                  \
+	(*(uint8 *)(s) | (*((uint8 *)(s) + 1) << 8) | (*((uint8 *)(s) + 2) << 16) | (*((uint8 *)(s) + 3) << 24))
+#define WRITE_WORD(s, d) *(uint8 *)(s) = (d), *((uint8 *)(s) + 1) = (d) >> 8
+#define WRITE_DWORD(s, d)                                                                                              \
+	*(uint8 *)(s) = (uint8)(d), *((uint8 *)(s) + 1) = (uint8)((d) >> 8), *((uint8 *)(s) + 2) = (uint8)((d) >> 16), \
+		*((uint8 *)(s) + 3) = (uint8)((d) >> 24)
+#define WRITE_3WORD(s, d)                                                                                              \
+	*(uint8 *)(s) = (uint8)(d), *((uint8 *)(s) + 1) = (uint8)((d) >> 8), *((uint8 *)(s) + 2) = (uint8)((d) >> 16)
+#define READ_3WORD(s) (*(uint8 *)(s) | (*((uint8 *)(s) + 1) << 8) | (*((uint8 *)(s) + 2) << 16))
 #endif
 
 #define MEMMAP_BLOCK_SIZE (0x1000)
@@ -131,116 +121,129 @@
 #define MEMMAP_MASK (MEMMAP_BLOCK_SIZE - 1)
 #define MEMMAP_MAX_SDD1_LOGGED_ENTRIES (0x10000 / 8)
 
-//Extended ROM Formats
+// Extended ROM Formats
 #define NOPE 0
 #define YEAH 1
 #define BIGFIRST 2
 #define SMALLFIRST 3
 
-//File Formats go here
-#define ZIP			0
-#define RAR			1
-#define DEFAULT		2
+// File Formats go here
+#define ZIP 0
+#define RAR 1
+#define DEFAULT 2
 
-class CMemory {
-public:
-    bool8 LoadROM (const char *);
-    uint32 FileLoader (uint8* buffer, const char* filename, int32 maxsize);
-    void  InitROM (bool8);
-    bool8 LoadSRAM (const char *);
-    bool8 SaveSRAM (const char *);
-    bool8 Init ();
-    void  Deinit ();
-    void  FreeSDD1Data ();
+class CMemory
+{
+      public:
+	bool8 LoadROM(const char *);
+	uint32 FileLoader(uint8 *buffer, const char *filename, int32 maxsize);
+	void InitROM(bool8);
+	bool8 LoadSRAM(const char *);
+	bool8 SaveSRAM(const char *);
+	bool8 Init();
+	void Deinit();
+	void FreeSDD1Data();
 
-    void WriteProtectROM ();
-    void FixROMSpeed ();
-    void MapRAM ();
-    void MapExtraRAM ();
-    char *Safe (const char *);
+	void WriteProtectROM();
+	void FixROMSpeed();
+	void MapRAM();
+	void MapExtraRAM();
+	char *Safe(const char *);
 
 	void BSLoROMMap();
-	void JumboLoROMMap (bool8);
-    void LoROMMap ();
-    void LoROM24MBSMap ();
-    void SRAM512KLoROMMap ();
-//    void SRAM1024KLoROMMap ();
-    void SufamiTurboLoROMMap ();
-    void HiROMMap ();
-    void SuperFXROMMap ();
-    void TalesROMMap (bool8);
-    void AlphaROMMap ();
-    void SA1ROMMap ();
-    void BSHiROMMap ();
+	void JumboLoROMMap(bool8);
+	void LoROMMap();
+	void LoROM24MBSMap();
+	void SRAM512KLoROMMap();
+	//    void SRAM1024KLoROMMap ();
+	void SufamiTurboLoROMMap();
+	void HiROMMap();
+	void SuperFXROMMap();
+	void TalesROMMap(bool8);
+	void AlphaROMMap();
+	void SA1ROMMap();
+	void BSHiROMMap();
 	void SPC7110HiROMMap();
 	void SPC7110Sram(uint8);
 	void SetaDSPMap();
-    bool8 AllASCII (uint8 *b, int size);
-    int  ScoreHiROM (bool8 skip_header, int32 offset=0);
-    int  ScoreLoROM (bool8 skip_header, int32 offset=0);
+	bool8 AllASCII(uint8 *b, int size);
+	int ScoreHiROM(bool8 skip_header, int32 offset = 0);
+	int ScoreLoROM(bool8 skip_header, int32 offset = 0);
 #if 0
     void SufamiTurboAltROMMap();
 #endif
-    void ApplyROMFixes ();
-    void CheckForIPSPatch (const char *rom_filename, bool8 header,
-			   int32 &rom_size);
+	void ApplyROMFixes();
+	void CheckForIPSPatch(const char *rom_filename, bool8 header, int32 &rom_size);
 
-    const char *TVStandard ();
-    const char *Speed ();
-    const char *StaticRAMSize ();
-    const char *MapType ();
-    const char *MapMode ();
-    const char *KartContents ();
-    const char *Size ();
-    const char *Headers ();
-    const char *ROMID ();
-    const char *CompanyID ();
-    void ParseSNESHeader(uint8*);
-	enum {
-	MAP_PPU, MAP_CPU, MAP_DSP, MAP_LOROM_SRAM, MAP_HIROM_SRAM,
-	MAP_NONE, MAP_DEBUG, MAP_C4, MAP_BWRAM, MAP_BWRAM_BITMAP,
-	MAP_BWRAM_BITMAP2, MAP_SA1RAM, MAP_SPC7110_ROM, MAP_SPC7110_DRAM,
-	MAP_RONLY_SRAM, MAP_OBC_RAM, MAP_SETA_DSP, MAP_SETA_RISC, MAP_LAST
-    };
-    enum { MAX_ROM_SIZE = 0x800000 };
+	const char *TVStandard();
+	const char *Speed();
+	const char *StaticRAMSize();
+	const char *MapType();
+	const char *MapMode();
+	const char *KartContents();
+	const char *Size();
+	const char *Headers();
+	const char *ROMID();
+	const char *CompanyID();
+	void ParseSNESHeader(uint8 *);
+	enum { MAP_PPU,
+	       MAP_CPU,
+	       MAP_DSP,
+	       MAP_LOROM_SRAM,
+	       MAP_HIROM_SRAM,
+	       MAP_NONE,
+	       MAP_DEBUG,
+	       MAP_C4,
+	       MAP_BWRAM,
+	       MAP_BWRAM_BITMAP,
+	       MAP_BWRAM_BITMAP2,
+	       MAP_SA1RAM,
+	       MAP_SPC7110_ROM,
+	       MAP_SPC7110_DRAM,
+	       MAP_RONLY_SRAM,
+	       MAP_OBC_RAM,
+	       MAP_SETA_DSP,
+	       MAP_SETA_RISC,
+	       MAP_LAST };
+	enum { MAX_ROM_SIZE = 0x800000 };
 
-    uint8 *RAM;
-    uint8 *ROM;
-    uint8 *VRAM;
-    uint8 *SRAM;
-    uint8 *BWRAM;
-    uint8 *FillRAM;
-    uint8 *C4RAM;
-    bool8 HiROM;
-    bool8 LoROM;
-    uint32 SRAMMask;
-    uint8 SRAMSize;
-    uint8 *Map [MEMMAP_NUM_BLOCKS];
-    uint8 *WriteMap [MEMMAP_NUM_BLOCKS];
-    uint8 MemorySpeed [MEMMAP_NUM_BLOCKS];
-    uint8 BlockIsRAM [MEMMAP_NUM_BLOCKS];
-    uint8 BlockIsROM [MEMMAP_NUM_BLOCKS];
-    char  ROMName [ROM_NAME_LEN];
-    char  ROMId [5];
-    char  CompanyId [3];
-    uint8 ROMSpeed;
-    uint8 ROMType;
-    uint8 ROMSize;
-    int32 ROMFramesPerSecond;
-    int32 HeaderCount;
-    uint32 CalculatedSize;
-    uint32 CalculatedChecksum;
-    uint32 ROMChecksum;
-    uint32 ROMComplementChecksum;
-    uint8  *SDD1Index;
-    uint8  *SDD1Data;
-    uint32 SDD1Entries;
-    uint32 SDD1LoggedDataCountPrev;
-    uint32 SDD1LoggedDataCount;
-    uint8  SDD1LoggedData [MEMMAP_MAX_SDD1_LOGGED_ENTRIES];
-    char ROMFilename [_MAX_PATH];
+	uint8 *RAM;
+	uint8 *ROM;
+	uint8 *VRAM;
+	uint8 *SRAM;
+	uint8 *BWRAM;
+	uint8 *FillRAM;
+	uint8 *C4RAM;
+	bool8 HiROM;
+	bool8 LoROM;
+	uint32 SRAMMask;
+	uint8 SRAMSize;
+	uint8 *Map[MEMMAP_NUM_BLOCKS];
+	uint8 *WriteMap[MEMMAP_NUM_BLOCKS];
+	uint8 MemorySpeed[MEMMAP_NUM_BLOCKS];
+	uint8 BlockIsRAM[MEMMAP_NUM_BLOCKS];
+	uint8 BlockIsROM[MEMMAP_NUM_BLOCKS];
+	char ROMName[ROM_NAME_LEN];
+	char ROMId[5];
+	char CompanyId[3];
+	uint8 ROMSpeed;
+	uint8 ROMType;
+	uint8 ROMSize;
+	int32 ROMFramesPerSecond;
+	int32 HeaderCount;
+	uint32 CalculatedSize;
+	uint32 CalculatedChecksum;
+	uint32 ROMChecksum;
+	uint32 ROMComplementChecksum;
+	uint8 *SDD1Index;
+	uint8 *SDD1Data;
+	uint32 SDD1Entries;
+	uint32 SDD1LoggedDataCountPrev;
+	uint32 SDD1LoggedDataCount;
+	uint8 SDD1LoggedData[MEMMAP_MAX_SDD1_LOGGED_ENTRIES];
+	char ROMFilename[_MAX_PATH];
 	uint8 ROMRegion;
-    uint32 ROMCRC32;
+	uint32 ROMCRC32;
 	uint8 ExtendedFormat;
 #if 0
 	bool8 SufamiTurbo;
@@ -268,28 +271,25 @@ extern CMemory Memory;
 extern uint8 *SRAM;
 extern uint8 *ROM;
 extern uint8 *RegRAM;
-void S9xDeinterleaveMode2 ();
+void S9xDeinterleaveMode2();
 END_EXTERN_C
-bool8 LoadZip(const char* zipname,
-	      int32 *TotalFileSize,
-	      int32 *headers,
-              uint8 *buffer);
+bool8 LoadZip(const char *zipname, int32 *TotalFileSize, int32 *headers, uint8 *buffer);
 
 extern "C" {
-	void S9xAutoSaveSRAM ();
+void S9xAutoSaveSRAM();
 }
 
 #ifdef NO_INLINE_SET_GET
-uint8 S9xGetByte (uint32 Address);
-uint16 S9xGetWord (uint32 Address);
-void S9xSetByte (uint8 Byte, uint32 Address);
-void S9xSetWord (uint16 Byte, uint32 Address);
-void S9xSetPCBase (uint32 Address);
-uint8 *S9xGetMemPointer (uint32 Address);
-uint8 *GetBasePointer (uint32 Address);
+uint8 S9xGetByte(uint32 Address);
+uint16 S9xGetWord(uint32 Address);
+void S9xSetByte(uint8 Byte, uint32 Address);
+void S9xSetWord(uint16 Byte, uint32 Address);
+void S9xSetPCBase(uint32 Address);
+uint8 *S9xGetMemPointer(uint32 Address);
+uint8 *GetBasePointer(uint32 Address);
 
 extern "C" {
-	extern uint8 OpenBus;
+extern uint8 OpenBus;
 }
 
 #else
@@ -298,4 +298,3 @@ extern "C" {
 #endif // NO_INLINE_SET_GET
 
 #endif // _memmap_h_
-

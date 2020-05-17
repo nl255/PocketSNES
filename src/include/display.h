@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -92,45 +92,43 @@
 
 START_EXTERN_C
 // Routines the port specific code has to implement
-void S9xTextMode ();
-void S9xGraphicsMode ();
-char *S9xParseArgs (char **argv, int argc);
-void S9xParseArg (char **argv, int &index, int argc);
-void S9xExtraUsage ();
+void S9xTextMode();
+void S9xGraphicsMode();
+char *S9xParseArgs(char **argv, int argc);
+void S9xParseArg(char **argv, int &index, int argc);
+void S9xExtraUsage();
 #ifdef ACCUMULATE_JOYPAD
-void NDSSFCAccumulateJoypad ();
+void NDSSFCAccumulateJoypad();
 #endif
-uint32 S9xReadJoypad (int which1_0_to_4);
-bool8 S9xReadMousePosition (int which1_0_to_1, int &x, int &y, uint32 &buttons);
-bool8 S9xReadSuperScopePosition (int &x, int &y, uint32 &buttons);
+uint32 S9xReadJoypad(int which1_0_to_4);
+bool8 S9xReadMousePosition(int which1_0_to_1, int &x, int &y, uint32 &buttons);
+bool8 S9xReadSuperScopePosition(int &x, int &y, uint32 &buttons);
 
-void S9xUsage ();
-void S9xInitDisplay (int argc, char **argv);
-void S9xDeinitDisplay ();
-void S9xInitInputDevices ();
-void S9xSetTitle (const char *title);
-void S9xPutImage (int width, int height);
-void S9xParseDisplayArg (char **argv, int &index, int argc);
-void S9xToggleSoundChannel (int channel);
-void S9xSetInfoString (const char *string);
-int S9xMinCommandLineArgs ();
-void S9xNextController ();
-bool8 S9xLoadROMImage (const char *string);
-const char *S9xSelectFilename (const char *def, const char *dir,
-			       const char *ext, const char *title);
+void S9xUsage();
+void S9xInitDisplay(int argc, char **argv);
+void S9xDeinitDisplay();
+void S9xInitInputDevices();
+void S9xSetTitle(const char *title);
+void S9xPutImage(int width, int height);
+void S9xParseDisplayArg(char **argv, int &index, int argc);
+void S9xToggleSoundChannel(int channel);
+void S9xSetInfoString(const char *string);
+int S9xMinCommandLineArgs();
+void S9xNextController();
+bool8 S9xLoadROMImage(const char *string);
+const char *S9xSelectFilename(const char *def, const char *dir, const char *ext, const char *title);
 
-const char *S9xChooseFilename (bool8 read_only);
+const char *S9xChooseFilename(bool8 read_only);
 
-const char *S9xBasename (const char *filename);
+const char *S9xBasename(const char *filename);
 
-int S9xFStrcmp (FILE *, const char *);
-const char *S9xGetHomeDirectory ();
-const char *S9xGetSnapshotDirectory ();
-const char *S9xGetROMDirectory ();
-const char *S9xGetSRAMFilename ();
-const char *S9xGetFilename (const char *extension);
-const char *S9xGetFilenameInc (const char *);
+int S9xFStrcmp(FILE *, const char *);
+const char *S9xGetHomeDirectory();
+const char *S9xGetSnapshotDirectory();
+const char *S9xGetROMDirectory();
+const char *S9xGetSRAMFilename();
+const char *S9xGetFilename(const char *extension);
+const char *S9xGetFilenameInc(const char *);
 END_EXTERN_C
 
 #endif
-

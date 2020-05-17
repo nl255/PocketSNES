@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -96,14 +96,14 @@
 #include "spctool/soundmod.h"
 #endif
 
-#define Carry       1
-#define Zero        2
-#define Interrupt   4
-#define HalfCarry   8
-#define BreakFlag  16
+#define Carry 1
+#define Zero 2
+#define Interrupt 4
+#define HalfCarry 8
+#define BreakFlag 16
 #define DirectPageFlag 32
-#define Overflow   64
-#define Negative  128
+#define Overflow 64
+#define Negative 128
 
 #define APUClearCarry() (IAPU._Carry = 0)
 #define APUSetCarry() (IAPU._Carry = 1)
@@ -128,25 +128,28 @@
 #define APUCheckNegative() (IAPU._Zero & 0x80)
 
 #define APUClearFlags(f) (IAPU.Registers.P &= ~(f))
-#define APUSetFlags(f)   (IAPU.Registers.P |=  (f))
-#define APUCheckFlag(f)  (IAPU.Registers.P &   (f))
+#define APUSetFlags(f) (IAPU.Registers.P |= (f))
+#define APUCheckFlag(f) (IAPU.Registers.P & (f))
 
-typedef union
-{
+typedef union {
 #ifdef LSB_FIRST
-    struct { uint8 A, Y; } B;
+	struct {
+		uint8 A, Y;
+	} B;
 #else
-    struct { uint8 Y, A; } B;
+	struct {
+		uint8 Y, A;
+	} B;
 #endif
-    uint16 W;
+	uint16 W;
 } YAndA;
 
-struct SAPURegisters{
-    uint8  P;
-    YAndA YA;
-    uint8  X;
-    uint8  S;
-    uint16  PC;
+struct SAPURegisters {
+	uint8 P;
+	YAndA YA;
+	uint8 X;
+	uint8 S;
+	uint16 PC;
 };
 
 // Needed by ILLUSION OF GAIA
@@ -160,55 +163,52 @@ struct SAPURegisters{
 // 1.953us := 1.024065.54MHz
 
 #ifdef SPCTOOL
-EXTERN_C int32 ESPC (int32);
+EXTERN_C int32 ESPC(int32);
 
-#define APU_EXECUTE() \
-{ \
-    int32 l = (CPU.Cycles - APU.Cycles) / 14; \
-    if (l > 0) \
-    { \
-        l -= _EmuSPC(l); \
-        APU.Cycles += l * 14; \
-    } \
-}
+#define APU_EXECUTE()                                                                                                  \
+	{                                                                                                              \
+		int32 l = (CPU.Cycles - APU.Cycles) / 14;                                                              \
+		if (l > 0) {                                                                                           \
+			l -= _EmuSPC(l);                                                                               \
+			APU.Cycles += l * 14;                                                                          \
+		}                                                                                                      \
+	}
 
 #else
 
 #ifdef DEBUGGER
-#define APU_EXECUTE1() \
-{ \
-    if (APU.Flags & TRACE_FLAG) \
-	S9xTraceAPU ();\
-    APU.Cycles += S9xAPUCycles [*IAPU.PC]; \
-    (*S9xApuOpcodes[*IAPU.PC]) (); \
-}
+#define APU_EXECUTE1()                                                                                                 \
+	{                                                                                                              \
+		if (APU.Flags & TRACE_FLAG)                                                                            \
+			S9xTraceAPU();                                                                                 \
+		APU.Cycles += S9xAPUCycles[*IAPU.PC];                                                                  \
+		(*S9xApuOpcodes[*IAPU.PC])();                                                                          \
+	}
 #else
-#define APU_EXECUTE1() \
-{ \
-    APU.Cycles += S9xAPUCycles [*IAPU.PC]; \
-    (*S9xApuOpcodes[*IAPU.PC]) (); \
-}
+#define APU_EXECUTE1()                                                                                                 \
+	{                                                                                                              \
+		APU.Cycles += S9xAPUCycles[*IAPU.PC];                                                                  \
+		(*S9xApuOpcodes[*IAPU.PC])();                                                                          \
+	}
 #endif
 
-#define APU_EXECUTE() \
-if (IAPU.APUExecuting) \
-{\
-    while (APU.Cycles <= CPU.Cycles) \
-	APU_EXECUTE1(); \
-}
+#define APU_EXECUTE()                                                                                                  \
+	if (IAPU.APUExecuting) {                                                                                       \
+		while (APU.Cycles <= CPU.Cycles)                                                                       \
+			APU_EXECUTE1();                                                                                \
+	}
 #endif
 
 #ifdef __ARM__
 EXTERN_C int32 spc700_execute(int32 cycles);
 
-#define asm_APU_EXECUTE()\
-{\
-	int32 cycles = (CPU.Cycles - APU.Cycles); \
-	if(cycles > 0) {\
-		APU.Cycles += cycles - spc700_execute(cycles);\
-	}\
-}
+#define asm_APU_EXECUTE()                                                                                              \
+	{                                                                                                              \
+		int32 cycles = (CPU.Cycles - APU.Cycles);                                                              \
+		if (cycles > 0) {                                                                                      \
+			APU.Cycles += cycles - spc700_execute(cycles);                                                 \
+		}                                                                                                      \
+	}
 #endif
 
 #endif
-

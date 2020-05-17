@@ -41,63 +41,62 @@
 #ifndef _PORT_H_
 #define _PORT_H_
 
-//Title
+// Title
 #define TITLE "Snes9x"
 
-//Required Includes
+// Required Includes
 #include "pixform.h"
 #include <zlib.h>
 #include <limits.h>
 #include <string.h>
 
-//Types Defined
-typedef unsigned char	bool8;
-typedef unsigned char	uint8;
-typedef unsigned short	uint16;
-typedef unsigned int	uint32;
-typedef signed char		int8;
-typedef short			int16;
-typedef int				int32;
-typedef long long		int64;
+// Types Defined
+typedef unsigned char bool8;
+typedef unsigned char uint8;
+typedef unsigned short uint16;
+typedef unsigned int uint32;
+typedef signed char int8;
+typedef short int16;
+typedef int int32;
+typedef long long int64;
 
-//CSNES Types for conversion to 32 bit
+// CSNES Types for conversion to 32 bit
 /*typedef unsigned long	bool8_32;
 typedef unsigned long	uint8_32;
 typedef unsigned long	uint16_32;
 typedef long			int8_32;
 typedef long			int16_32;*/
 
-//For Debugging Purposes:
+// For Debugging Purposes:
 
-typedef unsigned char	bool8_32;
-typedef unsigned char	uint8_32;
-typedef unsigned short	uint16_32;
-typedef signed char		int8_32;
-typedef short			int16_32;
+typedef unsigned char bool8_32;
+typedef unsigned char uint8_32;
+typedef unsigned short uint16_32;
+typedef signed char int8_32;
+typedef short int16_32;
 
-
-//Defines for Extern C
+// Defines for Extern C
 #define EXTERN_C extern "C"
 #define START_EXTERN_C extern "C" {
 #define END_EXTERN_C }
 
-//Path Defines
-#undef  _MAX_PATH
+// Path Defines
+#undef _MAX_PATH
 #define _MAX_DIR PATH_MAX
 #define _MAX_DRIVE 1
 #define _MAX_FNAME PATH_MAX
 #define _MAX_EXT PATH_MAX
 #define _MAX_PATH (1024)
 
-//True/False Defines
+// True/False Defines
 #define TRUE 1
 #define FALSE 0
 
-//Slash Char Definitions
+// Slash Char Definitions
 #define SLASH_STR "/"
 #define SLASH_CHAR '/'
 
-//Misc Items
+// Misc Items
 #define VAR_CYCLES
 #define SPC700_SHUTDOWN
 #define USE_SA1
@@ -116,11 +115,11 @@ typedef short			int16_32;
 #define VOID void
 #define CPU_SHUTDOWN
 #define UNZIP_SUPPORT
-#define ZeroMemory(a,b) memset((a),0,(b))
-#define PACKING __attribute__ ((packed))
-#define ALIGN_BY_ONE  __attribute__ ((aligned (1), packed))
+#define ZeroMemory(a, b) memset((a), 0, (b))
+#define PACKING __attribute__((packed))
+#define ALIGN_BY_ONE __attribute__((aligned(1), packed))
 #define LSB_FIRST
-#undef  FAST_LSB_WORD_ACCESS
+#undef FAST_LSB_WORD_ACCESS
 #define FAST_ALIGNED_LSB_WORD_ACCESS
 
 //#define sync()
@@ -128,14 +127,11 @@ typedef short			int16_32;
 //#define getgid()
 //#define chown(a,b,c)
 
+EXTERN_C void S9xGenerateSound();
 
-EXTERN_C void S9xGenerateSound ();
-
-//Additional Items for _SNESPPC port
-void _makepath (char *path, const char *drive, const char *dir,
-		const char *fname, const char *ext);
-void _splitpath (const char *path, char *drive, char *dir, char *fname,
-		 char *ext);
+// Additional Items for _SNESPPC port
+void _makepath(char *path, const char *drive, const char *dir, const char *fname, const char *ext);
+void _splitpath(const char *path, char *drive, char *dir, char *fname, char *ext);
 #define strcasecmp strcmp
 #define strncasecmp strncmp
 
@@ -152,5 +148,3 @@ void _splitpath (const char *path, char *drive, char *dir, char *fname,
 #define SNES_SYSTEM_DIR "./"
 
 #endif //  _SNESPPC
-
-

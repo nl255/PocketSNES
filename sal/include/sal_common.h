@@ -8,38 +8,32 @@
 #include <string.h>
 #include <SDL.h>
 
-#define SAL_OK						1
-#define SAL_ERROR					0
-#define SAL_TRUE					1
-#define SAL_FALSE					0
+#define SAL_OK 1
+#define SAL_ERROR 0
+#define SAL_TRUE 1
+#define SAL_FALSE 0
 
 typedef uint32_t u32;
-typedef int32_t  s32;
+typedef int32_t s32;
 typedef uint16_t u16;
-typedef int16_t  s16;
-typedef uint8_t  u8;
-typedef char     s8;
+typedef int16_t s16;
+typedef uint8_t u8;
+typedef char s8;
 
 extern u32 mInputRepeat;
 extern u32 mInputRepeatTimer[32];
 extern u32 mBpp;
 extern u32 mRefreshRate;
 
-enum  SAL_FILE_TYPE_ENUM
-{
-	SAL_FILE_TYPE_FILE = 0,
-	SAL_FILE_TYPE_DIRECTORY
-};
+enum SAL_FILE_TYPE_ENUM { SAL_FILE_TYPE_FILE = 0, SAL_FILE_TYPE_DIRECTORY };
 
-struct SAL_DIRECTORY_ENTRY
-{
+struct SAL_DIRECTORY_ENTRY {
 	s8 filename[SAL_MAX_PATH];
 	s8 displayName[SAL_MAX_PATH];
 	s32 type;
 };
 
-struct SAL_DIR
-{
+struct SAL_DIR {
 	DIR *dir;
 };
 
@@ -53,7 +47,7 @@ u32 sal_VideoGetBpp();
 void sal_VideoClear(u32 color);
 void sal_VideoClearAll(u32 color);
 void sal_VideoDrawRect(s32 x, s32 y, s32 width, s32 height, u32 color);
-void sal_VideoBitmapDim(u16* img, u32 pixelCount);
+void sal_VideoBitmapDim(u16 *img, u32 pixelCount);
 void sal_VideoPrint(s32 x, s32 y, const char *buffer, u32 color);
 
 u32 sal_VideoGetWidth();
@@ -68,7 +62,8 @@ void sal_VideoFlip(s32 vsync);
 void *sal_VideoGetBuffer();
 void sal_VideoPaletteSet(u32 index, u32 color);
 void sal_VideoPaletteSync();
-void sal_VideoBitmapScale(int startx, int starty, int viswidth, int visheight, int newwidth, int newheight,int pitch, u16 *src, u16 *dst);
+void sal_VideoBitmapScale(int startx, int starty, int viswidth, int visheight, int newwidth, int newheight, int pitch,
+			  u16 *src, u16 *dst);
 
 s32 sal_AudioInit(s32 rate, s32 bits, s32 stereo, s32 Hz);
 void sal_AudioPause(void);
@@ -124,10 +119,10 @@ s32 sal_FileExists(const char *filename);
 s32 sal_FileGetSize(const char *filename, u32 *filesize);
 u32 sal_FileGetCRC(u8 *data, u32 size);
 
-const char * sal_DirectoryGetHome(void);
-const char * sal_DirectoryGetUser(void);
-const char * sal_DirectoryGetTemp(void);
-void sal_DirectorySplitFilename(const char *wholeFilename, s8* path, s8 *filename, s8 *ext);
+const char *sal_DirectoryGetHome(void);
+const char *sal_DirectoryGetUser(void);
+const char *sal_DirectoryGetTemp(void);
+void sal_DirectorySplitFilename(const char *wholeFilename, s8 *path, s8 *filename, s8 *ext);
 void sal_DirectoryGetParent(s8 *path);
 s32 sal_DirectoryGetCurrent(s8 *path, u32 size);
 void sal_DirectoryCombine(s8 *path, const char *name);

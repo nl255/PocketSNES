@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -93,7 +93,7 @@
 #define FIRST_VISIBLE_LINE 1
 
 extern uint8 GetBank;
-extern uint16 SignExtend [2];
+extern uint16 SignExtend[2];
 
 #define TILE_2BIT 0
 #define TILE_4BIT 1
@@ -103,172 +103,171 @@ extern uint16 SignExtend [2];
 #define MAX_4BIT_TILES 2048
 #define MAX_8BIT_TILES 1024
 
-#define PPU_H_BEAM_IRQ_SOURCE	(1 << 0)
-#define PPU_V_BEAM_IRQ_SOURCE	(1 << 1)
-#define GSU_IRQ_SOURCE		(1 << 2)
-#define SA1_IRQ_SOURCE		(1 << 7)
-#define SA1_DMA_IRQ_SOURCE	(1 << 5)
+#define PPU_H_BEAM_IRQ_SOURCE (1 << 0)
+#define PPU_V_BEAM_IRQ_SOURCE (1 << 1)
+#define GSU_IRQ_SOURCE (1 << 2)
+#define SA1_IRQ_SOURCE (1 << 7)
+#define SA1_DMA_IRQ_SOURCE (1 << 5)
 
 struct ClipData {
-    uint32  Count [6];
-    uint32  Left [6][6];
-    uint32  Right [6][6];
+	uint32 Count[6];
+	uint32 Left[6][6];
+	uint32 Right[6][6];
 };
 
 struct InternalPPU {
-    bool8  ColorsChanged;
-    uint8  HDMA;
-    bool8  HDMAStarted;
-    uint8  MaxBrightness;
-    bool8  LatchedBlanking;
-    bool8  OBJChanged;
-    bool8  RenderThisFrame;
-    bool8  DirectColourMapsNeedRebuild;
-    uint32 FrameCount;
-    uint32 RenderedFramesCount;
-    uint32 DisplayedRenderedFrameCount;
-    uint32 SkippedFrames;
-    uint32 FrameSkip;
-    uint8  *TileCache [3];
-    uint8  *TileCached [3];
+	bool8 ColorsChanged;
+	uint8 HDMA;
+	bool8 HDMAStarted;
+	uint8 MaxBrightness;
+	bool8 LatchedBlanking;
+	bool8 OBJChanged;
+	bool8 RenderThisFrame;
+	bool8 DirectColourMapsNeedRebuild;
+	uint32 FrameCount;
+	uint32 RenderedFramesCount;
+	uint32 DisplayedRenderedFrameCount;
+	uint32 SkippedFrames;
+	uint32 FrameSkip;
+	uint8 *TileCache[3];
+	uint8 *TileCached[3];
 #ifdef CORRECT_VRAM_READS
-    uint16 VRAMReadBuffer;
+	uint16 VRAMReadBuffer;
 #else
-    bool8  FirstVRAMRead;
+	bool8 FirstVRAMRead;
 #endif
-    bool8  DoubleHeightPixels;
-    bool8  Interlace;
-    bool8  InterlaceSprites;
-    bool8  DoubleWidthPixels;
-    bool8  HalfWidthPixels;
-    int    RenderedScreenHeight;
-    int    RenderedScreenWidth;
-    uint32 Red [256];
-    uint32 Green [256];
-    uint32 Blue [256];
-    uint8  *XB;
-    uint16 ScreenColors [256];
-    int	   PreviousLine;
-    int	   CurrentLine;
-    int	   Controller;
-    uint32 Joypads[5];
-    uint32 SuperScope;
-    uint32 Mouse[2];
-    int    PrevMouseX[2];
-    int    PrevMouseY[2];
-    struct ClipData Clip [2];
+	bool8 DoubleHeightPixels;
+	bool8 Interlace;
+	bool8 InterlaceSprites;
+	bool8 DoubleWidthPixels;
+	bool8 HalfWidthPixels;
+	int RenderedScreenHeight;
+	int RenderedScreenWidth;
+	uint32 Red[256];
+	uint32 Green[256];
+	uint32 Blue[256];
+	uint8 *XB;
+	uint16 ScreenColors[256];
+	int PreviousLine;
+	int CurrentLine;
+	int Controller;
+	uint32 Joypads[5];
+	uint32 SuperScope;
+	uint32 Mouse[2];
+	int PrevMouseX[2];
+	int PrevMouseY[2];
+	struct ClipData Clip[2];
 };
 
-struct SOBJ
-{
-    short  HPos;
-    uint16 VPos;
-    uint16 Name;
-    uint8  VFlip;
-    uint8  HFlip;
-    uint8  Priority;
-    uint8  Palette;
-    uint8  Size;
+struct SOBJ {
+	short HPos;
+	uint16 VPos;
+	uint16 Name;
+	uint8 VFlip;
+	uint8 HFlip;
+	uint8 Priority;
+	uint8 Palette;
+	uint8 Size;
 };
 
 struct SPPU {
-    uint8  BGMode;
-    uint8  BG3Priority;
-    uint8  Brightness;
+	uint8 BGMode;
+	uint8 BG3Priority;
+	uint8 Brightness;
 
-    struct {
-	bool8 High;
-	uint8 Increment;
-	uint16 Address;
-	uint16 Mask1;
-	uint16 FullGraphicCount;
-	uint16 Shift;
-    } VMA;
+	struct {
+		bool8 High;
+		uint8 Increment;
+		uint16 Address;
+		uint16 Mask1;
+		uint16 FullGraphicCount;
+		uint16 Shift;
+	} VMA;
 
-    struct {
-	uint16 SCBase;
-	uint16 VOffset;
-	uint16 HOffset;
-	uint8 BGSize;
-	uint16 NameBase;
-	uint16 SCSize;
-    } BG [4];
+	struct {
+		uint16 SCBase;
+		uint16 VOffset;
+		uint16 HOffset;
+		uint8 BGSize;
+		uint16 NameBase;
+		uint16 SCSize;
+	} BG[4];
 
-    bool8  CGFLIP;
-    uint16 CGDATA [256];
-    uint8  FirstSprite;
-    uint8  LastSprite;
-    struct SOBJ OBJ [128];
-    uint8  OAMPriorityRotation;
-    uint16 OAMAddr;
-    uint8  RangeTimeOver;
+	bool8 CGFLIP;
+	uint16 CGDATA[256];
+	uint8 FirstSprite;
+	uint8 LastSprite;
+	struct SOBJ OBJ[128];
+	uint8 OAMPriorityRotation;
+	uint16 OAMAddr;
+	uint8 RangeTimeOver;
 
-    uint8  OAMFlip;
-    uint16 OAMTileAddress;
-    uint16 IRQVBeamPos;
-    uint16 IRQHBeamPos;
-    uint16 VBeamPosLatched;
-    uint16 HBeamPosLatched;
+	uint8 OAMFlip;
+	uint16 OAMTileAddress;
+	uint16 IRQVBeamPos;
+	uint16 IRQHBeamPos;
+	uint16 VBeamPosLatched;
+	uint16 HBeamPosLatched;
 
-    uint8  HBeamFlip;
-    uint8  VBeamFlip;
-    uint8  HVBeamCounterLatched;
+	uint8 HBeamFlip;
+	uint8 VBeamFlip;
+	uint8 HVBeamCounterLatched;
 
-    short  MatrixA;
-    short  MatrixB;
-    short  MatrixC;
-    short  MatrixD;
-    short  CentreX;
-    short  CentreY;
-    uint8  Joypad1ButtonReadPos;
-    uint8  Joypad2ButtonReadPos;
+	short MatrixA;
+	short MatrixB;
+	short MatrixC;
+	short MatrixD;
+	short CentreX;
+	short CentreY;
+	uint8 Joypad1ButtonReadPos;
+	uint8 Joypad2ButtonReadPos;
 
-    uint8  CGADD;
-    uint8  FixedColourRed;
-    uint8  FixedColourGreen;
-    uint8  FixedColourBlue;
-    uint16 SavedOAMAddr;
-    uint16 ScreenHeight;
-    uint32 WRAM;
-    uint8  BG_Forced;
-    bool8  ForcedBlanking;
-    bool8  OBJThroughMain;
-    bool8  OBJThroughSub;
-    uint8  OBJSizeSelect;
-    uint16 OBJNameBase;
-    bool8  OBJAddition;
-    uint8  OAMReadFlip;
-    uint8  OAMData [512 + 32];
-    bool8  VTimerEnabled;
-    bool8  HTimerEnabled;
-    short  HTimerPosition;
-    uint8  Mosaic;
-    bool8  BGMosaic [4];
-    bool8  Mode7HFlip;
-    bool8  Mode7VFlip;
-    uint8  Mode7Repeat;
-    uint8  Window1Left;
-    uint8  Window1Right;
-    uint8  Window2Left;
-    uint8  Window2Right;
-    uint8  ClipCounts [6];
-    uint8  ClipWindowOverlapLogic [6];
-    uint8  ClipWindow1Enable [6];
-    uint8  ClipWindow2Enable [6];
-    bool8  ClipWindow1Inside [6];
-    bool8  ClipWindow2Inside [6];
-    bool8  RecomputeClipWindows;
-    uint8  CGFLIPRead;
-    uint16 OBJNameSelect;
-    bool8  Need16x8Mulitply;
-    uint8  Joypad3ButtonReadPos;
-    uint8  MouseSpeed[2];
+	uint8 CGADD;
+	uint8 FixedColourRed;
+	uint8 FixedColourGreen;
+	uint8 FixedColourBlue;
+	uint16 SavedOAMAddr;
+	uint16 ScreenHeight;
+	uint32 WRAM;
+	uint8 BG_Forced;
+	bool8 ForcedBlanking;
+	bool8 OBJThroughMain;
+	bool8 OBJThroughSub;
+	uint8 OBJSizeSelect;
+	uint16 OBJNameBase;
+	bool8 OBJAddition;
+	uint8 OAMReadFlip;
+	uint8 OAMData[512 + 32];
+	bool8 VTimerEnabled;
+	bool8 HTimerEnabled;
+	short HTimerPosition;
+	uint8 Mosaic;
+	bool8 BGMosaic[4];
+	bool8 Mode7HFlip;
+	bool8 Mode7VFlip;
+	uint8 Mode7Repeat;
+	uint8 Window1Left;
+	uint8 Window1Right;
+	uint8 Window2Left;
+	uint8 Window2Right;
+	uint8 ClipCounts[6];
+	uint8 ClipWindowOverlapLogic[6];
+	uint8 ClipWindow1Enable[6];
+	uint8 ClipWindow2Enable[6];
+	bool8 ClipWindow1Inside[6];
+	bool8 ClipWindow2Inside[6];
+	bool8 RecomputeClipWindows;
+	uint8 CGFLIPRead;
+	uint16 OBJNameSelect;
+	bool8 Need16x8Mulitply;
+	uint8 Joypad3ButtonReadPos;
+	uint8 MouseSpeed[2];
 
-    // XXX Do these need to be added to snapshot.cpp?
-    uint16 OAMWriteRegister;
-    uint8 BGnxOFSbyte;
-    uint8 OpenBus1;
-    uint8 OpenBus2;
+	// XXX Do these need to be added to snapshot.cpp?
+	uint16 OAMWriteRegister;
+	uint8 BGnxOFSbyte;
+	uint8 OpenBus1;
+	uint8 OpenBus2;
 };
 
 #define CLIP_OR 0
@@ -277,64 +276,64 @@ struct SPPU {
 #define CLIP_XNOR 3
 
 struct SDMA {
-    bool8  TransferDirection;
-    bool8  AAddressFixed;
-    bool8  AAddressDecrement;
-    uint8  TransferMode;
+	bool8 TransferDirection;
+	bool8 AAddressFixed;
+	bool8 AAddressDecrement;
+	uint8 TransferMode;
 
-    uint8  ABank;
-    uint16 AAddress;
-    uint16 Address;
-    uint8  BAddress;
+	uint8 ABank;
+	uint16 AAddress;
+	uint16 Address;
+	uint8 BAddress;
 
-    // General DMA only:
-    uint16 TransferBytes;
+	// General DMA only:
+	uint16 TransferBytes;
 
-    // H-DMA only:
-    bool8  HDMAIndirectAddressing;
-    uint16 IndirectAddress;
-    uint8  IndirectBank;
-    uint8  Repeat;
-    uint8  LineCount;
-    uint8  FirstLine;
+	// H-DMA only:
+	bool8 HDMAIndirectAddressing;
+	uint16 IndirectAddress;
+	uint8 IndirectBank;
+	uint8 Repeat;
+	uint8 LineCount;
+	uint8 FirstLine;
 };
 
 START_EXTERN_C
-void S9xUpdateScreen ();
-void S9xResetPPU ();
-void S9xSoftResetPPU ();
-void S9xFixColourBrightness ();
-void S9xUpdateJoypads ();
+void S9xUpdateScreen();
+void S9xResetPPU();
+void S9xSoftResetPPU();
+void S9xFixColourBrightness();
+void S9xUpdateJoypads();
 void S9xProcessMouse(int which1);
-void S9xSuperFXExec ();
+void S9xSuperFXExec();
 
-void S9xSetPPU (uint8 Byte, uint16 Address);
-uint8 S9xGetPPU (uint16 Address);
-void S9xSetCPU (uint8 Byte, uint16 Address);
-uint8 S9xGetCPU (uint16 Address);
+void S9xSetPPU(uint8 Byte, uint16 Address);
+uint8 S9xGetPPU(uint16 Address);
+void S9xSetCPU(uint8 Byte, uint16 Address);
+uint8 S9xGetCPU(uint16 Address);
 
-void S9xInitC4 ();
-void S9xSetC4 (uint8 Byte, uint16 Address);
-uint8 S9xGetC4 (uint16 Address);
-void S9xSetC4RAM (uint8 Byte, uint16 Address);
-uint8 S9xGetC4RAM (uint16 Address);
+void S9xInitC4();
+void S9xSetC4(uint8 Byte, uint16 Address);
+uint8 S9xGetC4(uint16 Address);
+void S9xSetC4RAM(uint8 Byte, uint16 Address);
+uint8 S9xGetC4RAM(uint16 Address);
 
 extern struct SPPU PPU;
-extern struct SDMA DMA [8];
+extern struct SDMA DMA[8];
 extern struct InternalPPU IPPU;
 END_EXTERN_C
 
 #include "gfx.h"
 #include "memmap.h"
 
-typedef struct{
+typedef struct {
 	uint8 _5C77;
 	uint8 _5C78;
 	uint8 _5A22;
 } SnesModel;
 
 START_EXTERN_C
-extern SnesModel* Model;
+extern SnesModel *Model;
 extern SnesModel M1SNES;
 extern SnesModel M2SNES;
 END_EXTERN_C
@@ -344,20 +343,19 @@ END_EXTERN_C
 #define MAX_5A22_VERSION 0x02
 
 extern uint8 REGISTER_4212();
-extern void FLUSH_REDRAW ();
-extern void REGISTER_2104 (uint8 byte);
-extern void REGISTER_2118 (uint8 Byte);
-extern void REGISTER_2118_tile (uint8 Byte);
-extern void REGISTER_2118_linear (uint8 Byte);
-extern void REGISTER_2119 (uint8 Byte);
-extern void REGISTER_2119_tile (uint8 Byte);
-extern void REGISTER_2119_linear (uint8 Byte);
+extern void FLUSH_REDRAW();
+extern void REGISTER_2104(uint8 byte);
+extern void REGISTER_2118(uint8 Byte);
+extern void REGISTER_2118_tile(uint8 Byte);
+extern void REGISTER_2118_linear(uint8 Byte);
+extern void REGISTER_2119(uint8 Byte);
+extern void REGISTER_2119_tile(uint8 Byte);
+extern void REGISTER_2119_linear(uint8 Byte);
 extern void REGISTER_2122(uint8 Byte);
 extern void REGISTER_2180(uint8 Byte);
 
-//Platform specific input functions used by PPU.CPP
-void JustifierButtons(uint32&);
+// Platform specific input functions used by PPU.CPP
+void JustifierButtons(uint32 &);
 bool JustifierOffscreen();
 
 #endif
-

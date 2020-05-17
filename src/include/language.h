@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -91,21 +91,22 @@
 
 #define WINDOW_TITLE "Snes9X v%s for Windows"
 
-#define MY_REG_KEY   "Software\\Emulators\\Snes9X"
+#define MY_REG_KEY "Software\\Emulators\\Snes9X"
 
-#define REG_KEY_VER  "1.31"
+#define REG_KEY_VER "1.31"
 
-#define DISCLAIMER_TEXT        "Snes9X v%s for Windows.\r\n" \
-        "(c) Copyright 1996 - 2002 Gary Henderson and Jerremy Koot.\r\n" \
-        "(c) Copyright 2001- 2004 John Weidman.\r\n" \
-	"(c) Copyright 2002 - 2004 blip, Brad Jorsch, funkyass, Joel Yliluoma, Kris Bleakley, Matthew Kendora, Nach, Peter Bortas, zones.\r\n\r\n" \
-	"Snes9X is a Super Nintendo Entertainment System\r\n" \
-		"emulator that allows you to play most games designed\r\n" \
-		"for the SNES on your PC.\r\n\r\n" \
-		"Please visit http://www.snes9x.com for\r\n" \
-		"up-to-the-minute information and help on Snes9X.\r\n\r\n" \
-		"Nintendo is a trade mark."
-
+#define DISCLAIMER_TEXT                                                                                                \
+	"Snes9X v%s for Windows.\r\n"                                                                                  \
+	"(c) Copyright 1996 - 2002 Gary Henderson and Jerremy Koot.\r\n"                                               \
+	"(c) Copyright 2001- 2004 John Weidman.\r\n"                                                                   \
+	"(c) Copyright 2002 - 2004 blip, Brad Jorsch, funkyass, Joel Yliluoma, Kris Bleakley, Matthew Kendora, Nach, " \
+	"Peter Bortas, zones.\r\n\r\n"                                                                                 \
+	"Snes9X is a Super Nintendo Entertainment System\r\n"                                                          \
+	"emulator that allows you to play most games designed\r\n"                                                     \
+	"for the SNES on your PC.\r\n\r\n"                                                                             \
+	"Please visit http://www.snes9x.com for\r\n"                                                                   \
+	"up-to-the-minute information and help on Snes9X.\r\n\r\n"                                                     \
+	"Nintendo is a trade mark."
 
 #define APP_NAME "Snes9x"
 // possible global strings
@@ -142,7 +143,7 @@
 #define INPUTCONFIG_LABEL_DOWNLEFT "Down Left"
 #define INPUTCONFIG_LABEL_BLUE "Blue means the current key/button is already mapped"
 
-//gaming buttons and axises
+// gaming buttons and axises
 #define GAMEDEVICE_JOYNUMPREFIX "(J%d)"
 #define GAMEDEVICE_JOYBUTPREFIX "#[%d]"
 #define GAMEDEVICE_XNEG "Left"
@@ -155,7 +156,7 @@
 #define GAMEDEVICE_POVDOWN "POV Down"
 #define GAMEDEVICE_POVDNLEFT "POV Dn Left"
 #define GAMEDEVICE_POVDNRIGHT "POV Dn Right"
-#define GAMEDEVICE_POVUPLEFT  "POV Up Left"
+#define GAMEDEVICE_POVUPLEFT "POV Up Left"
 #define GAMEDEVICE_POVUPRIGHT "POV Up Right"
 #define GAMEDEVICE_ZPOS "Z Up"
 #define GAMEDEVICE_ZNEG "Z Down"
@@ -167,10 +168,10 @@
 #define GAMEDEVICE_VNEG "V Down"
 #define GAMEDEVICE_BUTTON "Button %d"
 
-//gaming general
+// gaming general
 #define GAMEDEVICE_DISABLED "Disabled"
 
-//gaming keys
+// gaming keys
 #define GAMEDEVICE_KEY "#%d"
 #define GAMEDEVICE_NUMPADPREFIX "Numpad-%c"
 #define GAMEDEVICE_VK_TAB "Tab"
@@ -218,13 +219,13 @@
 #define GAMEDEVICE_VK_NUMLOCK "Num-lock"
 #define GAMEDEVICE_VK_SCROLL "Scroll-lock"
 
-//evil things I found in WinProc
+// evil things I found in WinProc
 
 #define WINPROC_TURBOMODE_ON "Turbo Mode Activated"
 #define WINPROC_TURBOMODE_OFF "Turbo Mode Deactivated"
 #define WINPROC_TURBOMODE_TEXT "Turbo Mode"
 #define WINPROC_HDMA_TEXT "HDMA emulation"
-#define WINPROC_BG1 "BG#1" //Background Layers
+#define WINPROC_BG1 "BG#1" // Background Layers
 #define WINPROC_BG2 "BG#2"
 #define WINPROC_BG3 "BG#3"
 #define WINPROC_BG4 "BG#4"
@@ -261,15 +262,21 @@
 #define WINPROC_TURBO_SEL_OFF "Turbo Select Deactivated"
 #define WINPROC_TURBO_START_ON "Turbo Start Activated"
 #define WINPROC_TURBO_START_OFF "Turbo Start Deactivated"
-#define WINPROC_FILTER_RESTART "You will need to restart Snes9x before the output image\nprocessing option change will take effect."
+#define WINPROC_FILTER_RESTART                                                                                         \
+	"You will need to restart Snes9x before the output image\nprocessing option change will take effect."
 #define WINPROC_DISCONNECT "Disconnect from the NetPlay server first."
-#define WINPROC_NET_RESTART "Your game will be reset after the ROM has been sent due to\nyour 'Sync Using Reset Game' setting.\n\n"
+#define WINPROC_NET_RESTART                                                                                            \
+	"Your game will be reset after the ROM has been sent due to\nyour 'Sync Using Reset Game' setting.\n\n"
 #define WINPROC_INTERPOLATED_SND "Interpolated sound"
 #define WINPROC_SYNC_SND "Sync sound"
-#define WINPROC_SND_OFF "Disabling the sound CPU emulation will help to improve\nemulation speed but you will not hear any sound effects\nor music. If you later want to re-enable the sound CPU\nemulation you will need to reset your game before it will\ntake effect.\n\nAre you sure this is what you want?"
-#define WINPROC_SND_RESTART "You will need to reset your game or load another one\nbefore enabling the sound CPU will take effect."
+#define WINPROC_SND_OFF                                                                                                \
+	"Disabling the sound CPU emulation will help to improve\nemulation speed but you will not hear any sound "     \
+	"effects\nor music. If you later want to re-enable the sound CPU\nemulation you will need to reset your game " \
+	"before it will\ntake effect.\n\nAre you sure this is what you want?"
+#define WINPROC_SND_RESTART                                                                                            \
+	"You will need to reset your game or load another one\nbefore enabling the sound CPU will take effect."
 
-//Emulator Settings
+// Emulator Settings
 
 #define EMUSET_TITLE "Emulation Settings"
 #define EMUSET_LABEL_FREEZE "Freeze Folder Directory"
@@ -282,7 +289,7 @@
 #define EMUSET_LABEL_STURBO_TEXT "frames in Turbo mode"
 #define EMUSET_TOGGLE_TURBO "Tab Toggles Turbo"
 
-//Netplay Options
+// Netplay Options
 
 #define NPOPT_TITLE "Netplay Options"
 #define NPOPT_LABEL_PORTNUM "Socket Port Number"
@@ -296,16 +303,14 @@
 #define NPOPT_CLIENTSETTINGSBLOCK "Client Settings"
 #define NPOPT_SERVERSETTINGSBLOCK "Server Settings"
 
-//Netplay Connect
-
+// Netplay Connect
 
 #define NPCON_TITLE "Connect to Server"
 #define NPCON_LABEL_SERVERADDY "Server Address"
 #define NPCON_LABEL_PORTNUM "Port Number"
 #define NPCON_CLEARHISTORY "Clear History"
 
-
-//Movie Messages
+// Movie Messages
 
 #define MOVIE_INFO_REPLAY "Movie replay"
 #define MOVIE_INFO_RECORD "Movie record"
@@ -321,7 +326,6 @@
 #define MOVIE_ERR_NOT_FOUND "File not found."
 #define MOVIE_ERR_WRONG_FORMAT "File is wrong format."
 #define MOVIE_ERR_WRONG_VERSION "File is wrong version."
-
 
 // AVI Messages
 

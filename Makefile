@@ -62,20 +62,10 @@ $(TARGET) : $(OBJS)
 %.o: %.S
 	$(CXX) $(INCLUDES) $(CXXFLAGS) $(LDFLAGS) -Wa,-I./src/ -c $< -o $@
 
-.PHONY : clean
+format:
+	clang-format -i **/*.{c,cpp,h}
 
-opk: all
-	mksquashfs \
-	pocketsnes/default.gcw0.desktop \
-	pocketsnes/default.retrofw.desktop \
-	pocketsnes/snes.retrofw.desktop \
-	pocketsnes/pocketsnes.elf \
-	pocketsnes/pocketsnes.dge \
-	pocketsnes/pocketsnes.man.txt \
-	pocketsnes/pocketsnes.png \
-	pocketsnes/backdrop.png \
-	pocketsnes/pocketsnes.opk \
-	-all-root -noappend -no-exports -no-xattrs
+.PHONY : clean
 
 clean :
 	rm -f $(OBJS) $(TARGET)

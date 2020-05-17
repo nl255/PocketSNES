@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -90,9 +90,9 @@
 #define _spc7110_h
 #include "port.h"
 
-#define DECOMP_BUFFER_SIZE	0x10000
+#define DECOMP_BUFFER_SIZE 0x10000
 
-extern void (*LoadUp7110)(char*);
+extern void (*LoadUp7110)(char *);
 extern void (*CleanUp7110)(void);
 extern void (*Copy7110)(void);
 
@@ -101,27 +101,26 @@ extern uint16 cacheMegs;
 void Del7110Gfx(void);
 void Close7110Gfx(void);
 void Drop7110Gfx(void);
-extern "C"{
+extern "C" {
 uint8 S9xGetSPC7110(uint16 Address);
 uint8 S9xGetSPC7110Byte(uint32 Address);
-uint8* Get7110BasePtr(uint32);
+uint8 *Get7110BasePtr(uint32);
 }
-void S9xSetSPC7110 (uint8 data, uint16 Address);
+void S9xSetSPC7110(uint8 data, uint16 Address);
 void S9xSpc7110Init();
-uint8* Get7110BasePtr(uint32);
+uint8 *Get7110BasePtr(uint32);
 void S9xSpc7110Reset();
-void S9xUpdateRTC ();
+void S9xUpdateRTC();
 void Do7110Logging();
-int	S9xRTCDaysInMonth( int month, int year );
+int S9xRTCDaysInMonth(int month, int year);
 
-//These are platform-dependant functions, but should work on
-//most systems that use GNU compilers, and on Win32.
-void SPC7110Load(char*);
-void SPC7110Open(char*);
-void SPC7110Grab(char*);
+// These are platform-dependant functions, but should work on
+// most systems that use GNU compilers, and on Win32.
+void SPC7110Load(char *);
+void SPC7110Open(char *);
+void SPC7110Grab(char *);
 
-typedef struct SPC7110RTC
-{
+typedef struct SPC7110RTC {
 	unsigned char reg[16];
 	short index;
 	uint8 control;
@@ -129,8 +128,7 @@ typedef struct SPC7110RTC
 	time_t last_used;
 } S7RTC;
 
-typedef struct SPC7110EmuVars
-{
+typedef struct SPC7110EmuVars {
 	unsigned char reg4800;
 	unsigned char reg4801;
 	unsigned char reg4802;
@@ -188,8 +186,7 @@ typedef struct SPC7110EmuVars
 extern SPC7110Regs s7r;
 extern S7RTC rtc_f9;
 // These are defined in spc7110.cpp
-bool8 S9xSaveSPC7110RTC (S7RTC *rtc_f9);
-bool8 S9xLoadSPC7110RTC (S7RTC *rtc_f9);
+bool8 S9xSaveSPC7110RTC(S7RTC *rtc_f9);
+bool8 S9xLoadSPC7110RTC(S7RTC *rtc_f9);
 
 #endif
-

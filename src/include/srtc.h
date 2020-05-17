@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -91,16 +91,15 @@
 
 #include <time.h>
 
-#define MAX_RTC_INDEX       0xC
+#define MAX_RTC_INDEX 0xC
 
-#define MODE_READ           0
-#define MODE_LOAD_RTC       1
-#define MODE_COMMAND        2
-#define MODE_COMMAND_DONE   3
+#define MODE_READ 0
+#define MODE_LOAD_RTC 1
+#define MODE_COMMAND 2
+#define MODE_COMMAND_DONE 3
 
-#define COMMAND_LOAD_RTC    0
-#define COMMAND_CLEAR_RTC   4
-
+#define COMMAND_LOAD_RTC 0
+#define COMMAND_CLEAR_RTC 4
 
 /***   The format of the rtc_data structure is:
 
@@ -129,29 +128,27 @@ Index Description     Range (nibble)
 
 ***/
 
-typedef struct
-{
-    bool8 needs_init;
-    bool8 count_enable;	// Does RTC mark time or is it frozen
-    uint8 data [MAX_RTC_INDEX+1];
-    int8  index;
-    uint8 mode;
+typedef struct {
+	bool8 needs_init;
+	bool8 count_enable; // Does RTC mark time or is it frozen
+	uint8 data[MAX_RTC_INDEX + 1];
+	int8 index;
+	uint8 mode;
 
-    time_t system_timestamp;	// Of latest RTC load time
-    uint32 pad;
+	time_t system_timestamp; // Of latest RTC load time
+	uint32 pad;
 } SRTC_DATA;
 
-extern SRTC_DATA           rtc;
+extern SRTC_DATA rtc;
 
-void    S9xUpdateSrtcTime ();
-void	S9xSetSRTC (uint8 data, uint16 Address);
-uint8	S9xGetSRTC (uint16 Address);
-void	S9xSRTCPreSaveState ();
-void	S9xSRTCPostLoadState ();
-void	S9xResetSRTC ();
-void	S9xHardResetSRTC ();
+void S9xUpdateSrtcTime();
+void S9xSetSRTC(uint8 data, uint16 Address);
+uint8 S9xGetSRTC(uint16 Address);
+void S9xSRTCPreSaveState();
+void S9xSRTCPostLoadState();
+void S9xResetSRTC();
+void S9xHardResetSRTC();
 
 #define SRTC_SRAM_PAD (4 + 8 + 1 + MAX_RTC_INDEX)
 
-#endif	// _srtc_h
-
+#endif // _srtc_h

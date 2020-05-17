@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -94,172 +94,166 @@
 #include "snes9x.h"
 
 START_EXTERN_C
-void S9xStartScreenRefresh ();
-void S9xDrawScanLine (uint8 Line);
-void S9xEndScreenRefresh ();
-void S9xSetupOBJ ();
-void S9xUpdateScreen ();
-void RenderLine (uint8 line);
-void S9xBuildDirectColourMaps ();
+void S9xStartScreenRefresh();
+void S9xDrawScanLine(uint8 Line);
+void S9xEndScreenRefresh();
+void S9xSetupOBJ();
+void S9xUpdateScreen();
+void RenderLine(uint8 line);
+void S9xBuildDirectColourMaps();
 
 // External port interface which must be implemented or initialised for each
 // port.
 extern struct SGFX GFX;
 
-bool8 S9xGraphicsInit ();
+bool8 S9xGraphicsInit();
 void S9xGraphicsDeinit();
-bool8 S9xInitUpdate (void);
-bool8 S9xDeinitUpdate (int Width, int Height, bool8 sixteen_bit);
-void S9xSyncSpeed ();
+bool8 S9xInitUpdate(void);
+bool8 S9xDeinitUpdate(int Width, int Height, bool8 sixteen_bit);
+void S9xSyncSpeed();
 
 #ifdef GFX_MULTI_FORMAT
-bool8 S9xSetRenderPixelFormat (int format);
+bool8 S9xSetRenderPixelFormat(int format);
 #endif
 
 END_EXTERN_C
 
-struct SGFX{
-    // Initialize these variables
-    uint8  *Screen;
-    uint8  *SubScreen;
-    uint8  *ZBuffer;
-    uint8  *SubZBuffer;
-    uint32 Pitch;
+struct SGFX {
+	// Initialize these variables
+	uint8 *Screen;
+	uint8 *SubScreen;
+	uint8 *ZBuffer;
+	uint8 *SubZBuffer;
+	uint32 Pitch;
 
-    // Setup in call to S9xGraphicsInit()
-    int   Delta;
-    #ifndef _FAST_GFX
-    uint16 *X2;
-    uint16 *ZERO_OR_X2;
-    #endif
-    uint16 *ZERO;
-    uint32 RealPitch; // True pitch of Screen buffer.
-    uint32 Pitch2;    // Same as RealPitch except while using speed up hack for Glide.
-    uint32 ZPitch;    // Pitch of ZBuffer
-    uint32 PPL;	      // Number of pixels on each of Screen buffer
-    uint32 PPLx2;
-    uint32 PixSize;
-    uint8  *S;
-    uint8  *DB;
-    uint32 DepthDelta;
-    uint8  Z1;          // Depth for comparison
-    uint8  Z2;          // Depth to save
-    uint8  ZSprite;     // Used to ensure only 1st sprite is drawn per pixel
-    uint32 FixedColour;
-    const char *InfoString;
-    uint32 InfoStringTimeout;
-    uint32 StartY;
-    uint32 EndY;
-    struct ClipData *pCurrentClip;
-    uint32 Mode7Mask;
-    uint32 Mode7PriorityMask;
-    uint8  OBJWidths[128];
-    uint8  OBJVisibleTiles[128];
-    struct {
-        uint8 RTOFlags;
-        int16 Tiles;
-        struct {
-            int8 Sprite;
-            uint8 Line;
-        } OBJ[32];
-    } OBJLines [SNES_HEIGHT_EXTENDED];
+	// Setup in call to S9xGraphicsInit()
+	int Delta;
+#ifndef _FAST_GFX
+	uint16 *X2;
+	uint16 *ZERO_OR_X2;
+#endif
+	uint16 *ZERO;
+	uint32 RealPitch; // True pitch of Screen buffer.
+	uint32 Pitch2;	  // Same as RealPitch except while using speed up hack for Glide.
+	uint32 ZPitch;	  // Pitch of ZBuffer
+	uint32 PPL;	  // Number of pixels on each of Screen buffer
+	uint32 PPLx2;
+	uint32 PixSize;
+	uint8 *S;
+	uint8 *DB;
+	uint32 DepthDelta;
+	uint8 Z1;      // Depth for comparison
+	uint8 Z2;      // Depth to save
+	uint8 ZSprite; // Used to ensure only 1st sprite is drawn per pixel
+	uint32 FixedColour;
+	const char *InfoString;
+	uint32 InfoStringTimeout;
+	uint32 StartY;
+	uint32 EndY;
+	struct ClipData *pCurrentClip;
+	uint32 Mode7Mask;
+	uint32 Mode7PriorityMask;
+	uint8 OBJWidths[128];
+	uint8 OBJVisibleTiles[128];
+	struct {
+		uint8 RTOFlags;
+		int16 Tiles;
+		struct {
+			int8 Sprite;
+			uint8 Line;
+		} OBJ[32];
+	} OBJLines[SNES_HEIGHT_EXTENDED];
 
-    uint8  r212c;
-    uint8  r212d;
-    uint8  r2130;
-    uint8  r2131;
-    bool8  Pseudo;
+	uint8 r212c;
+	uint8 r212d;
+	uint8 r2130;
+	uint8 r2131;
+	bool8 Pseudo;
 
 #ifdef GFX_MULTI_FORMAT
-    uint32 PixelFormat;
-    uint32 (*BuildPixel) (uint32 R, uint32 G, uint32 B);
-    uint32 (*BuildPixel2) (uint32 R, uint32 G, uint32 B);
-    void   (*DecomposePixel) (uint32 Pixel, uint32 &R, uint32 &G, uint32 &B);
+	uint32 PixelFormat;
+	uint32 (*BuildPixel)(uint32 R, uint32 G, uint32 B);
+	uint32 (*BuildPixel2)(uint32 R, uint32 G, uint32 B);
+	void (*DecomposePixel)(uint32 Pixel, uint32 &R, uint32 &G, uint32 &B);
 #endif
 };
 
 struct SLineData {
-    struct {
-	uint16 VOffset;
-	uint16 HOffset;
-    } BG [4];
+	struct {
+		uint16 VOffset;
+		uint16 HOffset;
+	} BG[4];
 };
 
 #define H_FLIP 0x4000
 #define V_FLIP 0x8000
 #define BLANK_TILE 2
 
-struct SBG
-{
-    uint32 TileSize;
-    uint32 BitShift;
-    uint32 TileShift;
-    uint32 TileAddress;
-    uint32 NameSelect;
-    uint32 SCBase;
+struct SBG {
+	uint32 TileSize;
+	uint32 BitShift;
+	uint32 TileShift;
+	uint32 TileAddress;
+	uint32 NameSelect;
+	uint32 SCBase;
 
-    uint32 StartPalette;
-    uint32 PaletteShift;
-    uint32 PaletteMask;
+	uint32 StartPalette;
+	uint32 PaletteShift;
+	uint32 PaletteMask;
 
-    uint8 *Buffer;
-    uint8 *Buffered;
-    bool8  DirectColourMode;
+	uint8 *Buffer;
+	uint8 *Buffered;
+	bool8 DirectColourMode;
 };
 
-struct SLineMatrixData
-{
-    short MatrixA;
-    short MatrixB;
-    short MatrixC;
-    short MatrixD;
-    short CentreX;
-    short CentreY;
+struct SLineMatrixData {
+	short MatrixA;
+	short MatrixB;
+	short MatrixC;
+	short MatrixD;
+	short CentreX;
+	short CentreY;
 };
 
-extern uint32 odd_high [4][16];
-extern uint32 odd_low [4][16];
-extern uint32 even_high [4][16];
-extern uint32 even_low [4][16];
+extern uint32 odd_high[4][16];
+extern uint32 odd_low[4][16];
+extern uint32 even_high[4][16];
+extern uint32 even_low[4][16];
 extern SBG BG;
-extern uint16 DirectColourMaps [8][256];
+extern uint16 DirectColourMaps[8][256];
 
-extern uint8 add32_32 [32][32];
-extern uint8 add32_32_half [32][32];
-extern uint8 sub32_32 [32][32];
-extern uint8 sub32_32_half [32][32];
-extern uint8 mul_brightness [16][32];
+extern uint8 add32_32[32][32];
+extern uint8 add32_32_half[32][32];
+extern uint8 sub32_32[32][32];
+extern uint8 sub32_32_half[32][32];
+extern uint8 mul_brightness[16][32];
 
 #ifdef __ARM__
 // by Harald Kipp, from http://www.ethernut.de/en/documents/arm-inline-asm.html
-#define SWAP_DWORD(val) \
-    __asm__ __volatile__ ( \
-        "eor     r3, %1, %1, ror #16\n\t" \
-        "bic     r3, r3, #0x00FF0000\n\t" \
-        "mov     %0, %1, ror #8\n\t" \
-        "eor     %0, %0, r3, lsr #8" \
-        : "=r" (val) \
-        : "0"(val) \
-        : "r3", "cc" \
-    );
+#define SWAP_DWORD(val)                                                                                                \
+	__asm__ __volatile__("eor     r3, %1, %1, ror #16\n\t"                                                         \
+			     "bic     r3, r3, #0x00FF0000\n\t"                                                         \
+			     "mov     %0, %1, ror #8\n\t"                                                              \
+			     "eor     %0, %0, r3, lsr #8"                                                              \
+			     : "=r"(val)                                                                               \
+			     : "0"(val)                                                                                \
+			     : "r3", "cc");
 #else
 // Could use BSWAP instruction on Intel port...
-#define SWAP_DWORD(dw) dw = ((dw & 0xff) << 24) | ((dw & 0xff00) << 8) | \
-		            ((dw & 0xff0000) >> 8) | ((dw & 0xff000000) >> 24)
+#define SWAP_DWORD(dw)                                                                                                 \
+	dw = ((dw & 0xff) << 24) | ((dw & 0xff00) << 8) | ((dw & 0xff0000) >> 8) | ((dw & 0xff000000) >> 24)
 #endif
 
 #ifdef FAST_LSB_WORD_ACCESS
-#define READ_2BYTES(s) (*(uint16 *) (s))
-#define WRITE_2BYTES(s, d) *(uint16 *) (s) = (d)
+#define READ_2BYTES(s) (*(uint16 *)(s))
+#define WRITE_2BYTES(s, d) *(uint16 *)(s) = (d)
 #else
 #ifdef LSB_FIRST
-#define READ_2BYTES(s) (*(uint8 *) (s) | (*((uint8 *) (s) + 1) << 8))
-#define WRITE_2BYTES(s, d) *(uint8 *) (s) = (d), \
-			   *((uint8 *) (s) + 1) = (d) >> 8
-#else  // else MSB_FISRT
-#define READ_2BYTES(s) (*(uint8 *) (s) | (*((uint8 *) (s) + 1) << 8))
-#define WRITE_2BYTES(s, d) *(uint8 *) (s) = (d), \
-			   *((uint8 *) (s) + 1) = (d) >> 8
+#define READ_2BYTES(s) (*(uint8 *)(s) | (*((uint8 *)(s) + 1) << 8))
+#define WRITE_2BYTES(s, d) *(uint8 *)(s) = (d), *((uint8 *)(s) + 1) = (d) >> 8
+#else // else MSB_FISRT
+#define READ_2BYTES(s) (*(uint8 *)(s) | (*((uint8 *)(s) + 1) << 8))
+#define WRITE_2BYTES(s, d) *(uint8 *)(s) = (d), *((uint8 *)(s) + 1) = (d) >> 8
 #endif // LSB_FIRST
 #endif // i386
 
@@ -269,70 +263,76 @@ extern uint8 mul_brightness [16][32];
 #define MASK1 0xF7DE
 #define MASK2 0x7BEF
 
-inline uint16 COLOR_ADD (uint16, uint16);
+inline uint16 COLOR_ADD(uint16, uint16);
 
 #ifdef _FAST_GFX
-inline uint16 COLOR_ADD(uint16 C1, uint16 C2) {
-    uint16 a, b, c, z, c1, c2;
+inline uint16 COLOR_ADD(uint16 C1, uint16 C2)
+{
+	uint16 a, b, c, z, c1, c2;
 
-    c1 = C1 & MASK1;
-    c2 = C2 & MASK1;
-    a = (c1>>1) + (c2>>1);
-    b = a & 0x8410;
-    c = b- (b >> 4);
-    z = ((a | c) & MASK2)<<1;
-    return z;
+	c1 = C1 & MASK1;
+	c2 = C2 & MASK1;
+	a = (c1 >> 1) + (c2 >> 1);
+	b = a & 0x8410;
+	c = b - (b >> 4);
+	z = ((a | c) & MASK2) << 1;
+	return z;
 }
 #else
-inline uint16 COLOR_ADD (uint16 C1, uint16 C2)
+inline uint16 COLOR_ADD(uint16 C1, uint16 C2)
 {
 	if (C1 == 0)
 		return C2;
 	else if (C2 == 0)
 		return C1;
 	else
-		return GFX.X2 [(((C1 & RGB_REMOVE_LOW_BITS_MASK) + (C2 & RGB_REMOVE_LOW_BITS_MASK)) >> 1) + (C1 & C2 & RGB_LOW_BITS_MASK)] | ((C1 ^ C2) & RGB_LOW_BITS_MASK);
+		return GFX.X2[(((C1 & RGB_REMOVE_LOW_BITS_MASK) + (C2 & RGB_REMOVE_LOW_BITS_MASK)) >> 1) +
+			      (C1 & C2 & RGB_LOW_BITS_MASK)] |
+		       ((C1 ^ C2) & RGB_LOW_BITS_MASK);
 }
 #endif
 
-#define COLOR_ADD1_2(C1, C2) \
-(((((C1) & RGB_REMOVE_LOW_BITS_MASK) + \
-          ((C2) & RGB_REMOVE_LOW_BITS_MASK)) >> 1) + \
-         ((C1) & (C2) & RGB_LOW_BITS_MASK) | ALPHA_BITS_MASK)
+#define COLOR_ADD1_2(C1, C2)                                                                                           \
+	(((((C1)&RGB_REMOVE_LOW_BITS_MASK) + ((C2)&RGB_REMOVE_LOW_BITS_MASK)) >> 1) +                                  \
+	     ((C1) & (C2)&RGB_LOW_BITS_MASK) |                                                                         \
+	 ALPHA_BITS_MASK)
 
 inline uint16 COLOR_SUB(uint16, uint16);
 
 #ifdef _FAST_GFX
 inline uint16 COLOR_SUB(uint16 C1, uint16 C2)
 {
-    uint16 a, b, c, z, c1, c2;
-    c1 = (C1 & MASK1)>>1;
-    c2 = (C2 & MASK1)>>1;
-    c2 = (c2 ^ 0xffff) + 0x0821;
-    a = c1 + c2;
-    b = a & 0x8410;
-    c = b - (b>>4);
-    c = c ^ 0x7bcf;
-    z = ((a & c) & MASK2)<<1;
+	uint16 a, b, c, z, c1, c2;
+	c1 = (C1 & MASK1) >> 1;
+	c2 = (C2 & MASK1) >> 1;
+	c2 = (c2 ^ 0xffff) + 0x0821;
+	a = c1 + c2;
+	b = a & 0x8410;
+	c = b - (b >> 4);
+	c = c ^ 0x7bcf;
+	z = ((a & c) & MASK2) << 1;
 
-    return z;
+	return z;
 }
 #else
 inline uint16 COLOR_SUB(uint16 C1, uint16 C2)
 {
-	uint16	mC1, mC2, v = 0;
+	uint16 mC1, mC2, v = 0;
 
 	mC1 = C1 & FIRST_COLOR_MASK;
 	mC2 = C2 & FIRST_COLOR_MASK;
-	if (mC1 > mC2) v += (mC1 - mC2);
+	if (mC1 > mC2)
+		v += (mC1 - mC2);
 
 	mC1 = C1 & SECOND_COLOR_MASK;
 	mC2 = C2 & SECOND_COLOR_MASK;
-	if (mC1 > mC2) v += (mC1 - mC2);
+	if (mC1 > mC2)
+		v += (mC1 - mC2);
 
 	mC1 = C1 & THIRD_COLOR_MASK;
 	mC2 = C2 & THIRD_COLOR_MASK;
-	if (mC1 > mC2) v += (mC1 - mC2);
+	if (mC1 > mC2)
+		v += (mC1 - mC2);
 
 	return v;
 }
@@ -343,32 +343,26 @@ inline uint16 COLOR_SUB1_2(uint16, uint16);
 
 inline uint16 COLOR_SUB1_2(uint16 C1, uint16 C2)
 {
-    uint16 a, b, c, z, c1, c2;
-    c1 = (C1 & MASK1)>>1;
-    c2 = (C2 & MASK1)>>1;
-    c2 = (c2 ^ 0xffff) + 0x0821;
-    a = c1 + c2;
-    b = a & 0x8410;
-    c = b - (b>>4);
-    c = c ^ 0x7bcf;
-    z = (a & c) & MASK2;
+	uint16 a, b, c, z, c1, c2;
+	c1 = (C1 & MASK1) >> 1;
+	c2 = (C2 & MASK1) >> 1;
+	c2 = (c2 ^ 0xffff) + 0x0821;
+	a = c1 + c2;
+	b = a & 0x8410;
+	c = b - (b >> 4);
+	c = c ^ 0x7bcf;
+	z = (a & c) & MASK2;
 
-    return z;
+	return z;
 }
 #else
-#define COLOR_SUB1_2(C1, C2) \
-GFX.ZERO [(((C1) | RGB_HI_BITS_MASKx2) - \
-	   ((C2) & RGB_REMOVE_LOW_BITS_MASK)) >> 1]
+#define COLOR_SUB1_2(C1, C2) GFX.ZERO[(((C1) | RGB_HI_BITS_MASKx2) - ((C2)&RGB_REMOVE_LOW_BITS_MASK)) >> 1]
 #endif
 
-typedef void (*NormalTileRenderer) (uint32 Tile, uint32 Offset,
-				    uint32 StartLine, uint32 LineCount);
-typedef void (*ClippedTileRenderer) (uint32 Tile, uint32 Offset,
-				     uint32 StartPixel, uint32 Width,
-				     uint32 StartLine, uint32 LineCount);
-typedef void (*LargePixelRenderer) (uint32 Tile, uint32 Offset,
-				    uint32 StartPixel, uint32 Pixels,
-				    uint32 StartLine, uint32 LineCount);
+typedef void (*NormalTileRenderer)(uint32 Tile, uint32 Offset, uint32 StartLine, uint32 LineCount);
+typedef void (*ClippedTileRenderer)(uint32 Tile, uint32 Offset, uint32 StartPixel, uint32 Width, uint32 StartLine,
+				    uint32 LineCount);
+typedef void (*LargePixelRenderer)(uint32 Tile, uint32 Offset, uint32 StartPixel, uint32 Pixels, uint32 StartLine,
+				   uint32 LineCount);
 
 #endif
-

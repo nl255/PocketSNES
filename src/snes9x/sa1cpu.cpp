@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -104,7 +104,7 @@
 #define S9xOpcodesM1X0 S9xSA1OpcodesM1X0
 #define S9xOpcodesM0X1 S9xSA1OpcodesM0X1
 #define S9xOpcodesM0X0 S9xSA1OpcodesM0X0
-#define S9xOpcodesE1   S9xSA1OpcodesE1
+#define S9xOpcodesE1 S9xSA1OpcodesE1
 #define S9xOpcode_IRQ S9xSA1Opcode_IRQ
 #define S9xOpcode_NMI S9xSA1Opcode_NMI
 #define S9xUnpackStatus S9xSA1UnpackStatus
@@ -202,9 +202,9 @@
 
 #include "cpuops.cpp"
 
-void S9xSA1MainLoop ()
+void S9xSA1MainLoop()
 {
-    int i;
+	int i;
 
 #if 0
     if (SA1.Flags & NMI_FLAG)
@@ -218,41 +218,32 @@ void S9xSA1MainLoop ()
 	S9xSA1Opcode_NMI ();
     }
 #endif
-    if (SA1.Flags & IRQ_PENDING_FLAG)
-    {
-	if (SA1.IRQActive)
-	{
-	    if (SA1.WaitingForInterrupt)
-	    {
-		SA1.WaitingForInterrupt = FALSE;
-		SA1.PC++;
-	    }
-	    if (!SA1CheckFlag (IRQ))
-		S9xSA1Opcode_IRQ ();
+	if (SA1.Flags & IRQ_PENDING_FLAG) {
+		if (SA1.IRQActive) {
+			if (SA1.WaitingForInterrupt) {
+				SA1.WaitingForInterrupt = FALSE;
+				SA1.PC++;
+			}
+			if (!SA1CheckFlag(IRQ))
+				S9xSA1Opcode_IRQ();
+		} else
+			SA1.Flags &= ~IRQ_PENDING_FLAG;
 	}
-	else
-	    SA1.Flags &= ~IRQ_PENDING_FLAG;
-    }
 #ifdef DEBUGGER
-    if (SA1.Flags & TRACE_FLAG)
-    {
-	for (i = 0; i < 3 && SA1.Executing; i++)
-	{
-	    S9xSA1Trace ();
+	if (SA1.Flags & TRACE_FLAG) {
+		for (i = 0; i < 3 && SA1.Executing; i++) {
+			S9xSA1Trace();
 #ifdef CPU_SHUTDOWN
-	    SA1.PCAtOpcodeStart = SA1.PC;
+			SA1.PCAtOpcodeStart = SA1.PC;
 #endif
-	    (*SA1.S9xOpcodes [*SA1.PC++].S9xOpcode) ();
-	}
-    }
-    else
+			(*SA1.S9xOpcodes[*SA1.PC++].S9xOpcode)();
+		}
+	} else
 #endif
-    for (i = 0; i < 3 && SA1.Executing; i++)
-    {
+		for (i = 0; i < 3 && SA1.Executing; i++) {
 #ifdef CPU_SHUTDOWN
-	SA1.PCAtOpcodeStart = SA1.PC;
+			SA1.PCAtOpcodeStart = SA1.PC;
 #endif
-	(*SA1.S9xOpcodes [*SA1.PC++].S9xOpcode) ();
-    }
+			(*SA1.S9xOpcodes[*SA1.PC++].S9xOpcode)();
+		}
 }
-

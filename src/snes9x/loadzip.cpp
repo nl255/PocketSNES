@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -112,159 +112,139 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool8 LoadZip(const char* zipname,
-	      int32 *TotalFileSize,
-	      int32 *headers, uint8* buffer)
+bool8 LoadZip(const char *zipname, int32 *TotalFileSize, int32 *headers, uint8 *buffer)
 {
-    *TotalFileSize = 0;
-    *headers = 0;
+	*TotalFileSize = 0;
+	*headers = 0;
 
-    unzFile file = unzOpen(zipname);
-    if(file == NULL)
-	return (FALSE);
+	unzFile file = unzOpen(zipname);
+	if (file == NULL)
+		return (FALSE);
 
-    // find largest file in zip file (under MAX_ROM_SIZE)
-    // or a file with extension .1
-    char filename[132];
-    int filesize = 0;
-    int port = unzGoToFirstFile(file);
-    unz_file_info info;
-    while(port == UNZ_OK)
-    {
-	char name[132];
-	unzGetCurrentFileInfo(file, &info, name,128, NULL,0, NULL,0);
+	// find largest file in zip file (under MAX_ROM_SIZE)
+	// or a file with extension .1
+	char filename[132];
+	int filesize = 0;
+	int port = unzGoToFirstFile(file);
+	unz_file_info info;
+	while (port == UNZ_OK) {
+		char name[132];
+		unzGetCurrentFileInfo(file, &info, name, 128, NULL, 0, NULL, 0);
 
-	int calc_size = info.uncompressed_size & ~0x1FFF; // round to lower 0x2000
-	if(!(info.uncompressed_size - calc_size == 512 || info.uncompressed_size == calc_size))
-	{
-	    port = unzGoToNextFile(file);
-	    continue;
+		int calc_size = info.uncompressed_size & ~0x1FFF; // round to lower 0x2000
+		if (!(info.uncompressed_size - calc_size == 512 || info.uncompressed_size == calc_size)) {
+			port = unzGoToNextFile(file);
+			continue;
+		}
+
+		if (info.uncompressed_size > (CMemory::MAX_ROM_SIZE + 512)) {
+			port = unzGoToNextFile(file);
+			continue;
+		}
+
+		if ((int)info.uncompressed_size > filesize) {
+			strcpy(filename, name);
+			filesize = info.uncompressed_size;
+		}
+		int len = strlen(name);
+		if (name[len - 2] == '.' && name[len - 1] == '1') {
+			strcpy(filename, name);
+			filesize = info.uncompressed_size;
+			break;
+		}
+		port = unzGoToNextFile(file);
+	}
+	if (!(port == UNZ_END_OF_LIST_OF_FILE || port == UNZ_OK) || filesize == 0) {
+		//	assert( unzClose(file) == UNZ_OK );
+		return (FALSE);
 	}
 
-	if(info.uncompressed_size > (CMemory::MAX_ROM_SIZE + 512))
-	{
-	    port = unzGoToNextFile(file);
-	    continue;
-	}
-
-	if ((int) info.uncompressed_size > filesize)
-	{
-	    strcpy(filename,name);
-	    filesize = info.uncompressed_size;
-	}
-	int len = strlen(name);
-	if(name[len-2] == '.' && name[len-1] == '1')
-	{
-	    strcpy(filename,name);
-	    filesize = info.uncompressed_size;
-	    break;
-	}
-	port = unzGoToNextFile(file);
-    }
-    if( !(port == UNZ_END_OF_LIST_OF_FILE || port == UNZ_OK) || filesize == 0)
-    {
-//	assert( unzClose(file) == UNZ_OK );
-	return (FALSE);
-    }
-
-    // Find extension
-    char tmp[2];
-    tmp[0] = tmp[1] = 0;
-    char *ext = strrchr(filename,'.');
-    if(ext) ext++;
-    else ext = tmp;
-
-    uint8 *ptr = buffer;
-    bool8 more = FALSE;
-
-    unzLocateFile(file,filename,1);
-    unzGetCurrentFileInfo(file, &info, filename,128, NULL,0, NULL,0);
-
-    if( unzOpenCurrentFile(file) != UNZ_OK )
-    {
-	unzClose(file);
-	return (FALSE);
-    }
-
-    do
-    {
-//	assert(info.uncompressed_size <= CMemory::MAX_ROM_SIZE + 512);
-	int FileSize = info.uncompressed_size;
-
-	int calc_size = FileSize & ~0x1FFF; // round to lower 0x2000
-
-	int l = unzReadCurrentFile(file,ptr,FileSize);
-	if(unzCloseCurrentFile(file) == UNZ_CRCERROR)
-	{
-	    unzClose(file);
-	    return (FALSE);
-	}
-
-	if(l <= 0 || l != FileSize)
-	{
-	    unzClose(file);
-	    switch(l)
-	    {
-		case UNZ_ERRNO:
-		    break;
-		case UNZ_EOF:
-		    break;
-		case UNZ_PARAMERROR:
-		    break;
-		case UNZ_BADZIPFILE:
-		    break;
-		case UNZ_INTERNALERROR:
-		    break;
-		case UNZ_CRCERROR:
-		    break;
-	    }
-	    return (FALSE);
-	}
-
-	if ((FileSize - calc_size == 512 && !Settings.ForceNoHeader) ||
-	    Settings.ForceHeader)
-	{
-	    // memmove required: Overlapping addresses [Neb]
-	    // DS2 DMA notes: Can be split into 512-byte DMA blocks [Neb]
-	    memmove (ptr, ptr + 512, calc_size);
-	    (*headers)++;
-	    FileSize -= 512;
-	}
-	ptr += FileSize;
-	(*TotalFileSize) += FileSize;
-
-	int len;
-	if (ptr - Memory.ROM < CMemory::MAX_ROM_SIZE + 0x200 &&
-	    (isdigit (ext [0]) && ext [1] == 0 && ext [0] < '9'))
-	{
-	    more = TRUE;
-	    ext [0]++;
-	}
-	else if (ptr - Memory.ROM < CMemory::MAX_ROM_SIZE + 0x200 &&
-		 (((len = strlen (filename)) == 7 || len == 8) &&
-		  strncasecmp (filename, "sf", 2) == 0 &&
-		  isdigit (filename [2]) && isdigit (filename [3]) && isdigit (filename [4]) &&
-		  isdigit (filename [5]) && isalpha (filename [len - 1])))
-	{
-	    more = TRUE;
-	    filename [len - 1]++;
-	}
+	// Find extension
+	char tmp[2];
+	tmp[0] = tmp[1] = 0;
+	char *ext = strrchr(filename, '.');
+	if (ext)
+		ext++;
 	else
-	    more = FALSE;
+		ext = tmp;
 
-	if(more)
-	{
-	    if( unzLocateFile(file,filename,1) != UNZ_OK ||
-		unzGetCurrentFileInfo(file, &info, filename,128, NULL,0, NULL,0) != UNZ_OK ||
-		unzOpenCurrentFile(file) != UNZ_OK)
-		break;
+	uint8 *ptr = buffer;
+	bool8 more = FALSE;
+
+	unzLocateFile(file, filename, 1);
+	unzGetCurrentFileInfo(file, &info, filename, 128, NULL, 0, NULL, 0);
+
+	if (unzOpenCurrentFile(file) != UNZ_OK) {
+		unzClose(file);
+		return (FALSE);
 	}
 
-    } while(more);
+	do {
+		//	assert(info.uncompressed_size <= CMemory::MAX_ROM_SIZE + 512);
+		int FileSize = info.uncompressed_size;
 
-    unzClose(file);
-    return (TRUE);
+		int calc_size = FileSize & ~0x1FFF; // round to lower 0x2000
+
+		int l = unzReadCurrentFile(file, ptr, FileSize);
+		if (unzCloseCurrentFile(file) == UNZ_CRCERROR) {
+			unzClose(file);
+			return (FALSE);
+		}
+
+		if (l <= 0 || l != FileSize) {
+			unzClose(file);
+			switch (l) {
+			case UNZ_ERRNO:
+				break;
+			case UNZ_EOF:
+				break;
+			case UNZ_PARAMERROR:
+				break;
+			case UNZ_BADZIPFILE:
+				break;
+			case UNZ_INTERNALERROR:
+				break;
+			case UNZ_CRCERROR:
+				break;
+			}
+			return (FALSE);
+		}
+
+		if ((FileSize - calc_size == 512 && !Settings.ForceNoHeader) || Settings.ForceHeader) {
+			// memmove required: Overlapping addresses [Neb]
+			// DS2 DMA notes: Can be split into 512-byte DMA blocks [Neb]
+			memmove(ptr, ptr + 512, calc_size);
+			(*headers)++;
+			FileSize -= 512;
+		}
+		ptr += FileSize;
+		(*TotalFileSize) += FileSize;
+
+		int len;
+		if (ptr - Memory.ROM < CMemory::MAX_ROM_SIZE + 0x200 &&
+		    (isdigit(ext[0]) && ext[1] == 0 && ext[0] < '9')) {
+			more = TRUE;
+			ext[0]++;
+		} else if (ptr - Memory.ROM < CMemory::MAX_ROM_SIZE + 0x200 &&
+			   (((len = strlen(filename)) == 7 || len == 8) && strncasecmp(filename, "sf", 2) == 0 &&
+			    isdigit(filename[2]) && isdigit(filename[3]) && isdigit(filename[4]) &&
+			    isdigit(filename[5]) && isalpha(filename[len - 1]))) {
+			more = TRUE;
+			filename[len - 1]++;
+		} else
+			more = FALSE;
+
+		if (more) {
+			if (unzLocateFile(file, filename, 1) != UNZ_OK ||
+			    unzGetCurrentFileInfo(file, &info, filename, 128, NULL, 0, NULL, 0) != UNZ_OK ||
+			    unzOpenCurrentFile(file) != UNZ_OK)
+				break;
+		}
+
+	} while (more);
+
+	unzClose(file);
+	return (TRUE);
 }
 
 #endif
-

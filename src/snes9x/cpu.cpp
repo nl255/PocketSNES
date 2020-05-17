@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -102,139 +102,137 @@
 #include "spc7110.h"
 #include "obc1.h"
 
-
 #ifndef ZSNES_FX
 #include "fxemu.h"
 
 extern struct FxInit_s SuperFX;
 
-void S9xResetSuperFX ()
+void S9xResetSuperFX()
 {
-    SuperFX.vFlags = 0; //FX_FLAG_ROM_BUFFER;// | FX_FLAG_ADDRESS_CHECKING;
-    FxReset (&SuperFX);
+	SuperFX.vFlags = 0; // FX_FLAG_ROM_BUFFER;// | FX_FLAG_ADDRESS_CHECKING;
+	FxReset(&SuperFX);
 }
 #endif
 
-void S9xResetCPU ()
+void S9xResetCPU()
 {
-    ICPU.Registers.PB = 0;
-    ICPU.Registers.PC = S9xGetWord (0xFFFC);
-    ICPU.Registers.D.W = 0;
-    ICPU.Registers.DB = 0;
-    ICPU.Registers.SH = 1;
-    ICPU.Registers.SL = 0xFF;
-    ICPU.Registers.XH = 0;
-    ICPU.Registers.YH = 0;
-    ICPU.Registers.P.W = 0;
+	ICPU.Registers.PB = 0;
+	ICPU.Registers.PC = S9xGetWord(0xFFFC);
+	ICPU.Registers.D.W = 0;
+	ICPU.Registers.DB = 0;
+	ICPU.Registers.SH = 1;
+	ICPU.Registers.SL = 0xFF;
+	ICPU.Registers.XH = 0;
+	ICPU.Registers.YH = 0;
+	ICPU.Registers.P.W = 0;
 
-    ICPU.ShiftedPB = 0;
-    ICPU.ShiftedDB = 0;
-    SetFlags (MemoryFlag | IndexFlag | IRQ | Emulation);
-    ClearFlags (Decimal);
+	ICPU.ShiftedPB = 0;
+	ICPU.ShiftedDB = 0;
+	SetFlags(MemoryFlag | IndexFlag | IRQ | Emulation);
+	ClearFlags(Decimal);
 
-    CPU.Flags = CPU.Flags & (DEBUG_MODE_FLAG | TRACE_FLAG);
-    CPU.BranchSkip = FALSE;
-    CPU.NMIActive = FALSE;
-    CPU.IRQActive = FALSE;
-    CPU.WaitingForInterrupt = FALSE;
-    CPU.InDMA = FALSE;
-    CPU.WhichEvent = HBLANK_START_EVENT;
-    CPU.PC = NULL;
-    CPU.PCBase = NULL;
-    CPU.PCAtOpcodeStart = NULL;
-    CPU.WaitAddress = NULL;
-    CPU.WaitCounter = 0;
-    CPU.Cycles = 0;
-    CPU.NextEvent = Settings.HBlankStart;
-    CPU.V_Counter = 0;
-    CPU.MemSpeed = SLOW_ONE_CYCLE;
-    CPU.MemSpeedx2 = SLOW_ONE_CYCLE * 2;
-    CPU.FastROMSpeed = SLOW_ONE_CYCLE;
-    CPU.AutoSaveTimer = 0;
-    CPU.SRAMModified = FALSE;
-    // CPU.NMITriggerPoint = 4; // Set when ROM image loaded
-    CPU.BRKTriggered = FALSE;
-    //CPU.TriedInterleavedMode2 = FALSE; // Reset when ROM image loaded
-    CPU.NMICycleCount = 0;
-    CPU.IRQCycleCount = 0;
-    S9xSetPCBase (ICPU.Registers.PC);
+	CPU.Flags = CPU.Flags & (DEBUG_MODE_FLAG | TRACE_FLAG);
+	CPU.BranchSkip = FALSE;
+	CPU.NMIActive = FALSE;
+	CPU.IRQActive = FALSE;
+	CPU.WaitingForInterrupt = FALSE;
+	CPU.InDMA = FALSE;
+	CPU.WhichEvent = HBLANK_START_EVENT;
+	CPU.PC = NULL;
+	CPU.PCBase = NULL;
+	CPU.PCAtOpcodeStart = NULL;
+	CPU.WaitAddress = NULL;
+	CPU.WaitCounter = 0;
+	CPU.Cycles = 0;
+	CPU.NextEvent = Settings.HBlankStart;
+	CPU.V_Counter = 0;
+	CPU.MemSpeed = SLOW_ONE_CYCLE;
+	CPU.MemSpeedx2 = SLOW_ONE_CYCLE * 2;
+	CPU.FastROMSpeed = SLOW_ONE_CYCLE;
+	CPU.AutoSaveTimer = 0;
+	CPU.SRAMModified = FALSE;
+	// CPU.NMITriggerPoint = 4; // Set when ROM image loaded
+	CPU.BRKTriggered = FALSE;
+	// CPU.TriedInterleavedMode2 = FALSE; // Reset when ROM image loaded
+	CPU.NMICycleCount = 0;
+	CPU.IRQCycleCount = 0;
+	S9xSetPCBase(ICPU.Registers.PC);
 
-    ICPU.S9xOpcodes = S9xOpcodesE1;
-    ICPU.CPUExecuting = TRUE;
+	ICPU.S9xOpcodes = S9xOpcodesE1;
+	ICPU.CPUExecuting = TRUE;
 
-    S9xUnpackStatus();
+	S9xUnpackStatus();
 }
 
 #ifdef ZSNES_FX
 START_EXTERN_C
-void S9xResetSuperFX ();
+void S9xResetSuperFX();
 bool8 WinterGold = 0;
 extern uint8 *C4Ram;
 END_EXTERN_C
 #endif
 
-void S9xReset (void)
+void S9xReset(void)
 {
-    if (Settings.SuperFX)
-        S9xResetSuperFX ();
+	if (Settings.SuperFX)
+		S9xResetSuperFX();
 
 #ifdef ZSNES_FX
-    WinterGold = Settings.WinterGold;
+	WinterGold = Settings.WinterGold;
 #endif
-    ZeroMemory (Memory.FillRAM, 0x8000);
-    memset (Memory.VRAM, 0x00, 0x10000);
-    memset (Memory.RAM, 0x55, 0x20000);
+	ZeroMemory(Memory.FillRAM, 0x8000);
+	memset(Memory.VRAM, 0x00, 0x10000);
+	memset(Memory.RAM, 0x55, 0x20000);
 
-	if(Settings.SPC7110)
+	if (Settings.SPC7110)
 		S9xSpc7110Reset();
-    S9xResetCPU ();
-    S9xResetPPU ();
-    S9xResetSRTC ();
-    if (Settings.SDD1)
-        S9xResetSDD1 ();
+	S9xResetCPU();
+	S9xResetPPU();
+	S9xResetSRTC();
+	if (Settings.SDD1)
+		S9xResetSDD1();
 
-    S9xResetDMA ();
-    S9xResetAPU ();
-    S9xResetDSP1 ();
-    S9xSA1Init ();
-    if (Settings.C4)
-        S9xInitC4 ();
-    S9xInitCheatData ();
-	if(Settings.OBC1)
+	S9xResetDMA();
+	S9xResetAPU();
+	S9xResetDSP1();
+	S9xSA1Init();
+	if (Settings.C4)
+		S9xInitC4();
+	S9xInitCheatData();
+	if (Settings.OBC1)
 		ResetOBC1();
 
-//    Settings.Paused = FALSE;
+	//    Settings.Paused = FALSE;
 }
-void S9xSoftReset (void)
+void S9xSoftReset(void)
 {
-    if (Settings.SuperFX)
-        S9xResetSuperFX ();
+	if (Settings.SuperFX)
+		S9xResetSuperFX();
 
 #ifdef ZSNES_FX
-    WinterGold = Settings.WinterGold;
+	WinterGold = Settings.WinterGold;
 #endif
-    ZeroMemory (Memory.FillRAM, 0x8000);
-    memset (Memory.VRAM, 0x00, 0x10000);
- //   memset (Memory.RAM, 0x55, 0x20000);
+	ZeroMemory(Memory.FillRAM, 0x8000);
+	memset(Memory.VRAM, 0x00, 0x10000);
+	//   memset (Memory.RAM, 0x55, 0x20000);
 
-	if(Settings.SPC7110)
+	if (Settings.SPC7110)
 		S9xSpc7110Reset();
-    S9xResetCPU ();
-    S9xSoftResetPPU ();
-    S9xResetSRTC ();
-    if (Settings.SDD1)
-        S9xResetSDD1 ();
+	S9xResetCPU();
+	S9xSoftResetPPU();
+	S9xResetSRTC();
+	if (Settings.SDD1)
+		S9xResetSDD1();
 
-    S9xResetDMA ();
-    S9xResetAPU ();
-    S9xResetDSP1 ();
-	if(Settings.OBC1)
+	S9xResetDMA();
+	S9xResetAPU();
+	S9xResetDSP1();
+	if (Settings.OBC1)
 		ResetOBC1();
-    S9xSA1Init ();
-    if (Settings.C4)
-        S9xInitC4 ();
-    S9xInitCheatData ();
+	S9xSA1Init();
+	if (Settings.C4)
+		S9xInitC4();
+	S9xInitCheatData();
 
-//    Settings.Paused = FALSE;
+	//    Settings.Paused = FALSE;
 }
-

@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -97,11 +97,9 @@
 #define ST_011 0x02
 #define ST_018 0x03
 
-
-extern "C"
-{
+extern "C" {
 uint8 S9xGetSetaDSP(uint32 Address);
-void S9xSetSetaDSP(uint8 byte,uint32 Address);
+void S9xSetSetaDSP(uint8 byte, uint32 Address);
 uint8 S9xGetST018(uint32 Address);
 void S9xSetST018(uint8 Byte, uint32 Address);
 
@@ -114,8 +112,7 @@ void S9xSetST011(uint32 Address, uint8 Byte);
 extern void (*SetSETA)(uint32, uint8);
 extern uint8 (*GetSETA)(uint32);
 
-typedef struct SETA_ST010_STRUCT
-{
+typedef struct SETA_ST010_STRUCT {
 	uint8 input_params[16];
 	uint8 output_params[16];
 	uint8 op_reg;
@@ -123,8 +120,7 @@ typedef struct SETA_ST010_STRUCT
 	bool8 control_enable;
 } ST010_Regs;
 
-typedef struct SETA_ST011_STRUCT
-{
+typedef struct SETA_ST011_STRUCT {
 	bool8 waiting4command;
 	uint8 status;
 	uint8 command;
@@ -132,12 +128,11 @@ typedef struct SETA_ST011_STRUCT
 	uint32 in_index;
 	uint32 out_count;
 	uint32 out_index;
-	uint8 parameters [512];
-	uint8 output [512];
+	uint8 parameters[512];
+	uint8 output[512];
 } ST011_Regs;
 
-typedef struct SETA_ST018_STRUCT
-{
+typedef struct SETA_ST018_STRUCT {
 	bool8 waiting4command;
 	uint8 status;
 	uint8 part_command;
@@ -147,10 +142,9 @@ typedef struct SETA_ST018_STRUCT
 	uint32 in_index;
 	uint32 out_count;
 	uint32 out_index;
-	uint8 parameters [512];
-	uint8 output [512];
+	uint8 parameters[512];
+	uint8 output[512];
 } ST018_Regs;
 
 #endif
 #endif
-

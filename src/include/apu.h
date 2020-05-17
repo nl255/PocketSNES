@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -92,40 +92,38 @@
 
 #include "spc700.h"
 
-struct SIAPU
-{
-    uint8  *PC;
-    struct SAPURegisters Registers;
-    uint8  *RAM;
-    uint8  *DirectPage;
-    bool8  APUExecuting;
-    uint8  Bit;
-    uint32 Address;
-    uint8  *WaitAddress1;
-    uint8  *WaitAddress2;
-    uint32 WaitCounter;
-    uint8  _Carry;
-    uint8  _Zero;
-    uint8  _Overflow;
-    uint32 TimerErrorCounter;
-    uint32 Scanline;
-    int32  OneCycle;
-    int32  TwoCycles;
+struct SIAPU {
+	uint8 *PC;
+	struct SAPURegisters Registers;
+	uint8 *RAM;
+	uint8 *DirectPage;
+	bool8 APUExecuting;
+	uint8 Bit;
+	uint32 Address;
+	uint8 *WaitAddress1;
+	uint8 *WaitAddress2;
+	uint32 WaitCounter;
+	uint8 _Carry;
+	uint8 _Zero;
+	uint8 _Overflow;
+	uint32 TimerErrorCounter;
+	uint32 Scanline;
+	int32 OneCycle;
+	int32 TwoCycles;
 };
 
-struct SAPU
-{
-    int32  Cycles;
-    bool8  ShowROM;
-    uint8  Flags;
-    uint8  KeyedChannels;
-    uint8  OutPorts [4];
-    uint8  DSP [0x80];
-    uint8  ExtraRAM [64];
-    uint16 Timer [3];
-    uint16 TimerTarget [3];
-    bool8  TimerEnabled [3];
-    bool8  TimerValueWritten [3];
+struct SAPU {
+	int32 Cycles;
+	bool8 ShowROM;
+	uint8 Flags;
+	uint8 KeyedChannels;
+	uint8 OutPorts[4];
+	uint8 DSP[0x80];
+	uint8 ExtraRAM[64];
+	uint16 Timer[3];
+	uint16 TimerTarget[3];
+	bool8 TimerEnabled[3];
+	bool8 TimerValueWritten[3];
 };
 
 EXTERN_C struct SAPU APU;
@@ -135,37 +133,35 @@ extern int spc_is_dumping_temp;
 extern uint8 spc_dump_dsp[0x100];
 STATIC inline void S9xAPUUnpackStatus()
 {
-    IAPU._Zero = ((IAPU.Registers.P & Zero) == 0) | (IAPU.Registers.P & Negative);
-    IAPU._Carry = (IAPU.Registers.P & Carry);
-    IAPU._Overflow = (IAPU.Registers.P & Overflow) >> 6;
+	IAPU._Zero = ((IAPU.Registers.P & Zero) == 0) | (IAPU.Registers.P & Negative);
+	IAPU._Carry = (IAPU.Registers.P & Carry);
+	IAPU._Overflow = (IAPU.Registers.P & Overflow) >> 6;
 }
 
 STATIC inline void S9xAPUPackStatus()
 {
-    IAPU.Registers.P &= ~(Zero | Negative | Carry | Overflow);
-    IAPU.Registers.P |= IAPU._Carry | ((IAPU._Zero == 0) << 1) |
-		      (IAPU._Zero & 0x80) | (IAPU._Overflow << 6);
+	IAPU.Registers.P &= ~(Zero | Negative | Carry | Overflow);
+	IAPU.Registers.P |= IAPU._Carry | ((IAPU._Zero == 0) << 1) | (IAPU._Zero & 0x80) | (IAPU._Overflow << 6);
 }
 
 START_EXTERN_C
-void S9xResetAPU (void);
-bool8 S9xInitAPU ();
-void S9xDeinitAPU ();
-void S9xDecacheSamples ();
-int S9xTraceAPU ();
-int S9xAPUOPrint (char *buffer, uint16 Address);
-void S9xSetAPUControl (uint8 byte);
-void S9xSetAPUDSP (uint8 byte);
-uint8 S9xGetAPUDSP ();
-void S9xSetAPUTimer (uint16 Address, uint8 byte);
-bool8 S9xInitSound (int quality, bool8 stereo, int buffer_size);
-void S9xOpenCloseSoundTracingFile (bool8);
-void S9xPrintAPUState ();
-extern uint16 S9xAPUCycles [256];	// Scaled cycle lengths
-extern uint16 S9xAPUCycleLengths [256];	// Raw data.
-extern void (*S9xApuOpcodes [256]) (void);
+void S9xResetAPU(void);
+bool8 S9xInitAPU();
+void S9xDeinitAPU();
+void S9xDecacheSamples();
+int S9xTraceAPU();
+int S9xAPUOPrint(char *buffer, uint16 Address);
+void S9xSetAPUControl(uint8 byte);
+void S9xSetAPUDSP(uint8 byte);
+uint8 S9xGetAPUDSP();
+void S9xSetAPUTimer(uint16 Address, uint8 byte);
+bool8 S9xInitSound(int quality, bool8 stereo, int buffer_size);
+void S9xOpenCloseSoundTracingFile(bool8);
+void S9xPrintAPUState();
+extern uint16 S9xAPUCycles[256];       // Scaled cycle lengths
+extern uint16 S9xAPUCycleLengths[256]; // Raw data.
+extern void (*S9xApuOpcodes[256])(void);
 END_EXTERN_C
-
 
 #define APU_VOL_LEFT 0x00
 #define APU_VOL_RIGHT 0x01
@@ -210,4 +206,3 @@ END_EXTERN_C
 
 #define FREQUENCY_MASK 0x3fff
 #endif
-

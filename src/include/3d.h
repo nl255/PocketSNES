@@ -2,47 +2,47 @@
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
 
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
-                            Jerremy Koot (jkoot@snes9x.com)
+			    Jerremy Koot (jkoot@snes9x.com)
 
   (c) Copyright 2001 - 2004 John Weidman (jweidman@slip.net)
 
   (c) Copyright 2002 - 2004 Brad Jorsch (anomie@users.sourceforge.net),
-                            funkyass (funkyass@spam.shaw.ca),
-                            Joel Yliluoma (http://iki.fi/bisqwit/)
-                            Kris Bleakley (codeviolation@hotmail.com),
-                            Matthew Kendora,
-                            Nach (n-a-c-h@users.sourceforge.net),
-                            Peter Bortas (peter@bortas.org) and
-                            zones (kasumitokoduck@yahoo.com)
+			    funkyass (funkyass@spam.shaw.ca),
+			    Joel Yliluoma (http://iki.fi/bisqwit/)
+			    Kris Bleakley (codeviolation@hotmail.com),
+			    Matthew Kendora,
+			    Nach (n-a-c-h@users.sourceforge.net),
+			    Peter Bortas (peter@bortas.org) and
+			    zones (kasumitokoduck@yahoo.com)
 
   C4 x86 assembler and some C emulation code
   (c) Copyright 2000 - 2003 zsKnight (zsknight@zsnes.com),
-                            _Demo_ (_demo_@zsnes.com), and Nach
+			    _Demo_ (_demo_@zsnes.com), and Nach
 
   C4 C++ code
   (c) Copyright 2003 Brad Jorsch
 
   DSP-1 emulator code
   (c) Copyright 1998 - 2004 Ivar (ivar@snes9x.com), _Demo_, Gary Henderson,
-                            John Weidman, neviksti (neviksti@hotmail.com),
-                            Kris Bleakley, Andreas Naive
+			    John Weidman, neviksti (neviksti@hotmail.com),
+			    Kris Bleakley, Andreas Naive
 
   DSP-2 emulator code
   (c) Copyright 2003 Kris Bleakley, John Weidman, neviksti, Matthew Kendora, and
-                     Lord Nightmare (lord_nightmare@users.sourceforge.net
+		     Lord Nightmare (lord_nightmare@users.sourceforge.net
 
   OBC1 emulator code
   (c) Copyright 2001 - 2004 zsKnight, pagefault (pagefault@zsnes.com) and
-                            Kris Bleakley
+			    Kris Bleakley
   Ported from x86 assembler to C by sanmaiwashi
 
   SPC7110 and RTC C++ emulator code
   (c) Copyright 2002 Matthew Kendora with research by
-                     zsKnight, John Weidman, and Dark Force
+		     zsKnight, John Weidman, and Dark Force
 
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
-                     Andreas Naive and John Weidman
+		     Andreas Naive and John Weidman
 
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
@@ -98,53 +98,50 @@
 #include <GL/glx.h>
 #endif
 
-typedef struct
-{
-    bool8       packed_pixels_extension_present;
-    bool8       draw_cube;
-    uint32      version;
-    // Texture format
-    GLint       internal_format;
-    GLint       format;
-    GLint       type;
+typedef struct {
+	bool8 packed_pixels_extension_present;
+	bool8 draw_cube;
+	uint32 version;
+	// Texture format
+	GLint internal_format;
+	GLint format;
+	GLint type;
 
-    GLint       max_texture_size;// 256 or 512
-    GLint       texture_size;
-    uint32      num_textures;    // 1 if max_texture_size == 256, 2 otherwise
-    GLuint      textures [2];
+	GLint max_texture_size; // 256 or 512
+	GLint texture_size;
+	uint32 num_textures; // 1 if max_texture_size == 256, 2 otherwise
+	GLuint textures[2];
 } OpenGLData;
 
 extern OpenGLData OpenGL;
 
-bool8 S9xOpenGLInit ();
-bool8 S9xOpenGLInit2 ();
-void S9xOpenGLPutImage (int width, int height);
-void S9xOpenGLDeinit ();
+bool8 S9xOpenGLInit();
+bool8 S9xOpenGLInit2();
+void S9xOpenGLPutImage(int width, int height);
+void S9xOpenGLDeinit();
 
 #endif
 
 #ifdef USE_GLIDE
 #include <glide.h>
 
-typedef struct
-{
-    bool8	voodoo_present;
-    GrVertex	sq[4];
-    GrTexInfo	texture;
-    int32	texture_mem_size;
-    int32	texture_mem_start;
-    float	x_offset, y_offset;
-    float	x_scale, y_scale;
-    float	voodoo_width;
-    float	voodoo_height;
+typedef struct {
+	bool8 voodoo_present;
+	GrVertex sq[4];
+	GrTexInfo texture;
+	int32 texture_mem_size;
+	int32 texture_mem_start;
+	float x_offset, y_offset;
+	float x_scale, y_scale;
+	float voodoo_width;
+	float voodoo_height;
 } GlideData;
 
 extern GlideData Glide;
-bool8 S9xGlideEnable (bool8 enable);
-void S9xGlideDeinit ();
-bool8 S9xGlideInit ();
-bool8 S9xVoodooInitialise ();
+bool8 S9xGlideEnable(bool8 enable);
+void S9xGlideDeinit();
+bool8 S9xGlideInit();
+bool8 S9xVoodooInitialise();
 #endif
 
 #endif
-

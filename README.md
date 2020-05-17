@@ -25,7 +25,7 @@ To do this, first:
 
 To generate a binary with instrumentation. Put this in your Miyoo and play a
 little, but keep in mind that a PGO binary is very slow (so be patient, it
-is worth it). Afterwards, copy  `profile` directory from `sd://emus/snes9x4d`
+is worth it). Afterwards, copy  `profile` directory from `sd://emus/pocketsnes`
 to the root of the project and run:
 
     $ make PGO=APPLY

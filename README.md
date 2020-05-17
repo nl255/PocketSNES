@@ -11,8 +11,26 @@ Follow those steps to setup Debian 9 environment with compatible toolchain:
 
 Afterwards, run:
 
-    $ make -f Makefile.miyoo
+    $ make
 
 It will generate a directory `pocketsnes` with the resulting files. You can
 them substitute `sd://emus/pocketsnes` contents with the ones in the generated
 directory.
+
+You can build this binary using
+[PGO](https://en.wikipedia.org/wiki/Profile-guided_optimization).
+To do this, first:
+
+    $ make PGO=GENERATE
+
+To generate a binary with instrumentation. Put this in your Miyoo and play a
+little, but keep in mind that a PGO binary is very slow (so be patient, it
+is worth it). Afterwards, copy  `profile` directory from `sd://emus/snes9x4d`
+to the root of the project and run:
+
+    $ make PGO=APPLY
+
+To apply optimizations. A `profile.zip` file is included with each release with
+a playthrough of some game, but it may not be updated with `master` branch.
+Also, keep in mind that if you want the best performance in your
+specific game it may be better to generate your playthrough of it.

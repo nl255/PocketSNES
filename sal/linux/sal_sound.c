@@ -64,7 +64,7 @@ s32 sal_AudioInit(s32 rate, s32 bits, s32 stereo, s32 Hz)
 	while (buffer < audiospec.samples) {
 		buffer *= 2;
 	}
-	audiospec.samples = buffer / 2;
+	audiospec.samples = buffer;
 
 	if (SDL_OpenAudio(&audiospec, NULL) < 0) {
 		fprintf(stderr, "Unable to initialize audio.\n");

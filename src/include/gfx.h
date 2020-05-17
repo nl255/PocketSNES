@@ -128,10 +128,8 @@ struct SGFX {
 
 	// Setup in call to S9xGraphicsInit()
 	int Delta;
-#ifndef _FAST_GFX
 	uint16 *X2;
 	uint16 *ZERO_OR_X2;
-#endif
 	uint16 *ZERO;
 	uint32 RealPitch; // True pitch of Screen buffer.
 	uint32 Pitch2;	  // Same as RealPitch except while using speed up hack for Glide.
@@ -228,21 +226,9 @@ extern uint8 sub32_32[32][32];
 extern uint8 sub32_32_half[32][32];
 extern uint8 mul_brightness[16][32];
 
-#ifdef __ARM__
-// by Harald Kipp, from http://www.ethernut.de/en/documents/arm-inline-asm.html
-#define SWAP_DWORD(val)                                                                                                \
-	__asm__ __volatile__("eor     r3, %1, %1, ror #16\n\t"                                                         \
-			     "bic     r3, r3, #0x00FF0000\n\t"                                                         \
-			     "mov     %0, %1, ror #8\n\t"                                                              \
-			     "eor     %0, %0, r3, lsr #8"                                                              \
-			     : "=r"(val)                                                                               \
-			     : "0"(val)                                                                                \
-			     : "r3", "cc");
-#else
 // Could use BSWAP instruction on Intel port...
 #define SWAP_DWORD(dw)                                                                                                 \
 	dw = ((dw & 0xff) << 24) | ((dw & 0xff00) << 8) | ((dw & 0xff0000) >> 8) | ((dw & 0xff000000) >> 24)
-#endif
 
 #ifdef FAST_LSB_WORD_ACCESS
 #define READ_2BYTES(s) (*(uint16 *)(s))
@@ -260,25 +246,13 @@ extern uint8 mul_brightness[16][32];
 #define SUB_SCREEN_DEPTH 0
 #define MAIN_SCREEN_DEPTH 32
 
-#define MASK1 0xF7DE
-#define MASK2 0x7BEF
-
+#if defined(OLD_COLOUR_BLENDING)
+#define COLOR_ADD(C1, C2)                                                                                              \
+	GFX.X2[((((C1)&RGB_REMOVE_LOW_BITS_MASK) + ((C2)&RGB_REMOVE_LOW_BITS_MASK)) >> 1) +                            \
+	       ((C1) & (C2)&RGB_LOW_BITS_MASK)]
+#else
 inline uint16 COLOR_ADD(uint16, uint16);
 
-#ifdef _FAST_GFX
-inline uint16 COLOR_ADD(uint16 C1, uint16 C2)
-{
-	uint16 a, b, c, z, c1, c2;
-
-	c1 = C1 & MASK1;
-	c2 = C2 & MASK1;
-	a = (c1 >> 1) + (c2 >> 1);
-	b = a & 0x8410;
-	c = b - (b >> 4);
-	z = ((a | c) & MASK2) << 1;
-	return z;
-}
-#else
 inline uint16 COLOR_ADD(uint16 C1, uint16 C2)
 {
 	if (C1 == 0)
@@ -297,24 +271,15 @@ inline uint16 COLOR_ADD(uint16 C1, uint16 C2)
 	     ((C1) & (C2)&RGB_LOW_BITS_MASK) |                                                                         \
 	 ALPHA_BITS_MASK)
 
+#if defined(OLD_COLOUR_BLENDING)
+#define COLOR_SUB(C1, C2) GFX.ZERO_OR_X2[(((C1) | RGB_HI_BITS_MASKx2) - ((C2)&RGB_REMOVE_LOW_BITS_MASK)) >> 1]
+#elif !defined(NEW_COLOUR_BLENDING)
+#define COLOR_SUB(C1, C2)                                                                                              \
+	(GFX.ZERO_OR_X2[(((C1) | RGB_HI_BITS_MASKx2) - ((C2)&RGB_REMOVE_LOW_BITS_MASK)) >> 1] +                        \
+	 ((C1)&RGB_LOW_BITS_MASK) - ((C2)&RGB_LOW_BITS_MASK))
+#else
 inline uint16 COLOR_SUB(uint16, uint16);
 
-#ifdef _FAST_GFX
-inline uint16 COLOR_SUB(uint16 C1, uint16 C2)
-{
-	uint16 a, b, c, z, c1, c2;
-	c1 = (C1 & MASK1) >> 1;
-	c2 = (C2 & MASK1) >> 1;
-	c2 = (c2 ^ 0xffff) + 0x0821;
-	a = c1 + c2;
-	b = a & 0x8410;
-	c = b - (b >> 4);
-	c = c ^ 0x7bcf;
-	z = ((a & c) & MASK2) << 1;
-
-	return z;
-}
-#else
 inline uint16 COLOR_SUB(uint16 C1, uint16 C2)
 {
 	uint16 mC1, mC2, v = 0;
@@ -338,26 +303,7 @@ inline uint16 COLOR_SUB(uint16 C1, uint16 C2)
 }
 #endif
 
-#ifdef _FAST_GFX
-inline uint16 COLOR_SUB1_2(uint16, uint16);
-
-inline uint16 COLOR_SUB1_2(uint16 C1, uint16 C2)
-{
-	uint16 a, b, c, z, c1, c2;
-	c1 = (C1 & MASK1) >> 1;
-	c2 = (C2 & MASK1) >> 1;
-	c2 = (c2 ^ 0xffff) + 0x0821;
-	a = c1 + c2;
-	b = a & 0x8410;
-	c = b - (b >> 4);
-	c = c ^ 0x7bcf;
-	z = (a & c) & MASK2;
-
-	return z;
-}
-#else
 #define COLOR_SUB1_2(C1, C2) GFX.ZERO[(((C1) | RGB_HI_BITS_MASKx2) - ((C2)&RGB_REMOVE_LOW_BITS_MASK)) >> 1]
-#endif
 
 typedef void (*NormalTileRenderer)(uint32 Tile, uint32 Offset, uint32 StartLine, uint32 LineCount);
 typedef void (*ClippedTileRenderer)(uint32 Tile, uint32 Offset, uint32 StartPixel, uint32 Width, uint32 StartLine,

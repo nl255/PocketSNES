@@ -942,7 +942,7 @@ int S9xUnfreezeFromStream(STREAM stream)
 		S9xUnpackStatus();
 		S9xFixCycles();
 		//		S9xReschedule ();				// <-- this causes desync when recording
-		//or playing movies
+		// or playing movies
 
 #ifdef ZSNES_FX
 		if (Settings.SuperFX)

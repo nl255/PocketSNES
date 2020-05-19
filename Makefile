@@ -20,7 +20,7 @@ INCLUDE = -I src \
 		-I src/include \
 		-I menu -I src/linux -I src/snes9x
 
-CCFLAGS =  $(INCLUDE) -DRC_OPTIMIZED -D__LINUX__ -D__DINGUX__ -D__ARM__ -DFOREVER_16_BIT  $(SDL_CFLAGS)
+CCFLAGS =  $(INCLUDE) -D__LINUX__ -D__DINGUX__ -DFOREVER_16_BIT  $(SDL_CFLAGS)
 CCFLAGS += -Ofast -march=armv5te -mtune=arm926ej-s
 CCFLAGS += --fast-math -fomit-frame-pointer -fno-strength-reduce -falign-functions=2 -fno-stack-protector
 

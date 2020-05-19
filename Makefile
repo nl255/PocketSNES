@@ -65,7 +65,7 @@ $(TARGET) : $(OBJS)
 	$(CXX) $(INCLUDES) $(CXXFLAGS) $(LDFLAGS) -Wa,-I./src/ -c $< -o $@
 
 format:
-	clang-format -i **/*.{c,cpp,h}
+	find . -regex '.*\.\(c\|h\|cpp\|hpp\|cc\|cxx\)' -exec clang-format -style=file -i {} \;
 
 .PHONY : clean
 

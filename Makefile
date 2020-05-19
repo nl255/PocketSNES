@@ -21,8 +21,10 @@ INCLUDE = -I src \
 		-I menu -I src/linux -I src/snes9x
 
 CCFLAGS =  $(INCLUDE) -D__LINUX__ -D__DINGUX__ -DFOREVER_16_BIT  $(SDL_CFLAGS)
-CCFLAGS += -Ofast -march=armv5te -mtune=arm926ej-s
+CCFLAGS += -Ofast -march=armv5te -mtune=arm926ej-s -marm
 CCFLAGS += --fast-math -fomit-frame-pointer -fno-strength-reduce -falign-functions=2 -fno-stack-protector
+CCFLAGS += -flto=4 -fwhole-program -fuse-linker-plugin -fmerge-all-constants
+CCFLAGS += -fdata-sections -ffunction-sections
 
 CFLAGS = --std=gnu11 $(CCFLAGS)
 CXXFLAGS = --std=gnu++11 $(CCFLAGS) -fno-exceptions -fno-rtti -fno-math-errno -fno-threadsafe-statics

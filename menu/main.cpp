@@ -99,10 +99,12 @@ void S9xMessage(int /* type */, int /* number */, const char *message)
 
 void erk(void) { S9xMessage(0, 0, "Erk!"); }
 
-const char *osd_GetPackDir(void)
+char *osd_GetPackDir(void)
 {
 	S9xMessage(0, 0, "get pack dir");
-	return ".";
+	char *c = (char *)malloc(1);
+	c[0] = '.';
+	return c;
 }
 
 void S9xLoadSDD1Data(void) {}

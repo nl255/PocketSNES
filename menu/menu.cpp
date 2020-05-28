@@ -50,11 +50,7 @@ void DefaultMenuOptions(void)
 	mMenuOptions->showFps = 0;
 	mMenuOptions->soundRate = 32000;
 	mMenuOptions->stereo = 0;
-#ifdef GCW_ZERO
-	mMenuOptions->fullScreen = 3;
-#else
 	mMenuOptions->fullScreen = 0;
-#endif
 	mMenuOptions->autoSaveSram = 1;
 	mMenuOptions->soundSync = 1;
 }
@@ -1059,11 +1055,6 @@ static void SettingsMenuUpdateText(s32 menu_index)
 		case 2:
 			strcpy(mMenuText[SETTINGS_MENU_FULLSCREEN], "Video scaling            SMOOTH");
 			break;
-#ifdef GCW_ZERO
-		case 3:
-			strcpy(mMenuText[SETTINGS_MENU_FULLSCREEN], "Video scaling          HARDWARE");
-			break;
-#endif
 		}
 
 	case SETTINGS_MENU_LOAD_GLOBAL_SETTINGS:
@@ -1363,19 +1354,14 @@ static s32 SettingsMenu(void)
 				break;
 
 			case SETTINGS_MENU_FULLSCREEN:
-#ifdef GCW_ZERO
-				static int max_fullscreen_options = 3;
-#else
-				static int max_fullscreen_options = 2;
-#endif
 				if (keys & SAL_INPUT_RIGHT) {
 					mMenuOptions->fullScreen++;
-					if (mMenuOptions->fullScreen > max_fullscreen_options)
+					if (mMenuOptions->fullScreen > 2)
 						mMenuOptions->fullScreen = 0;
 				} else {
 					mMenuOptions->fullScreen--;
-					if (mMenuOptions->fullScreen > max_fullscreen_options)
-						mMenuOptions->fullScreen = max_fullscreen_options;
+					if (mMenuOptions->fullScreen > 2)
+						mMenuOptions->fullScreen = 2;
 				}
 				SettingsMenuUpdateText(SETTINGS_MENU_FULLSCREEN);
 				break;

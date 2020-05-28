@@ -174,28 +174,7 @@ u32 sal_VideoGetPitch() { return mScreen->pitch; }
 
 void sal_VideoEnterGame(u32 fullscreenOption, u32 pal, u32 refreshRate)
 {
-#ifdef GCW_ZERO
-	/* Copied from C++ headers which we can't include in C */
-	unsigned int Width = 256 /* SNES_WIDTH */,
-		     Height = pal ? 239 /* SNES_HEIGHT_EXTENDED */ : 224 /* SNES_HEIGHT */;
-	if (fullscreenOption != 3) {
-		Width = SAL_SCREEN_WIDTH;
-		Height = SAL_SCREEN_HEIGHT;
-	}
-	if (SDL_MUSTLOCK(mScreen))
-		SDL_UnlockSurface(mScreen);
-	mScreen = SDL_SetVideoMode(Width, Height, mBpp,
-				   SDL_HWSURFACE |
-#ifdef SDL_TRIPLEBUF
-				       SDL_TRIPLEBUF
-#else
-				       SDL_DOUBLEBUF
-#endif
-	);
-	mRefreshRate = refreshRate;
-	if (SDL_MUSTLOCK(mScreen))
-		SDL_LockSurface(mScreen);
-#endif
+	memset(mScreen->pixels, 0, SAL_SCREEN_WIDTH * SAL_SCREEN_HEIGHT * 2);
 }
 
 void sal_VideoSetPAL(u32 fullscreenOption, u32 pal)
@@ -206,16 +185,7 @@ void sal_VideoSetPAL(u32 fullscreenOption, u32 pal)
 	}
 }
 
-void sal_VideoExitGame()
-{
-#ifdef GCW_ZERO
-	if (SDL_MUSTLOCK(mScreen))
-		SDL_UnlockSurface(mScreen);
-	mScreen = SDL_SetVideoMode(SAL_SCREEN_WIDTH, SAL_SCREEN_HEIGHT, mBpp, SDL_HWSURFACE | SDL_DOUBLEBUF);
-	if (SDL_MUSTLOCK(mScreen))
-		SDL_LockSurface(mScreen);
-#endif
-}
+void sal_VideoExitGame() { memset(mScreen->pixels, 0, SAL_SCREEN_WIDTH * SAL_SCREEN_HEIGHT * 2); }
 
 void sal_VideoBitmapDim(u16 *img, u32 pixelCount)
 {

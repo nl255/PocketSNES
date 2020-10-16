@@ -970,8 +970,8 @@ void ShowCredits()
 	strcpy(mMenuText[menuCount++],"Ported to OpenDingux by pcercuei");
 	strcpy(mMenuText[menuCount++],"Optimizations and fixes by Nebuleon");
 	strcpy(mMenuText[menuCount++],"Port to RetroGame by Steward-Fu");
-	strcpy(mMenuText[menuCount++],"RetroGame optimizations by Sauce");
-	strcpy(mMenuText[menuCount++],"and pingflood");
+	strcpy(mMenuText[menuCount++],"RetroGame optimizations by Sauce,");
+	strcpy(mMenuText[menuCount++],"pingflood and m45t3r");
 
 	sal_InputIgnore();
 	while (!menuExit)

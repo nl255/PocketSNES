@@ -175,6 +175,13 @@ extern int cprintf(const char *fmt, ...);
 #define SLOW_ONE_CYCLE 8
 #define TWO_CYCLES 12
 
+#define NTSC_MASTER_CLOCK			21477272.0
+#define PAL_MASTER_CLOCK			21281370.0
+
+#define SNES_APU_CLOCK				1024000.0 // 1026900.0?
+#define SNES_APU_ACCURACY			10
+#define SNES_APU_ONE_CYCLE_SCALED	((int32) (NTSC_MASTER_CLOCK / SNES_APU_CLOCK * (1 << SNES_APU_ACCURACY)))
+#define SNES_APUTIMER2_CYCLE_SCALED ((int32) (NTSC_MASTER_CLOCK / 64000.0 * (1 << SNES_APU_ACCURACY)))
 
 #define SNES_TR_MASK	    (1 << 4)
 #define SNES_TL_MASK	    (1 << 5)
@@ -212,6 +219,7 @@ enum {
 #define FRAME_ADVANCE_FLAG  (1 << 9)
 #define DELAYED_NMI_FLAG2   (1 << 10)
 #define IRQ_PENDING_FLAG    (1 << 11)
+#define HALTED_FLAG 		(1 << 12)
 
 struct SCPUState{
     uint32  Flags;
@@ -341,6 +349,7 @@ struct SSettings{
     bool8  DisableSoundEcho;
     bool8  DisableMasterVolume;
     bool8  SoundSync;
+    bool8  FakeMuteFix;
     bool8  InterpolatedSound;
     bool8  ThreadSound;
     bool8  Mute;

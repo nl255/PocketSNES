@@ -914,7 +914,7 @@ int S9xUnfreezeFromStream (STREAM stream)
 			S9xUpdateRTC();
 		}
 
-		S9xFixSoundAfterSnapshotLoad ();
+		S9xFixSoundAfterSnapshotLoad (1);
 
 		uint8 hdma_byte = Memory.FillRAM[0x420c];
 		S9xSetCPU(hdma_byte, 0x420c);
@@ -1816,7 +1816,7 @@ fread(&temp, 1, 4, fs);
 		S9xFixColourBrightness ();
 		IPPU.RenderThisFrame = FALSE;
 		
-		S9xFixSoundAfterSnapshotLoad ();
+		S9xFixSoundAfterSnapshotLoad (1);
 		ICPU.ShiftedPB = ICPU.Registers.PB << 16;
 		ICPU.ShiftedDB = ICPU.Registers.DB << 16;
 		S9xSetPCBase (ICPU.ShiftedPB + ICPU.Registers.PC);

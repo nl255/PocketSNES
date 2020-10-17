@@ -624,7 +624,7 @@ int SnesInit()
 
 	if (!S9xGraphicsInit ())
 	{
-         	S9xMessage (0,0,"Failed to init graphics");
+		S9xMessage (0,0,"Failed to init graphics");
 		return SAL_ERROR;
 	}
 
@@ -756,7 +756,8 @@ int mainEntry(int argc, char* argv[])
 			mFramesCleared = 0;
 			if(mMenuOptions.soundEnabled) 	
 				RunSound();
-			else	RunNoSound();
+			else
+				RunNoSound();
 
 			event=EVENT_NONE;
 		}

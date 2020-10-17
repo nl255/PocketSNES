@@ -14,6 +14,9 @@ extern struct MENU_OPTIONS *mMenuOptions;
 #define SNES_HEIGHT 239
 
 SDL_Surface *mScreen = NULL;
+#ifdef GCW_JOYSTICK
+SDL_Joystick *mJoy = NULL;
+#endif
 static u32 mSoundThreadFlag=0;
 static u32 mSoundLastCpuSpeed=0;
 static u32 mPaletteBuffer[PALETTE_BUFFER_LENGTH];
@@ -27,7 +30,7 @@ s32 mCpuSpeedLookup[1]={0};
 #include <sal_common.h>
 
 static u32 inputHeld = 0;
-static int key_repeat_enabled = 1;
+static int key_repeat_enabled = 0;
 
 #ifdef GCW_JOYSTICK
 static void sal_InputAnalogue(u32 analogJoy)
@@ -45,11 +48,9 @@ static void sal_InputAnalogue(u32 analogJoy)
 		//Update joystick position
 		if (SDL_NumJoysticks() > 0)
 		{
-			SDL_Joystick *joy;
-			joy    = SDL_JoystickOpen(0);
 			SDL_JoystickUpdate();
-			x_move = SDL_JoystickGetAxis(joy, 0);
-			y_move = SDL_JoystickGetAxis(joy, 1);
+			x_move = SDL_JoystickGetAxis(mJoy, 0);
+			y_move = SDL_JoystickGetAxis(mJoy, 1);
 		}
 
 		//Emulate keypresses with joystick
@@ -105,20 +106,26 @@ static u32 sal_Input(int held)
 	SDL_Event event;
 
 	if (!SDL_PollEvent(&event)) {
-		if (held) return inputHeld;
+		if (held)
+			return inputHeld;
 		return 0;
 	}
 
 	u32 extraKeys = 0;
+
 	do {
 		switch (event.type) {
-		case SDL_KEYDOWN:
-			switch (event.key.keysym.sym) {
-			case SDLK_HOME:
-				extraKeys |= SAL_INPUT_MENU;
+			case SDL_KEYDOWN:
+				switch (event.key.keysym.sym) {
+					case SDLK_HOME:
+						extraKeys |= SAL_INPUT_MENU;
+						break;
+				}
 				break;
-			}
-			break;
+#ifdef GCW_JOYSTICK
+			case SDL_JOYAXISMOTION:
+				break;
+#endif
 		}
 	} while(SDL_PollEvent(&event));
 
@@ -147,21 +154,29 @@ static u32 sal_Input(int held)
 	return inputHeld | extraKeys;
 }
 
-u32 sal_InputPollRepeat()
-{
+void sal_EnableKeyRepeat() {
 	if (!key_repeat_enabled) {
 		SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 		key_repeat_enabled = 1;
 	}
+}
+
+void sal_DisableKeyRepeat() {
+	if (key_repeat_enabled) {
+		SDL_EnableKeyRepeat(0, 0);
+		key_repeat_enabled = 0;
+	}
+}
+
+u32 sal_InputPollRepeat()
+{
+	sal_EnableKeyRepeat();
 	return sal_Input(0);
 }
 
 u32 sal_InputPoll()
 {
-	if (key_repeat_enabled) {
-		SDL_EnableKeyRepeat(0, 0);
-		key_repeat_enabled = 0;
-	}
+	sal_DisableKeyRepeat();
 	return sal_Input(1);
 }
 
@@ -213,7 +228,14 @@ s32 sal_Init(void)
 
 	memset(mInputRepeatTimer,0,sizeof(mInputRepeatTimer));
 
-	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+	sal_EnableKeyRepeat();
+#ifdef GCW_JOYSTICK
+	if (SDL_NumJoysticks() > 0)
+	{
+		mJoy = SDL_JoystickOpen(0);
+		SDL_JoystickEventState(SDL_ENABLE);
+	}
+#endif
 
 	return SAL_OK;
 }
@@ -340,6 +362,10 @@ void sal_VideoPaletteSet(u32 index, u32 color)
 
 void sal_Reset(void)
 {
+#ifdef GCW_JOYSTICK
+	if (SDL_JoystickOpened(0))
+		SDL_JoystickClose(mJoy);
+#endif
 	sal_AudioClose();
 	SDL_Quit();
 }

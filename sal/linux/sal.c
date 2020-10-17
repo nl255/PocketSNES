@@ -4,6 +4,11 @@
 #include <sys/time.h>
 #include "sal.h"
 
+#ifdef GCW_JOYSTICK
+#include "menu.h"
+extern struct MENU_OPTIONS *mMenuOptions;
+#endif
+
 #define PALETTE_BUFFER_LENGTH	256*2*4
 #define SNES_WIDTH  256
 #define SNES_HEIGHT 239
@@ -22,10 +27,83 @@ s32 mCpuSpeedLookup[1]={0};
 #include <sal_common.h>
 
 static u32 inputHeld = 0;
+static int key_repeat_enabled = 1;
+
+#ifdef GCW_JOYSTICK
+static void sal_InputAnalogue(u32 analogJoy)
+{
+	s32 x_move = 0;
+	s32 y_move = 0;
+
+	if(analogJoy && !key_repeat_enabled)
+	{
+		static int j_left = 0;
+		static int j_right = 0;
+		static int j_up = 0;
+		static int j_down = 0;
+
+		//Update joystick position
+		if (SDL_NumJoysticks() > 0)
+		{
+			SDL_Joystick *joy;
+			joy    = SDL_JoystickOpen(0);
+			SDL_JoystickUpdate();
+			x_move = SDL_JoystickGetAxis(joy, 0);
+			y_move = SDL_JoystickGetAxis(joy, 1);
+		}
+
+		//Emulate keypresses with joystick
+		if (x_move < -SAL_INPUT_JOYSTICK_DEADZONE || x_move > SAL_INPUT_JOYSTICK_DEADZONE)
+		{
+			if (x_move < -SAL_INPUT_JOYSTICK_DEADZONE) inputHeld |= SAL_INPUT_LEFT;
+			if (x_move >  SAL_INPUT_JOYSTICK_DEADZONE) inputHeld |= SAL_INPUT_RIGHT;
+			if (x_move < -SAL_INPUT_JOYSTICK_DEADZONE) j_left     = 1;
+			if (x_move >  SAL_INPUT_JOYSTICK_DEADZONE) j_right    = 1;
+		}
+		else
+		{
+			//stop movement if previously triggered by analogue stick
+			if (j_left)
+			{
+				j_left = 0;
+				inputHeld &= ~(SAL_INPUT_LEFT );
+			}
+			if (j_right)
+			{
+				j_right = 0;
+				inputHeld &= ~(SAL_INPUT_RIGHT );
+			}
+		}
+
+		if (y_move < -SAL_INPUT_JOYSTICK_DEADZONE || y_move > SAL_INPUT_JOYSTICK_DEADZONE)
+		{
+			if (y_move < -SAL_INPUT_JOYSTICK_DEADZONE) inputHeld |= SAL_INPUT_UP;
+			if (y_move >  SAL_INPUT_JOYSTICK_DEADZONE) inputHeld |= SAL_INPUT_DOWN;
+			if (y_move < -SAL_INPUT_JOYSTICK_DEADZONE) j_up       = 1;
+			if (y_move >  SAL_INPUT_JOYSTICK_DEADZONE) j_down     = 1;
+		}
+		else
+		{
+			//stop movement if previously triggered by analogue stick
+			if (j_up)
+			{
+				j_up = 0;
+				inputHeld &= ~(SAL_INPUT_UP);
+			}
+			if (j_down)
+			{
+				j_down = 0;
+				inputHeld &= ~(SAL_INPUT_DOWN);
+			}
+		}
+	}
+}
+#endif
 
 static u32 sal_Input(int held)
 {
 	SDL_Event event;
+
 	if (!SDL_PollEvent(&event)) {
 		if (held) return inputHeld;
 		return 0;
@@ -61,11 +139,13 @@ static u32 sal_Input(int held)
 	if ( keystate[SDLK_RIGHT] )		inputHeld |= SAL_INPUT_RIGHT;
 	if ( keystate[SDLK_HOME] )		inputHeld |= SAL_INPUT_MENU;
 
+#ifdef GCW_JOYSTICK
+	sal_InputAnalogue(mMenuOptions->analogJoy);
+#endif
+
 	mInputRepeat = inputHeld;
 	return inputHeld | extraKeys;
 }
-
-static int key_repeat_enabled = 1;
 
 u32 sal_InputPollRepeat()
 {

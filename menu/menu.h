@@ -54,6 +54,9 @@ enum SETTINGS_MENU_ENUM
 //	SETTINGS_MENU_SOUND_VOL,
 	SETTINGS_MENU_SOUND_RATE,
 	SETTINGS_MENU_SOUND_STEREO,
+#ifdef GCW_JOYSTICK
+	SETTINGS_MENU_ANALOG_JOY,
+#endif
 	SETTINGS_MENU_SOUND_SYNC,
 	SETTINGS_MENU_AUTO_SAVE_SRAM,
 	SAVESTATE_MENU_SAVE_SRAM,
@@ -135,7 +138,11 @@ struct MENU_OPTIONS
   unsigned int cpuSpeed;
   unsigned int soundRate;
   unsigned int soundSync;
+#ifdef GCW_JOYSTICK
+  unsigned int analogJoy;
+#else
   unsigned int spare02;
+#endif
   unsigned int spare03;
   unsigned int spare04;
   unsigned int spare05;

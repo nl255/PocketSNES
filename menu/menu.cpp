@@ -32,7 +32,7 @@ static struct SAVE_STATE mSaveState[10];  // holds the filenames for the savesta
 static s8 mSaveStateName[SAL_MAX_PATH]={""};       // holds the last filename to be scanned for save states
 static s8 mRomName[SAL_MAX_PATH]={""};
 static s8 mSystemDir[SAL_MAX_PATH];
-static struct MENU_OPTIONS *mMenuOptions=NULL;
+struct MENU_OPTIONS *mMenuOptions=NULL;
 static u16 mTempFb[SNES_WIDTH*SNES_HEIGHT_EXTENDED*2];
 
 static char errormsg[MAX_DISPLAY_CHARS];
@@ -54,6 +54,9 @@ void DefaultMenuOptions(void)
 	mMenuOptions->fullScreen=3;
 	mMenuOptions->autoSaveSram=1;
 	mMenuOptions->soundSync=1;
+#ifdef GCW_JOYSTICK
+	mMenuOptions->analogJoy=0;
+#endif
 }
 
 s32 LoadMenuOptions(const char *path, const char *filename, const char *ext,
@@ -1123,7 +1126,19 @@ void SettingsMenuUpdateText(s32 menu_index)
 					strcpy(mMenuText[SETTINGS_MENU_FULLSCREEN],"Video scaling          HARDWARE");
 					break;
 			}
-		
+#ifdef GCW_JOYSTICK
+		case SETTINGS_MENU_ANALOG_JOY:
+			switch(mMenuOptions->analogJoy)
+			{
+				case 0:
+					strcpy(mMenuText[SETTINGS_MENU_ANALOG_JOY],"Analogue Joystick           OFF");
+					break;
+				case 1:
+					strcpy(mMenuText[SETTINGS_MENU_ANALOG_JOY],"Analogue Joystick            ON");
+					break;
+			}
+			break;
+#endif
 		case SETTINGS_MENU_LOAD_GLOBAL_SETTINGS:
 			strcpy(mMenuText[SETTINGS_MENU_LOAD_GLOBAL_SETTINGS],"Load global settings");
 			break;
@@ -1162,6 +1177,9 @@ void SettingsMenuUpdateTextAll(void)
 	SettingsMenuUpdateText(SETTINGS_MENU_FPS);
 	SettingsMenuUpdateText(SETTINGS_MENU_SOUND_SYNC);
 	SettingsMenuUpdateText(SETTINGS_MENU_FULLSCREEN);
+#ifdef GCW_JOYSTICK
+	SettingsMenuUpdateText(SETTINGS_MENU_ANALOG_JOY);
+#endif
 	SettingsMenuUpdateText(SETTINGS_MENU_LOAD_GLOBAL_SETTINGS);
 	SettingsMenuUpdateText(SETTINGS_MENU_SAVE_GLOBAL_SETTINGS);
 	SettingsMenuUpdateText(SETTINGS_MENU_LOAD_CURRENT_SETTINGS);
@@ -1451,6 +1469,12 @@ s32 SettingsMenu(void)
 					}
 					SettingsMenuUpdateText(SETTINGS_MENU_FULLSCREEN);
 					break;
+#ifdef GCW_JOYSTICK
+				case SETTINGS_MENU_ANALOG_JOY:
+					mMenuOptions->analogJoy^=1;
+					SettingsMenuUpdateText(SETTINGS_MENU_ANALOG_JOY);
+					break;
+#endif
 			}
 		}
 		else if ((keys & (SAL_INPUT_UP | SAL_INPUT_DOWN))

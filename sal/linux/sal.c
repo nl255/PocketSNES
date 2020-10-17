@@ -101,8 +101,11 @@ static u32 sal_Input(int held)
 	}
 
 	u32 extraKeys = 0;
-	s32 x_move = 0;
-	s32 y_move = 0;
+
+#ifdef GCW_JOYSTICK
+	static s32 x_move = 0;
+	static s32 y_move = 0;
+#endif
 
 	do {
 		switch (event.type) {
@@ -115,8 +118,10 @@ static u32 sal_Input(int held)
 				break;
 #ifdef GCW_JOYSTICK
 			case SDL_JOYAXISMOTION:
-				x_move = SDL_JoystickGetAxis(mJoy, 0);
-				y_move = SDL_JoystickGetAxis(mJoy, 1);
+				if (event.jaxis.axis == 0)
+					x_move = event.jaxis.value;
+				else if (event.jaxis.axis == 1)
+					y_move = event.jaxis.value;
 				break;
 #endif
 		}

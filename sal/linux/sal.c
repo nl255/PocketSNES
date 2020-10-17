@@ -33,69 +33,58 @@ static u32 inputHeld = 0;
 static int key_repeat_enabled = 0;
 
 #ifdef GCW_JOYSTICK
-static void sal_InputAnalogue(u32 analogJoy)
+static void sal_ProcessInputAnalogue(s32 x_move, s32 y_move)
 {
-	s32 x_move = 0;
-	s32 y_move = 0;
+	if (key_repeat_enabled)
+		return;
 
-	if(analogJoy && !key_repeat_enabled)
+	static int j_left = 0;
+	static int j_right = 0;
+	static int j_up = 0;
+	static int j_down = 0;
+
+	//Emulate keypresses with joystick
+	if (x_move < -SAL_INPUT_JOYSTICK_DEADZONE || x_move > SAL_INPUT_JOYSTICK_DEADZONE)
 	{
-		static int j_left = 0;
-		static int j_right = 0;
-		static int j_up = 0;
-		static int j_down = 0;
+		if (x_move < -SAL_INPUT_JOYSTICK_DEADZONE) inputHeld |= SAL_INPUT_LEFT;
+		if (x_move >  SAL_INPUT_JOYSTICK_DEADZONE) inputHeld |= SAL_INPUT_RIGHT;
+		if (x_move < -SAL_INPUT_JOYSTICK_DEADZONE) j_left     = 1;
+		if (x_move >  SAL_INPUT_JOYSTICK_DEADZONE) j_right    = 1;
+	}
+	else
+	{
+		//stop movement if previously triggered by analogue stick
+		if (j_left)
+		{
+			j_left = 0;
+			inputHeld &= ~(SAL_INPUT_LEFT );
+		}
+		if (j_right)
+		{
+			j_right = 0;
+			inputHeld &= ~(SAL_INPUT_RIGHT );
+		}
+	}
 
-		//Update joystick position
-		if (SDL_NumJoysticks() > 0)
+	if (y_move < -SAL_INPUT_JOYSTICK_DEADZONE || y_move > SAL_INPUT_JOYSTICK_DEADZONE)
+	{
+		if (y_move < -SAL_INPUT_JOYSTICK_DEADZONE) inputHeld |= SAL_INPUT_UP;
+		if (y_move >  SAL_INPUT_JOYSTICK_DEADZONE) inputHeld |= SAL_INPUT_DOWN;
+		if (y_move < -SAL_INPUT_JOYSTICK_DEADZONE) j_up       = 1;
+		if (y_move >  SAL_INPUT_JOYSTICK_DEADZONE) j_down     = 1;
+	}
+	else
+	{
+		//stop movement if previously triggered by analogue stick
+		if (j_up)
 		{
-			SDL_JoystickUpdate();
-			x_move = SDL_JoystickGetAxis(mJoy, 0);
-			y_move = SDL_JoystickGetAxis(mJoy, 1);
+			j_up = 0;
+			inputHeld &= ~(SAL_INPUT_UP);
 		}
-
-		//Emulate keypresses with joystick
-		if (x_move < -SAL_INPUT_JOYSTICK_DEADZONE || x_move > SAL_INPUT_JOYSTICK_DEADZONE)
+		if (j_down)
 		{
-			if (x_move < -SAL_INPUT_JOYSTICK_DEADZONE) inputHeld |= SAL_INPUT_LEFT;
-			if (x_move >  SAL_INPUT_JOYSTICK_DEADZONE) inputHeld |= SAL_INPUT_RIGHT;
-			if (x_move < -SAL_INPUT_JOYSTICK_DEADZONE) j_left     = 1;
-			if (x_move >  SAL_INPUT_JOYSTICK_DEADZONE) j_right    = 1;
-		}
-		else
-		{
-			//stop movement if previously triggered by analogue stick
-			if (j_left)
-			{
-				j_left = 0;
-				inputHeld &= ~(SAL_INPUT_LEFT );
-			}
-			if (j_right)
-			{
-				j_right = 0;
-				inputHeld &= ~(SAL_INPUT_RIGHT );
-			}
-		}
-
-		if (y_move < -SAL_INPUT_JOYSTICK_DEADZONE || y_move > SAL_INPUT_JOYSTICK_DEADZONE)
-		{
-			if (y_move < -SAL_INPUT_JOYSTICK_DEADZONE) inputHeld |= SAL_INPUT_UP;
-			if (y_move >  SAL_INPUT_JOYSTICK_DEADZONE) inputHeld |= SAL_INPUT_DOWN;
-			if (y_move < -SAL_INPUT_JOYSTICK_DEADZONE) j_up       = 1;
-			if (y_move >  SAL_INPUT_JOYSTICK_DEADZONE) j_down     = 1;
-		}
-		else
-		{
-			//stop movement if previously triggered by analogue stick
-			if (j_up)
-			{
-				j_up = 0;
-				inputHeld &= ~(SAL_INPUT_UP);
-			}
-			if (j_down)
-			{
-				j_down = 0;
-				inputHeld &= ~(SAL_INPUT_DOWN);
-			}
+			j_down = 0;
+			inputHeld &= ~(SAL_INPUT_DOWN);
 		}
 	}
 }
@@ -112,6 +101,8 @@ static u32 sal_Input(int held)
 	}
 
 	u32 extraKeys = 0;
+	s32 x_move = 0;
+	s32 y_move = 0;
 
 	do {
 		switch (event.type) {
@@ -124,6 +115,8 @@ static u32 sal_Input(int held)
 				break;
 #ifdef GCW_JOYSTICK
 			case SDL_JOYAXISMOTION:
+				x_move = SDL_JoystickGetAxis(mJoy, 0);
+				y_move = SDL_JoystickGetAxis(mJoy, 1);
 				break;
 #endif
 		}
@@ -147,7 +140,9 @@ static u32 sal_Input(int held)
 	if ( keystate[SDLK_HOME] )		inputHeld |= SAL_INPUT_MENU;
 
 #ifdef GCW_JOYSTICK
-	sal_InputAnalogue(mMenuOptions->analogJoy);
+	if (mMenuOptions->analogJoy) {
+		sal_ProcessInputAnalogue(x_move, y_move);
+	}
 #endif
 
 	mInputRepeat = inputHeld;

@@ -17,20 +17,21 @@ INCLUDE = -I pocketsnes \
 		-I pocketsnes/include \
 		-I menu -I pocketsnes/linux -I pocketsnes/snes9x
 
-CFLAGS = $(INCLUDE) -DRC_OPTIMIZED -DGCW_ZERO -DGCW_JOYSTICK -D__LINUX__ -D__DINGUX__ -DFOREVER_16_BIT -DFOREVER_16_BIT_SOUND -DLAGFIX -DNO_ROM_BROWSER
+CFLAGS = $(INCLUDE) -DRC_OPTIMIZED -DGCW_ZERO -DGCW_JOYSTICK -D__LINUX__ -D__DINGUX__ -DFOREVER_16_BIT -DFOREVER_16_BIT_SOUND -DLAGFIX
 # CFLAGS += -ggdb3 -Og
-CFLAGS += -Ofast -fdata-sections -ffunction-sections -mips32r2 -mno-mips16 -fomit-frame-pointer -fno-builtin -fno-common
+CFLAGS += -Ofast -fdata-sections -ffunction-sections -mips32r2 -mno-mips16
+CFLAGS += -fomit-frame-pointer -fno-builtin -fno-common -flto=4
 CFLAGS += -DFAST_LSB_WORD_ACCESS
 CFLAGS += $(SDL_CFLAGS)
 ifdef PROFILE_GEN
-CFLAGS += -fprofile-generate -fprofile-dir=/media/data/profile/pocketsnes
+CFLAGS += -fprofile-generate -fprofile-dir=/media/data/local/home/profile/pocketsnes
 else
 CFLAGS += -fprofile-use -fprofile-dir=./profile
 endif
 
 CXXFLAGS = $(CFLAGS) -std=gnu++03 -fno-exceptions -fno-rtti -fno-math-errno -fno-threadsafe-statics
 
-LDFLAGS = $(CXXFLAGS) -lz -lpng $(SDL_LIBS) -Wl,--as-needed
+LDFLAGS = $(CXXFLAGS) -lz -lpng $(SDL_LIBS) -Wl,-O1,--sort-common,--as-needed
 ifndef PROFILE_GEN
 LDFLAGS += -Wl,--gc-sections -s
 endif

@@ -58,7 +58,11 @@ endif
 
 .PHONY: opk
 opk: $(TARGET)
+ifdef HUGE_PAGES
+	opk/make_opk.sh PocketSNES_new.opk
+else
 	opk/make_opk.sh
+endif
 
 %.o: %.c
 	$(CMD)$(CC) $(CFLAGS) -c $< -o $@

@@ -9,11 +9,12 @@ which is a pain in the ass especially as I'm always changing things
 
 */
 
-#include <sal.h>
 #include <png.h>
+#include <sys/stat.h>
 #include <unzip.h>
 #include <zip.h>
 
+#include "sal.h"
 #include "sal_common.h"
 
 #define SAL_FRAME_BUFFER_COUNT	1

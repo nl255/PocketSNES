@@ -2,8 +2,8 @@
 #include <dirent.h>
 #include <SDL.h>
 #include <sys/time.h>
-#include "sal.h"
 
+#include "sal.h"
 #ifdef GCW_JOYSTICK
 #include "menu.h"
 extern struct MENU_OPTIONS *mMenuOptions;

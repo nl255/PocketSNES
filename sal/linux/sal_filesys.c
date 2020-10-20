@@ -4,8 +4,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
-#include "sal.h"
+#include <unistd.h>
 
+#include "sal.h"
 
 s32 sal_DirectoryGetCurrent(s8 *path, u32 size)
 {

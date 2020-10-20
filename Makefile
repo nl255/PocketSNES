@@ -19,7 +19,7 @@ INCLUDE = -I pocketsnes \
 
 CFLAGS = $(INCLUDE) -DRC_OPTIMIZED -DGCW_ZERO -DGCW_JOYSTICK -D__LINUX__ -D__DINGUX__ -DFOREVER_16_BIT -DFOREVER_16_BIT_SOUND -DLAGFIX
 # CFLAGS += -ggdb3 -Og
-CFLAGS += -Ofast -fdata-sections -ffunction-sections -mips32r2 -mno-mips16
+CFLAGS += -Ofast -fdata-sections -ffunction-sections -mips32r2 -mno-mips16 -mplt -mno-shared
 CFLAGS += -fomit-frame-pointer -fno-builtin -fno-common -flto=4
 CFLAGS += -DFAST_LSB_WORD_ACCESS
 CFLAGS += $(SDL_CFLAGS)
@@ -32,6 +32,9 @@ endif
 CXXFLAGS = $(CFLAGS) -std=gnu++03 -fno-exceptions -fno-rtti -fno-math-errno -fno-threadsafe-statics
 
 LDFLAGS = $(CXXFLAGS) -lz -lpng $(SDL_LIBS) -Wl,-O1,--sort-common,--as-needed
+ifdef HUGE_PAGES
+LDFLAGS += -Wl,-zcommon-page-size=2097152 -Wl,-zmax-page-size=2097152 -lhugetlbfs
+endif
 ifndef PROFILE_GEN
 LDFLAGS += -Wl,--gc-sections -s
 endif
@@ -49,6 +52,9 @@ all : $(TARGET)
 
 $(TARGET) : $(OBJS)
 	$(CMD)$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+ifdef HUGE_PAGES
+	hugeedit --text --data $(TARGET)
+endif
 
 .PHONY: opk
 opk: $(TARGET)
